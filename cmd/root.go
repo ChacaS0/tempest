@@ -56,6 +56,9 @@ var pathProg string
 // pathTempest is the path to the tempest folder
 var pathTempest string
 
+// isVersion is the flag variable that indicates whether we want to see the version
+var isVersion bool
+
 //* Bold Colors
 // blueB is a func used to print in bold blue
 var blueB func(...interface{}) string
@@ -99,7 +102,23 @@ Or if you want to see what files/folders would get deleted:
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		// According to the flag
+		switch {
+		case isVersion:
+			// If isVersion is true we can display the current version
+			if version, errVersion := getVersion(); errVersion != nil {
+				color.Red(errVersion.Error())
+			} else {
+				fmt.Println(color.HiYellowString(version))
+			}
+		default:
+			// By default we print help
+			if errHelp := cmd.Help(); errHelp != nil {
+				color.Red(errHelp.Error())
+			}
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -135,7 +154,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	// RootCmd.Flags()
+	RootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "Display the current version v[VERSION_NUMBER]-X-Y[REVISION_NUMBER]")
 
 }
 

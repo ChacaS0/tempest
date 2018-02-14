@@ -38,7 +38,7 @@ General:
 	visual:
 		✔ use colorized logs (check paper fluo in bag) @done (2/3/2018, 6:34:39 PM)
 		☐ refractor helpers with color package ? @low
-		☐ See the current version
+		☐ See the current version @low
 			☐ [CURRENT VERSION] [REVISION] Would be the last commit
 			☐ [LATEST VERSION]
 		☐ Improve visualisation of output on ``tempest start ``
@@ -49,16 +49,32 @@ Note:
 	☐ Use GoRoutines for deletion @high 
 	✔ THERE IS STILL A BUG ON UPDATE @critical @done (2/5/2018, 4:12:47 AM)
 	☐ make.sh -> makefile
+	☐ Checkout Jenkins?
 
 Config manager:
 	✔ update dep @today @done (2/8/2018, 4:12:02 AM)
 
 GLOBAL:
 	☐ TEST FILES @low
+<<<<<<< Updated upstream
+	☐ Migration from bitbucket to github-chacas0
+=======
 	☐ Set tempest as submodule? @low 
 	☐ UPDATE make.sh to adapt the switch to beta
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 TODOS:
 	☐ Fix display / error handling whan nothing is passed to purge @low
 	☐ Check if this issue is occuring somewhere else @low
-	
+
+	☐ Push @critical @today 
+	☐  adapt make.sh to take github instead ( from bitbucket, taking github instead ;) ) @today
+	☐ RM from scripts.git (NOT NOW)
+	☐ Push  (NOT NOW)
+	☐ Pull TEMPest
