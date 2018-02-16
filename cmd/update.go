@@ -53,7 +53,7 @@ var updateCmd = &cobra.Command{
 		case isUpToDate && errUpt == nil:
 			color.HiBlue("You are already up to date! Someone call TV, we have Captain Obvious on duty here!")
 		default:
-			color.Red("Error while checking for updates, do you have an access key !?")
+			color.Red("Error while checking for updates, do you have an access key !?") //! BUG: --
 			fmt.Println(errUpt)
 		}
 
@@ -81,10 +81,11 @@ func checkUpdate() (bool, error) {
 	// Fetch data about the remote TEMPest
 	fmt.Println(yellowB("::"), color.HiYellowString("Fetching data about the incoming TEMPest . . ."))
 	commFetch := exec.Command("git", "fetch")
-	commFetch.Dir = pathProg
+	commFetch.Dir = pathTempest
 	fetchResult, errFetch := commFetch.Output()
 	if errFetch != nil {
-		color.Red("Error while fetching stretching legs and branches!!")
+		commFetch = exec.Command("git", "fetch")
+		color.Red("Error while fetching stretching legs and branches!!") //! BUG: -- fetch, if not origin, needs to specify
 		return false, errFetch
 	}
 	fmt.Println(string(fetchResult))
