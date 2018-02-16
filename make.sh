@@ -1,4 +1,7 @@
 #!/bin/bash
+#===============  - ALPHA -  ===============#
+ALPHA_VERSION=$GOPATH/src/bitbucket.org/ChacaS0/scripts/tempest
+#! @Deprecated
 # # Go to the program dir
 # cd $GOPATH/src/bitbucket.org/ChacaS0/scripts
 
@@ -8,39 +11,52 @@
 # # build the muthafukkah
 # go install $GOPATH/src/bitbucket.org/ChacaS0/scripts/tempest/tempest.go
 
-#===============
+#===============  - BETA -  ===============#
+BETA_VERSION=$GOPATH/src/github.com/ChacaS0/tempest
 
 #* Check if Alpha version exists
 if [ -d "$ALPHA_VERSION" ]; then 
   if [ -L "$ALPHA_VERSION" ]; then
     # It is a symlink!
     # Don't give a fck about this shit if exists. Why the fck would that exist
-    rm $ALPHA_VERSION
-	 echo ":: Removed the alpha version anyway"
-  else
-    # It's a directory!
     rm -r $ALPHA_VERSION
-	 echo ":: Removed the alpha version"
+	 echo ":: Removed what seems to be an alpha version ... wth?"
+  else
+	# It's a directory!
+	
+	# The bin exists too ? GTFO!!
+	if [ -f "$GOBIN/tempest" ]; then
+		cd $ALPHA_VERSION
+		go clean -i tempest.go
+	else
+		# all good then
+	fi
+
+	# Remove folder then
+	rm -r $ALPHA_VERSION #? ``rm -rf`` needed?
+	echo ":: Removed the alpha version"
   fi
+
 fi
 
+
 #* Regular installation for Beta version
-#? Does ``go get -u`` works just fine?? Does it install too ?
+#! Doesn't work ``go get -u``!! Doesn't install
 # Go to the program dir
 # cd $GOPATH/src/github.com/ChacaS0/tempest
 # Check if Beta version already exists
 if [ -d "$BETA_VERSION" ]; then
-	if [ -L "$BETA_VERSION" ]; then
-		# Symlink: don't care
-	else
-		# # It exists already, then we update only
-		# cd $GOPATH/src/github.com/ChacaS0/tempest
-		# git pull origin master
-		# # Update Success ?
-	fi
+	# Then it's all good
 else
 	# # Doesn't exist, so create it
-	# mkdir $GOPATH/src/github.com/ChacaS0
-	# git clone https://github.com/ChacaS0/tempest.git
-	# echo ":: End of the migration towards Beta"
+	mkdir -p $GOPATH/src/github.com/ChacaS0
+	cd $GOPATH/src/github.com/ChacaS0
+	git clone https://github.com/ChacaS0/tempest.git
+	echo ":: End of the migration towards Beta"
 fi
+# #* [Update]
+echo ":: Updating"
+cd $BETA_VERSION
+git pull origin master 
+go install $BETA_VERSION/tempest.go
+echo "[Update]:: Installed!"
