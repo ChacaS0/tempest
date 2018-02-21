@@ -70,9 +70,10 @@ func getVersion() (string, error) {
 	tempOutput, errVersion := commVersion.Output()
 	if errVersion != nil {
 		fmt.Println(redB("::"), color.HiRedString("Could not read the current version"))
+		fmt.Println(redB("::"), color.HiRedString("Still no version out yet?"))
 
 		return "", errVersion
 	}
 	version := string(tempOutput)
-	return version, nil
+	return version, errVersion
 }

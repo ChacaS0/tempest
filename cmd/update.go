@@ -54,7 +54,7 @@ var updateCmd = &cobra.Command{
 		case isUpToDate && errUpt == nil:
 			color.HiBlue("You are already up to date! Someone call TV, we have Captain Obvious on duty here!")
 		default:
-			color.Red("Error while checking for updates !") //! BUG: --
+			color.Red("Error while checking for updates !")
 			fmt.Println(errUpt)
 		}
 
@@ -86,7 +86,7 @@ func checkUpdate() (bool, error) {
 	fetchResult, errFetch := commFetch.Output()
 	if errFetch != nil {
 		commFetch = exec.Command("git", "fetch", "origin", "master")
-		color.Red("Error while fetching stretching legs and branches!!") //! BUG: -- fetch, if not origin, needs to specify
+		color.Red("Error while fetching stretching legs and branches!!")
 		return false, errFetch
 	}
 	fmt.Println(string(fetchResult))
