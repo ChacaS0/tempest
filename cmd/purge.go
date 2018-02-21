@@ -187,9 +187,9 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 }
 
 // deleteAllInt deletes everything within the directory pointed by the path
-// provided, using the index from .tempestcf
+// provided, using the index from ``.tempestcf``
 // Doesn't delete anything if testMode is true.
-// It just displays what would be deleted
+// It just displays what would get deleted
 func deleteAllInt(index int, testMode bool) error {
 	allPaths, errPaths := getPaths()
 	if errPaths != nil {
@@ -204,10 +204,7 @@ func deleteAllInt(index int, testMode bool) error {
 				if eInt != nil {
 					fmt.Println("-----", eInt)
 				}
-				if errDelInt := deleteAllStr(indPath, fInt, testMode); errDelInt != nil {
-					return errDelInt
-				}
-				return nil
+				return deleteAllStr(indPath, fInt, testMode)
 			}
 		}
 	}
