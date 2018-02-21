@@ -20,7 +20,7 @@
 
 package main
 
-import "bitbucket.org/ChacaS0/scripts/tempest/cmd"
+import "github.com/ChacaS0/tempest/cmd"
 
 func main() {
 	cmd.Execute()

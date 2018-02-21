@@ -1,6 +1,6 @@
 #!/bin/bash
 #===============  - BETA -  ===============#
-BETA_VERSION=$GOPATH/src/github.com/ChacaS0/tempest
+# BETA_VERSION=$GOPATH/src/github.com/ChacaS0/tempest
 
 # Go to the program dir
 cd $GOPATH/src/github.com/ChacaS0/tempest
@@ -9,4 +9,4 @@ cd $GOPATH/src/github.com/ChacaS0/tempest
 git pull origin master
 
 # build the muthafukkah
-go install BETA_VERSION/tempest.go
+go install -i $GOPATH/src/github.com/ChacaS0/tempest/tempest.go

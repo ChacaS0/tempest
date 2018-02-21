@@ -22,6 +22,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os/exec"
 
 	"github.com/fatih/color"
@@ -53,7 +54,7 @@ var updateCmd = &cobra.Command{
 		case isUpToDate && errUpt == nil:
 			color.HiBlue("You are already up to date! Someone call TV, we have Captain Obvious on duty here!")
 		default:
-			color.Red("Error while checking for updates, do you have an access key !?") //! BUG: --
+			color.Red("Error while checking for updates !") //! BUG: --
 			fmt.Println(errUpt)
 		}
 
@@ -84,7 +85,7 @@ func checkUpdate() (bool, error) {
 	commFetch.Dir = pathTempest
 	fetchResult, errFetch := commFetch.Output()
 	if errFetch != nil {
-		commFetch = exec.Command("git", "fetch")
+		commFetch = exec.Command("git", "fetch", "origin", "master")
 		color.Red("Error while fetching stretching legs and branches!!") //! BUG: -- fetch, if not origin, needs to specify
 		return false, errFetch
 	}
@@ -92,6 +93,7 @@ func checkUpdate() (bool, error) {
 
 	// Check if up to date
 	fmt.Println(yellowB("::"), color.HiYellowString("Checking if the TEMPest is coming this way . . ."))
+	log.Println(":::::")
 	commCheck := exec.Command("git", "log", "HEAD..origin/master", "--oneline")
 	commCheck.Dir = pathTempest
 	resultComm, errCheck := commCheck.Output()
