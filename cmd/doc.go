@@ -21,7 +21,6 @@
 package cmd
 
 import (
-	"os"
 	"os/exec"
 
 	"github.com/fatih/color"
@@ -62,7 +61,7 @@ func init() {
 }
 
 func launchDoc() {
-	pathReadme := pathProg + string(os.PathSeparator) + "tempest" + string(os.PathSeparator) + "README.md"
+	pathReadme := pathTempest + "README.md"
 	// if no flag "man" added, open with Showdown
 	if !isMan {
 		commShowdown := exec.Command("showdown", pathReadme)

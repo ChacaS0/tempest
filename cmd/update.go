@@ -93,7 +93,7 @@ func checkUpdate() (bool, error) {
 	// Check if up to date
 	fmt.Println(yellowB("::"), color.HiYellowString("Checking if the TEMPest is coming this way . . ."))
 	commCheck := exec.Command("git", "log", "HEAD..origin/master", "--oneline")
-	commCheck.Dir = pathProg
+	commCheck.Dir = pathTempest
 	resultComm, errCheck := commCheck.Output()
 	if errCheck != nil {
 		color.Red("Error while checking for updates, duuuuuuude!")

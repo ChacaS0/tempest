@@ -135,9 +135,11 @@ func init() {
 	if err := envconfig.Init(&conf); err != nil {
 		log.Fatal(err)
 	}
-	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "bitbucket.org" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator) + "scripts"
+
 	cobra.OnInitialize(initConfig)
-	pathTempest = pathProg + string(os.PathSeparator) + "tempest" + string(os.PathSeparator)
+
+	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
+	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
