@@ -22,7 +22,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/fatih/color"
@@ -40,14 +39,26 @@ This file will contain the list of all the directories you wish tempest to handl
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := initializeTP(); err != nil {
-			log.Fatalln(err)
+		// .tempest.yaml
+		if err := initializeCfFile(); err != nil {
+			fmt.Println(redB("::"), color.HiRedString("Could not initialize .tempest.yaml"))
+			fmt.Println(redB("::"), color.HiRedString("If the error persists, try to create the file manually : touch $HOME/.tempest.yaml"))
 		}
-		fmt.Println(color.HiGreenString(`You are now ready to use TEMPest.
 
-Suggestions:
-	Start using TEMPest right away by adding a temporay file :
-		tempest add <FILE_PATH>
+		// .tempestcf
+		if err := initializeTP(); err != nil {
+			// log.Fatalln(err)
+			fmt.Println(redB("::"), color.HiRedString("Could not initialize .tempestcf"))
+			fmt.Println(redB(err.Error()))
+		}
+
+		// SUCCESS:
+		fmt.Println(greenB("::"), color.HiGreenString("You are now ready to use TEMPest."))
+		fmt.Println(greenB("::"), color.HiGreenString("Suggestions:"))
+		fmt.Println(color.HiGreenString(`	Start using TEMPest right away by adding a temporay file :
+		tempest add <DIRECTORY_PATH>
+	Or get help to add new paths:
+		tempest help add
 `))
 	},
 }
@@ -83,10 +94,45 @@ func initializeTP() error {
 			return err2
 		}
 		defer f2.Close()
+
+		return nil
 	}
+
 	if err := f.Close(); err != nil {
-		// fmt.Println("here dude")
-		log.Fatal(err)
+		fmt.Println(redB("::"), color.HiRedString("Weird.. could not close .tempestcf"))
+	}
+
+	return nil
+}
+
+// initializeCfFile creates the file ``$HOME/.tempest.yaml``
+// if it doesn't already exist with ``duration: 5``
+func initializeCfFile() error {
+	_, errDir := IsDirectory(conf.Home + "/.tempest.yaml")
+	if errDir != nil {
+		// Doesn't exist so create it!
+		f, err := os.OpenFile(conf.Home+"/.tempest.yaml", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			fmt.Println(color.HiRedString("::Huge error! Could not recreate file! God lost faith in you!"))
+			return err
+		}
+		defer f.Close()
+
+		defConf := `{
+	duration: 5
+}`
+		_, errWrite := f.WriteString(defConf)
+		if errWrite != nil {
+			fmt.Println(redB("::"), color.HiRedString("Could not write the default config to $HOME/.tempest.yaml"))
+			fmt.Println(redB("::"), color.HiRedString(`If the problem persists, try add this to it:
+{
+	duration: 5
+}
+`))
+			return errWrite
+		}
+		// initConfig()
+		// viper.WriteConfigAs(viper.ConfigFileUsed())
 	}
 
 	return nil

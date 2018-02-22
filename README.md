@@ -20,28 +20,18 @@ First, to initialize it the first time, run:
 This will generate a ``~/.tempestcf`` file. 
 It will hold the list of all the temp directories.
 
-### Config file for tempest ``~/.tempest.yaml``
-#### First check if it exists
+> If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempestcf`` and leave it empty for now.
+  
+This will also generate a ``~/.tempest.yaml`` file.
+It will hold the configuration of **TEMPest**.  
 
-```bash
-$ cat $HOME/.tempest.yaml
-```
-
-#### If it doesn't, create it
-For now, you **have to** create this file manually. 
-Idealy you want to place it in the home directory. You can achieve that by runing:
-
-```bash
-$ touch $HOME/.tempest.yaml
-```
-
-Then add the following to the file and save it:
-
+> If there is an issue and the file can't be created somehow, you can still crate it at its default location: ``$HOME/.tempest.yaml`` with default content:
 ```yaml
 {
-	"duration": 5
+	duration: 5
 }
 ```
+#### Parameters:
 
 * **duration** : This is the maximum age the content of the temp directories, choose it carefully!
 
@@ -140,3 +130,12 @@ There is also a "man like" view of the documentation.
 ```bash
 $ tempest doc -m
 ```
+
+
+-------------------
+*Thanks to*
+> <a href="" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png" width=33%></a> 
+
+> <a href="" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886352/ad566232-814f-11e5-9cd0-aa101788c117.png" width=33%></a> 
+
+> <a href="https://github.com/spf13/viper" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886745/998df88a-8151-11e5-9448-4736db51020d.png" width=33%></a> 

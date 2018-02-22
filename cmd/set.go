@@ -49,7 +49,7 @@ More features might come next. Stay tuned!
 			if errAge := setAge(); errAge != nil {
 				fmt.Println(errAge)
 			}
-			color.HiCyan("Sorry! No working at the moment! -\\('o')/-")
+			// color.HiCyan("Sorry! No working at the moment! -\\('o')/-")
 		default:
 			color.HiRed("You must provide some flags or whatever! Just do something!")
 		}
@@ -81,7 +81,7 @@ func init() {
 func setAge() error {
 	if age > 0 {
 		// ageStr := fmt.Sprintf("%d", age)
-		viper.Set("duration", age) //! Bug: Doesn't actually sets the duration
+		viper.Set("duration", age)
 		viper.WriteConfigAs(viper.ConfigFileUsed())
 
 		// fmt.Println(viper.GetInt("duration"))

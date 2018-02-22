@@ -80,6 +80,7 @@ func getAge() string {
 	return fmt.Sprintf("%d", viper.GetInt("duration"))
 }
 
+// getHelp() calls the regualr helpCommand
 func getHelp() {
 	fmt.Println(RootCmd.UsageString())
 }

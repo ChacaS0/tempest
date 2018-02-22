@@ -78,3 +78,7 @@ TODOS:
 	☐ RM from scripts.git (NOT NOW)
 	☐ Push  (NOT NOW)
 	☐ Pull TEMPest
+
+
+	☐ add warning when using init
+	☐ add overriding to .tempest.yaml

@@ -151,7 +151,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.tempest.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "$HOME/.tempest.yaml", "config file (default is $HOME/.tempest.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
