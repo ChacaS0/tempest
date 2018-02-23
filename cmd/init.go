@@ -26,6 +26,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // initCmd represents the init command
@@ -85,7 +86,7 @@ func initializeTP() error {
 	if err != nil {
 		errDel := os.Remove(conf.Home + "/.tempestcf")
 		if errDel != nil {
-			fmt.Println(color.RedString("::Error while replacing existing file"))
+			fmt.Println(color.RedString("::Error while replacing existing file (.tempestcf)"))
 			return errDel
 		}
 		f2, err2 := os.OpenFile(conf.Home+"/.tempestcf", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
@@ -108,32 +109,42 @@ func initializeTP() error {
 // initializeCfFile creates the file ``$HOME/.tempest.yaml``
 // if it doesn't already exist with ``duration: 5``
 func initializeCfFile() error {
+	defConf := `{
+duration: 5
+}
+`
 	_, errDir := IsDirectory(conf.Home + "/.tempest.yaml")
-	if errDir != nil {
-		// Doesn't exist so create it!
-		f, err := os.OpenFile(conf.Home+"/.tempest.yaml", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
-		if err != nil {
-			fmt.Println(color.HiRedString("::Huge error! Could not recreate file! God lost faith in you!"))
-			return err
-		}
-		defer f.Close()
+	if errDir == nil {
+		// if already exists, we delete
 
-		defConf := `{
-	duration: 5
-}`
-		_, errWrite := f.WriteString(defConf)
-		if errWrite != nil {
-			fmt.Println(redB("::"), color.HiRedString("Could not write the default config to $HOME/.tempest.yaml"))
-			fmt.Println(redB("::"), color.HiRedString(`If the problem persists, try add this to it:
+		errDel := os.Remove(conf.Home + "/.tempest.yaml")
+		if errDel != nil {
+			fmt.Println(color.RedString("::Error while replacing existing file (.tempest.yaml)"))
+			return errDel
+		}
+	}
+	// Doesn't exist so create it!
+	f, err := os.OpenFile(conf.Home+"/.tempest.yaml", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println(color.HiRedString("::Huge error! Could not recreate file! God lost faith in you!"))
+		return err
+	}
+	defer f.Close()
+
+	_, errWrite := f.WriteString(defConf)
+	if errWrite != nil {
+		fmt.Println(redB("::"), color.HiRedString("Could not write the default config to $HOME/.tempest.yaml"))
+		fmt.Println(redB("::"), color.HiRedString(`If the problem persists, try add this to it:
 {
 	duration: 5
 }
 `))
-			return errWrite
-		}
-		// initConfig()
-		// viper.WriteConfigAs(viper.ConfigFileUsed())
+		return errWrite
 	}
+	// viper.WriteConfigAs(viper.ConfigFileUsed())
+	cfgFile = conf.Home + "/.tempest.yaml"
+	viper.SetConfigFile(cfgFile)
+	// initConfig()
 
 	return nil
 }

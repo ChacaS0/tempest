@@ -151,7 +151,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "$HOME/.tempest.yaml", "config file (default is $HOME/.tempest.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -183,7 +183,7 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		//fmt.Println("Using default config file:", viper.ConfigFileUsed())
+		fmt.Println("Using default config file:", viper.ConfigFileUsed())
 	}
 
 	viper.SetDefault("duration", 5)
