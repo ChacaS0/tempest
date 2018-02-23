@@ -7,7 +7,15 @@
 ### From AUR (ArchLinux)
 *coming soon*
 ### From source (Github)
-*coming soon*
+#### Requirements
+* git
+* go (golang)
+#### Command
+```bash
+go get -v -u github.com/ChacaS0/tempest
+```
+
+
 ## Initialization
 ### Command line ``init``
 It is very easy to use.  
@@ -134,8 +142,8 @@ $ tempest doc -m
 
 -------------------
 *Thanks to*
-> <a href="" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png" width=33%></a> 
+> <a href="https://github.com/golang/go" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png" width=33%></a> 
 
-> <a href="" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886352/ad566232-814f-11e5-9cd0-aa101788c117.png" width=33%></a> 
+> <a href="https://github.com/spf13/cobra" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886352/ad566232-814f-11e5-9cd0-aa101788c117.png" width=33%></a> 
 
 > <a href="https://github.com/spf13/viper" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886745/998df88a-8151-11e5-9448-4736db51020d.png" width=33%></a> 
