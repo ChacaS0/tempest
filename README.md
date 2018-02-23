@@ -83,7 +83,6 @@ Or
 ``$ vi ~/.tempestcf``  
 
 ## Updating TEMPest
-*Still buggy*
 ```bash
 $ tempest update
 ```

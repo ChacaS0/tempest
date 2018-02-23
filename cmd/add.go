@@ -127,7 +127,7 @@ func addLine(args []string) error {
 			fmt.Println(redB("::"), color.RedString("Could not write to the file. Fail bitch!"))
 			return errWrite
 		}
-		fmt.Println(greenB("[NEW TEMP]::"), color.GreenString(fmt.Sprintf("%d", nbBytes)+"::>"), this)
+		fmt.Println(greenB("[NEW TEMP]::"), color.GreenString(fmt.Sprintf("\t%d", nbBytes)+"::>"), this)
 	} else {
 		// Check if already exists
 		if checkRedondance(ctntSlice, args) {
@@ -144,7 +144,7 @@ func addLine(args []string) error {
 			if errWS != nil {
 				fmt.Println(color.RedString("::Are you sure you can handle this much? Without askin your mom first!?"))
 			}
-			fmt.Println(color.GreenString("[NEW TEMP]::"+fmt.Sprintf("%d", nbBytes)+"::>"), path)
+			fmt.Println(color.GreenString("[NEW TEMP]::"+fmt.Sprintf("\t%d", nbBytes)+"::>"), path)
 		}
 		fmt.Println(color.YellowString("::"), "All paths were added to TEMPest !")
 	}

@@ -175,8 +175,9 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 			fmt.Println(greenB("::"), color.HiGreenString("Nothing got removed, it is just a recap of what would get deleted <_<"))
 			fmt.Println(greenB("::"), color.HiGreenString("CHAMPAGNE !"))
 		} else {
-			fmt.Println(greenB("::"), color.HiGreenString("All done for"), path)
+			fmt.Println(greenB("\n::"), color.HiGreenString("All done for"), path)
 			fmt.Println(greenB("::"), color.HiGreenString("CHAMPAGNE !"))
+			fmt.Println("")
 		}
 	} else {
 		fmt.Println(redB("::"), color.HiRedString("Cannot delete files younger than 1 day!"))

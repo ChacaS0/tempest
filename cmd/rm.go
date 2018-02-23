@@ -45,7 +45,7 @@ var rmCmd = &cobra.Command{
 The basic command does not delete the original directory or file.
 It's just telling to TEMPest to untrack the file/directory. For example:
 
-	tempest rm /tmp
+	tempest rm -p /tmp
 
 or
 Place yourself inside the directory and run:
@@ -54,9 +54,9 @@ Place yourself inside the directory and run:
 
 If it is a directory tracked by TEMPest, it will be untracked, otherwise you will get an error.
 
-[SOON] It is also possible to use the index number resulting of the tempest list command:
+It is also possible to use the index number resulting of the tempest list command:
 
-	tempest rm 1
+	tempest rm -i 1
 
 ` + color.RedString("/!\\ [WARNING] After removing a file, the index number might change!!") + `
 
@@ -182,8 +182,10 @@ func writeTempestcf(targets []string) error {
 	}
 
 	info := greenB(":: ")
-	info += color.HiGreenString("Removed with success!!\n")
+	info += color.HiGreenString("Removed with success!!")
 	fmt.Println(info)
+
+	fmt.Println(yellowB("::"), color.HiYellowString("Check out the new INDEXES, MUCH FUNNNNN ! !\n"))
 
 	return nil
 }

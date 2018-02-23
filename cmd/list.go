@@ -21,6 +21,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -81,10 +82,16 @@ func printList() error {
 	// Check if the path already exists first
 	ctntSlice, errSliced := getPaths()
 	if errSliced != nil {
+		// Just a small enhancement of the "no paths set yet" display
+		if errSliced.Error() == "empty" {
+			fmt.Println(color.HiMagentaString(":: No path set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding paths!"))
+			return nil
+		}
 		return errSliced
 	}
+
 	// color.Red(fmt.Sprintf("%d", len(ctntSlice)))
-	if len(ctntSlice) > 1 {
+	if len(ctntSlice) >= 1 {
 		fmt.Println(color.HiYellowString("Current paths currently having \"fun\" with TEMPest:\n"))
 		fmt.Println(color.HiYellowString("Index\t| Path"))
 		// fmt.Println(color.HiYellowString("--------------------------------------------------"))
@@ -109,6 +116,10 @@ func getPaths() (returnSlice []string, pathsError error) {
 	if pathsError != nil {
 		fmt.Println(color.RedString("::Could not read the file muthafuckkah!"))
 		return nil, pathsError
+	}
+
+	if len(ctnt) == 0 {
+		return returnSlice, errors.New("empty")
 	}
 
 	// Store it as a slice of strings
