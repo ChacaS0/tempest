@@ -1,0 +1,13 @@
+language: go
+install: true
+
+go:
+  - "1.10.x"
+  - master
+
+env:
+  global:
+    - GOARCH=amd64
+
+before_install:
+  - go get -u github.com/golang/dep/cmd/dep
