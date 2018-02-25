@@ -21,7 +21,6 @@
 package cmd
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"math"
@@ -33,7 +32,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
-	"github.com/spf13/cobra/doc"
 	"github.com/spf13/viper"
 	"github.com/vrischmann/envconfig"
 )
@@ -150,15 +148,15 @@ func init() {
 	redB = color.New(color.FgHiRed, color.Bold).SprintFunc()
 	greenB = color.New(color.FgHiGreen, color.Bold).SprintFunc()
 
-	//* Man ?
-	header := &doc.GenManHeader{
-		Title:   "List",
-		Section: "3",
-	}
-	out := new(bytes.Buffer)
+	// //* Man ?
+	// header := &doc.GenManHeader{
+	// 	Title:   "List",
+	// 	Section: "3",
+	// }
+	// out := new(bytes.Buffer)
 
-	doc.GenMan(RootCmd, header, out)
-	fmt.Println(out.String())
+	// doc.GenMan(RootCmd, header, out)
+	// fmt.Println(out.String())
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
