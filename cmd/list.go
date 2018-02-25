@@ -28,7 +28,6 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"github.com/spf13/cobra/doc"
 )
 
 // listCmd represents the list command
@@ -52,11 +51,6 @@ The IndexPath can then be used to select the path
 			fmt.Println(color.HiRedString("Could not list paths, sorry bra!", errLi))
 		}
 	},
-}
-
-var listHeader = &doc.GenManHeader{
-	Title:   "Start",
-	Section: "3",
 }
 
 func init() {

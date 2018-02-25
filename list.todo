@@ -56,18 +56,10 @@ Config manager:
 
 GLOBAL:
 	☐ TEST FILES @low
-<<<<<<< Updated upstream
 	☐ Migration from bitbucket to github-chacas0
-=======
 	☐ Set tempest as submodule? @low 
 	☐ UPDATE make.sh to adapt the switch to beta
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 
 TODOS:
 	☐ Fix display / error handling whan nothing is passed to purge @low
