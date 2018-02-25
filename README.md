@@ -1,7 +1,7 @@
 # TEMPest <!-- <img src="icon" width="40" height="40" /> -->
 *TEMPest is a tool to manage easily temp folders/files*
 
-[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest)
+[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest) [![CircleCI](https://circleci.com/gh/ChacaS0/tempest.svg?style=svg)](https://circleci.com/gh/ChacaS0/tempest)
 
 > *Not up to date yet!*
 
