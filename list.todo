@@ -74,3 +74,5 @@ TODOS:
 
 	☐ add warning when using init
 	☐ add overriding to .tempest.yaml
+
+	☐ gocover.io
