@@ -111,6 +111,7 @@ func initializeTP() error {
 func initializeCfFile() error {
 	defConf := `{
 duration: 5
+auto-mode: false
 }
 `
 	_, errDir := IsDirectory(conf.Home + "/.tempest.yaml")

@@ -1,13 +1,9 @@
 # TEMPest <!-- <img src="icon" width="40" height="40" /> -->
-*TEMPest is a tool to manage easily temp folders/files*
+*TEMPest is a tool to manage easily temporary folders/files*
 
 [![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest)
 
-> *Not up to date yet!*
-
 ## Installation
-### From AUR (ArchLinux)
-*coming soon*
 ### From source (Github)
 #### Requirements
 * git
@@ -16,7 +12,6 @@
 ```bash
 go get -v -u github.com/ChacaS0/tempest
 ```
-
 
 ## Initialization
 ### Command line ``init``
@@ -37,8 +32,8 @@ It will hold the configuration of **TEMPest**.
 
 > If there is an issue and the file can't be created somehow, you can still crate it at its default location: ``$HOME/.tempest.yaml`` with default content:
 ```yaml
-	duration: 5
-	auto-mode: false
+duration: 5
+auto-mode: false
 ```
 #### Parameters:
 

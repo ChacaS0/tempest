@@ -193,7 +193,7 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Using default config file:", viper.ConfigFileUsed())
+		fmt.Println(blueB(":: Using config file:"), viper.ConfigFileUsed())
 	}
 
 	viper.SetDefault("duration", 5)
