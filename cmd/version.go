@@ -39,7 +39,7 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// fmt.Println("version called")
 		if version, errV := getVersion(); errV == nil {
-			fmt.Println(color.HiYellowString(version))
+			fmt.Print(yellowB("::TEMPest "), color.HiYellowString(version))
 		} else {
 			color.Red("error")
 		}

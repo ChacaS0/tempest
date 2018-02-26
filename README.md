@@ -1,18 +1,18 @@
 # TEMPest <!-- <img src="icon" width="40" height="40" /> -->
 *TEMPest is a tool to manage easily temporary folders/files*
 
-[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest)
+[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest) [![GoDoc](https://godoc.org/github.com/ChacaS0/tempest?status.svg)](https://godoc.org/github.com/ChacaS0/tempest)
 
 ## Installation
 ### From source (Github)
 #### Requirements
-* git
-* go (golang)
+* [git]("https://git-scm.com/downloads")
+* [go (golang)]("https://golang.org/")
 #### Command
 ```bash
 go get -v -u github.com/ChacaS0/tempest
 ```
-
+*This command installs TEMPest*
 ## Initialization
 ### Command line ``init``
 It is very easy to use.  
