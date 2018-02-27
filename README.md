@@ -1,7 +1,7 @@
 # TEMPest <!-- <img src="icon" width="40" height="40" /> -->
 *TEMPest is a tool to manage easily temporary folders/files*
 
-[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest) [![GoDoc](https://godoc.org/github.com/ChacaS0/tempest?status.svg)](https://godoc.org/github.com/ChacaS0/tempest)
+[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest) [![GoDoc](https://godoc.org/github.com/ChacaS0/tempest?status.svg)](https://godoc.org/github.com/ChacaS0/tempest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA)
 
 ## Installation
 ### From source (Github)
