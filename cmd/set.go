@@ -82,14 +82,12 @@ func setAge() error {
 	if age > 0 {
 		// ageStr := fmt.Sprintf("%d", age)
 		viper.Set("duration", age)
+		viper.Set("auto-mode", viper.GetBool("auto-mode"))
 
 		//* Save config
-		// errS := viper.WriteConfigAs(viper.ConfigFileUsed())
-		// if errS != nil {
-		// 	color.Red(errS.Error())
-		// }
-		if errM := viper.MergeInConfig(); errM != nil {
-			color.Red(errM.Error())
+		errS := viper.WriteConfigAs(viper.ConfigFileUsed())
+		if errS != nil {
+			color.Red(errS.Error())
 		}
 
 		fmt.Println(greenB("::"), color.HiGreenString("New age set at:"), viper.GetInt("duration"))
