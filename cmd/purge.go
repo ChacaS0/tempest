@@ -146,19 +146,32 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 			timeDiff := time.Now().Sub(target.ModTime()).Hours()
 			if timeDiff >= float64(days*24) {
 				var size = float64(target.Size())
-				size *= 0.001
+
 				size = Round(size, .5, 2)
+				// TODO: Here set the actual size and unit
+				var unit string
+				switch {
+				case size < 1000:
+					unit = "KBytes"
+					size *= 0.001
+				case size < 1000000:
+					unit = "MBytes"
+					size *= 0.000001
+				default:
+					unit = "GBytes"
+					size *= 0.000000001
+				}
 				// if target.ModTime() <
 				switch {
 				case testMode:
 					// It is in test mode
-					fmt.Println(color.HiCyanString(fmt.Sprintf("%v\tKBytes", size)), "\t\t", path+target.Name())
+					fmt.Println(color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t\t", path+target.Name())
 					smthToDel = true
 				default:
 					// Then it is an actual deletion
 					/* color.HiMagenta("List of item removed:\n")
 					color.HiMagenta("Size\t\tItem") */
-					fmt.Println(color.HiCyanString(fmt.Sprintf("%v\tKBytes", size)), "\t\t", path+target.Name())
+					fmt.Println(color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t\t", path+target.Name())
 					errRemove := os.RemoveAll(path + target.Name())
 					if errRemove != nil {
 						return errRemove
