@@ -13,6 +13,7 @@ before_install:
   - go get -u github.com/golang/dep
 
 script:
+  - chmod +x coverage.sh
   - go install -v ./... && ./coverage.sh
 
 after_success:
