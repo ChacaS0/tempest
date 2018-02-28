@@ -12,5 +12,8 @@ env:
 before_install:
   - go get -u github.com/golang/dep
 
+script:
+  - ./coverage.sh
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
