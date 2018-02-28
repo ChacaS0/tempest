@@ -9,10 +9,32 @@
 * [git]("https://git-scm.com/downloads")
 * [go (golang)]("https://golang.org/")
 #### Command
+First choose if you want to add permanantly ``GOBIN`` to your ``PATH``
+##### ``GOBIN`` temporarily in ``PATH``
+```bash
+export GOBIN=/bin
+```
+or
+```bash
+export GOBIN=/usr/bin
+```
+
+Then
 ```bash
 go get -v -u github.com/ChacaS0/tempest
 ```
-*This command installs TEMPest*
+##### ``GOBIN`` permanently in ``PATH``
+Add this line to ``/etc/environment``:
+```bash
+GOBIN=<PATH_OF_YOUR_CHOICE>
+PATH=$PATH:$GOBIN
+```
+
+Then
+```bash
+go get -v -u github.com/ChacaS0/tempest
+```
+
 ## Initialization
 ### Command line ``init``
 It is very easy to use.  

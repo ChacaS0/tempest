@@ -11,3 +11,6 @@ env:
 
 before_install:
   - go get -u github.com/golang/dep
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
