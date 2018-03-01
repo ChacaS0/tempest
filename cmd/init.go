@@ -134,9 +134,8 @@ auto-mode: false
 	if errWrite != nil {
 		fmt.Println(redB("::"), color.HiRedString("Could not write the default config to $HOME/.tempest.yaml"))
 		fmt.Println(redB("::"), color.HiRedString(`If the problem persists, try add this to it:
-{
 	duration: 5
-}
+	auto-mode: false
 `))
 		return errWrite
 	}

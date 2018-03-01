@@ -71,4 +71,5 @@ auto-mode: false
 	}
 	viper.SetConfigFile(currCfFile)
 
+	// All done
 }
