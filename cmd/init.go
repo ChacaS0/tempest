@@ -109,10 +109,8 @@ func initializeTP() error {
 // initializeCfFile creates the file ``$HOME/.tempest.yaml``
 // if it doesn't already exist with ``duration: 5``
 func initializeCfFile() error {
-	defConf := `{
-duration: 5
+	defConf := `duration: 5
 auto-mode: false
-}
 `
 	_, errDir := IsDirectory(conf.Home + "/.tempest.yaml")
 	if errDir == nil {
