@@ -1,9 +1,33 @@
-# TEMPest <!-- <img src="icon" width="40" height="40" /> -->
+# <a href="https://github.com/ChacaS0/tempest" ><img src="https://image.ibb.co/c829L7/logo_v5_small.gif" width="25" height="25" /></a> TEMPest
 *TEMPest is a tool to manage easily temporary folders/files*
 
 [![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest) [![codecov](https://codecov.io/gh/ChacaS0/tempest/branch/master/graph/badge.svg)](https://codecov.io/gh/ChacaS0/tempest) [![GoDoc](https://godoc.org/github.com/ChacaS0/tempest?status.svg)](https://godoc.org/github.com/ChacaS0/tempest) 
 [![apm](https://img.shields.io/apm/l/vim-mode.svg)](https://github.com/ChacaS0/tempest/blob/master/LICENSE)
  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA)
+
+## Index
+- [Installation](#installation)
+	- [From source](#from-source-github)
+		- [Requirements](#requirements)
+		- [Command](#command)
+		- [Temporarily ``GOBIN``](#gobin-permanently-in-path)
+- [Initialization](#initialization)
+	- [Command line ``init``](#command-line-init)
+	- [Parameters](#parameters)
+- [Add a new temp folder to the list](#add-a-new-temp-folder-to-the-list)
+	- [To add the current directory](#to-add-the-current-directory)
+		- [Through command-line](#through-command-line)
+		- [Through text editor](#through-text-editor)
+- [List the current directories added to TEMPest](#list-the-current-directories-added-to-tempest)
+	- [Using **TEMPest**](#using-tempest)
+	- [Viewing the file ``~/.tempestcf``](#viewing-the-file-tempestcf)
+- [Runing a global purge](#runing-a-global-purge)
+	- [Test mode](#test-mode)
+	- [Real one](#real-one)
+- [Purging one directory](#purging-one-directory)
+	- [Test mode](#test-mode-1)
+	- [Real one](#real-one-1)
+- [Access the documentation](#access-the-documentation-usage)
 
 ## Installation
 ### From source (Github)
