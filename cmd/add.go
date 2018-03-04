@@ -28,6 +28,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/viper"
+
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/vrischmann/envconfig"
@@ -85,7 +87,8 @@ func init() {
 // func addLine(argFlags []string, args []string) error {
 func addLine(args []string) error {
 	// Check if the path already exists first in tempestcf
-	ctnt, errRead := ioutil.ReadFile(conf.Home + "/.tempestcf")
+	// ctnt, errRead := ioutil.ReadFile(conf.Home + "/.tempestcf")
+	ctnt, errRead := ioutil.ReadFile(Tempestcf)
 	if errRead != nil {
 		fmt.Println(redB("::"), color.RedString("Could not read the file muthafuckkah!"))
 		return errRead
@@ -97,9 +100,9 @@ func addLine(args []string) error {
 
 	// Open the file to write to (adding new temp path)
 	// tmpcf, err := os.Open(conf.Home + "/.tempestcf")
-	tmpcf, err := os.OpenFile(conf.Home+"/.tempestcf", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	tmpcf, err := os.OpenFile(Tempestcf, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
-		fmt.Println(color.RedString("::Sorry! Could not find ~/.tempestcf ! :("))
+		fmt.Println(color.RedString("::Sorry! Could not find "), viper.ConfigFileUsed())
 		return err
 	}
 	defer tmpcf.Close()
@@ -118,17 +121,18 @@ func addLine(args []string) error {
 			return errors.New(blueB(":: ") + color.HiBlueString("A path provided is already in TEMPest! Later b*tch"))
 		}
 
-		// Check if path points to valid target
-		// if dir, errExist := IsDirectory()
-
 		// Add this directory to the file
 		nbBytes, errWrite := tmpcf.WriteString(this + "\n")
 		if errWrite != nil {
 			fmt.Println(redB("::"), color.RedString("Could not write to the file. Fail bitch!"))
 			return errWrite
 		}
-		fmt.Println(greenB("[NEW TEMP]::"), color.GreenString(fmt.Sprintf("\t%d", nbBytes)+"::>"), this)
+		fmt.Println(greenB("[NEW TEMP]::")+color.GreenString(fmt.Sprintf("%d", nbBytes)+"::>"), this)
 	} else {
+		// Treat the last character
+		for ind, onePath := range args {
+			args[ind] = TreatLastChar(onePath)
+		}
 		// Check if already exists
 		if checkRedondance(ctntSlice, args) {
 			return errors.New(blueB(":: ") + color.HiBlueString("A path provided is already in TEMPest! Later b*tch"))
@@ -142,9 +146,9 @@ func addLine(args []string) error {
 			// Add all the paths passed in the file
 			nbBytes, errWS := tmpcf.WriteString(path + "\n")
 			if errWS != nil {
-				fmt.Println(color.RedString("::Are you sure you can handle this much? Without askin your mom first!?"))
+				fmt.Println(color.RedString(":: Are you sure you can handle this much? Without askin your mom first!?"))
 			}
-			fmt.Println(color.GreenString("[NEW TEMP]::"+fmt.Sprintf("\t%d", nbBytes)+"::>"), path)
+			fmt.Println(color.GreenString("[NEW TEMP]::"+fmt.Sprintf("%d", nbBytes)+"::>"), path)
 		}
 		fmt.Println(color.YellowString("::"), "All paths were added to TEMPest !")
 	}
@@ -193,3 +197,14 @@ func checkRedondance(slice, sliceArgs []string) (doesit bool) {
 // 	}
 // 	return dir, nil
 // }
+
+// TreatLastChar takes a pointer to a string
+// It analyzes the last character of this string,
+// if it is a path separator character, it gets removed.
+// Returns the new path, wether there was change or not.
+func TreatLastChar(str string) string {
+	if str[len(str)-1:] == string(os.PathSeparator) {
+		str = str[:len(str)-1]
+	}
+	return str
+}

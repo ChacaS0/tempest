@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
+	"os"
 	"testing"
 )
 
@@ -53,7 +53,38 @@ func TestCheckRedondance(t *testing.T) {
 	// runing tests
 	for _, tst := range tests {
 		got := checkRedondance(tst.p1, tst.p2)
-		fmt.Println(got)
+		if got != tst.want {
+			t.Log(tst.err.Error())
+			t.Fail()
+		}
+	}
+}
+
+// TestTreatLastChar is the test func for TreatLastChar.
+// It checks if it does strip only the last character
+// if it is a path separator character and does nothing otherwise.
+func TestTreatLastChar(t *testing.T) {
+	// test variables
+	p1 := string(os.PathSeparator) + "path1" + string(os.PathSeparator) + "sub" + string(os.PathSeparator) + "dir"
+	w1 := p1
+
+	p2 := string(os.PathSeparator) + "path1" + string(os.PathSeparator) + "sub" + string(os.PathSeparator) + "dir" + string(os.PathSeparator)
+	w2 := p1
+
+	// tests holds the tests we want to do and the result expected
+	var tests = []struct {
+		param string
+		want  string
+		err   error
+	}{
+		{p1, w1, errors.New("[CONFUSION]:: The path was correct damn it")},
+		{p2, w2, errors.New("[FAIL]:: Did not change when it was supposed to")},
+	}
+
+	// runing tests
+	for _, tst := range tests {
+		got := TreatLastChar(tst.param)
+		// fmt.Println(got) // DEBUG
 		if got != tst.want {
 			t.Log(tst.err.Error())
 			t.Fail()

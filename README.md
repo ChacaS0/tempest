@@ -18,7 +18,7 @@
 	- [To add the current directory](#to-add-the-current-directory)
 		- [Through command-line](#through-command-line)
 		- [Through text editor](#through-text-editor)
-- [List the current directories added to TEMPest](#list-the-current-directories-added-to-tempest)
+- [List the current directories added to **TEMPest**](#list-the-current-directories-added-to-tempest)
 	- [Using **TEMPest**](#using-tempest)
 	- [Viewing the file ``~/.tempestcf``](#viewing-the-file-tempestcf)
 - [Runing a global purge](#runing-a-global-purge)

@@ -38,7 +38,7 @@ General:
 	visual:
 		✔ use colorized logs (check paper fluo in bag) @done (2/3/2018, 6:34:39 PM)
 		☐ refractor helpers with color package ? @low
-		☐ See the current version @low
+		✔ See the current version @low @done (3/4/2018, 3:37:40 PM)
 			☐ [CURRENT VERSION] [REVISION] Would be the last commit
 			☐ [LATEST VERSION]
 		☐ Improve visualisation of output on ``tempest start ``
@@ -48,31 +48,22 @@ Note:
 	✘ [UPDATE] go build -o $GOBIN/tempest main.go @cancelled (2/5/2018, 4:13:02 AM)
 	☐ Use GoRoutines for deletion @high 
 	✔ THERE IS STILL A BUG ON UPDATE @critical @done (2/5/2018, 4:12:47 AM)
-	☐ make.sh -> makefile
-	☐ Checkout Jenkins?
+	✘ make.sh -> makefile @cancelled (3/4/2018, 3:37:30 PM)
+	✔ Checkout Jenkins? @done (3/4/2018, 3:37:25 PM)
 
 Config manager:
 	✔ update dep @today @done (2/8/2018, 4:12:02 AM)
 
 GLOBAL:
 	☐ TEST FILES @low
-	☐ Migration from bitbucket to github-chacas0
-	☐ Set tempest as submodule? @low 
-	☐ UPDATE make.sh to adapt the switch to beta
+	✔ Migration from bitbucket to github-chacas0 @done (3/4/2018, 3:37:00 PM)
+	✘ Set tempest as submodule? @low @cancelled (3/4/2018, 3:37:08 PM)
+	✘ UPDATE make.sh to adapt the switch to beta @cancelled (3/4/2018, 3:37:16 PM)
 
 
 TODOS:
 	☐ Fix display / error handling whan nothing is passed to purge @low
-	☐ Check if this issue is occuring somewhere else @low
-
-	☐ Push @critical @today 
-	☐  adapt make.sh to take github instead ( from bitbucket, taking github instead ;) ) @today
-	☐ RM from scripts.git (NOT NOW)
-	☐ Push  (NOT NOW)
-	☐ Pull TEMPest
-
 
 	☐ add warning when using init
-	☐ add overriding to .tempest.yaml
 
-	☐ gocover.io
+	✔ gocover.io @done (3/4/2018, 3:36:52 PM)

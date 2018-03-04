@@ -137,7 +137,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 	smthToDel := false
 	if days > 1 {
 		// color.HiMagenta("List of item to be removed:\n\n")
-		fmt.Println(magB("\n:: List of item to be removed:\n"))
+		fmt.Println(magB("\n:: List of items to be removed in:"), path)
 		// color.HiMagenta("Size\tUnit\t\t Item")
 		fmt.Println(magB("Size\tUnit\t\t Item"))
 		if len(targets) == 0 {
@@ -187,7 +187,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 		}
 		// Comment on action
 		if !smthToDel {
-			fmt.Println("0\tKB\t\t Forever Alone ?")
+			fmt.Println("0\tKB\t\t Forever Alone ? Nothing to remove here !")
 		}
 		if testMode {
 			fmt.Println(greenB("::"), color.HiGreenString("Nothing got removed, it is just a recap of what would get deleted <_<"))

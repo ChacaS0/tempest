@@ -56,6 +56,10 @@ var pathProg string
 // pathTempest is the path to the tempest folder
 var pathTempest string
 
+// Tempestcf is the path to the .tempestcf file
+// this file holds all the paths (targets) of TEMPest
+var Tempestcf string
+
 // isVersion is the flag variable that indicates whether we want to see the version
 var isVersion bool
 
@@ -143,6 +147,8 @@ func init() {
 
 	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
+
+	Tempestcf = conf.Home + string(os.PathSeparator) + ".tempestcf"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
