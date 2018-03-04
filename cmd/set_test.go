@@ -16,6 +16,7 @@ import (
 func TestSetAge(t *testing.T) {
 	// Current settings
 	currAge := viper.GetInt("duration")
+	currAuto := viper.GetBool("auto-mode")
 	currCfFile := viper.ConfigFileUsed()
 
 	// set env for testing
@@ -51,8 +52,13 @@ auto-mode: false
 	_ = setAge()
 	// Check if it changed
 	if age != viper.GetInt("duration") && viper.GetInt("duration") != 6 {
-		t.Log("Couldn't set the age")
-		t.FailNow()
+		t.Log("[CHANGE]:: Couldn't set the age")
+		t.Fail()
+	}
+	// Check if auto-mode didn't get ereased or affected
+	if viper.GetBool("auto-mode") != currAuto {
+		t.Log("[AFFECTED]:: auto-mode changed and wasn't supposed to")
+		t.Fail()
 	}
 
 	// Go back to the previous configuration

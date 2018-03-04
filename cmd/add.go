@@ -152,17 +152,35 @@ func addLine(args []string) error {
 	return nil
 }
 
-// checkRedondance returns true if the path has already been set in ~/.tempestcf
+// checkRedondance returns true if a string is contained in both slices
+// Eventually it is used to check if the path has already been set in ~/.tempestcf
+// It also checks ``sliceArgs`` with ``sliceArgs`` to see if there were multiple same paths
+// provided as arguments
 func checkRedondance(slice, sliceArgs []string) (doesit bool) {
 	for _, pathExisting := range slice {
 		// fmt.Println(pathExisting)
 		for _, anArg := range sliceArgs {
 			if pathExisting == anArg {
-				fmt.Println(color.RedString("::This path is already taken care of by sweet TEMPest:"), anArg)
+				fmt.Println(redB("::"), color.RedString("This path is already taken care of by sweet TEMPest:"), anArg)
 				// return errors.New("Won't override the path in ~/.tempestcf")
 				doesit = true
 			}
 		}
+	}
+
+	// now check in the slice passed as args with itself
+	sliceArgs2 := sliceArgs
+	var count int
+	for _, pathArg1 := range sliceArgs {
+		for _, pathArg2 := range sliceArgs2 {
+			if pathArg1 == pathArg2 {
+				count++
+			}
+		}
+	}
+	if count > len(sliceArgs) {
+		fmt.Println(redB("::"), color.RedString("A path has been provided twice to TEMPest"))
+		doesit = true
 	}
 	return
 }

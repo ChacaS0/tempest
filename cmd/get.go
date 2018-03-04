@@ -67,7 +67,7 @@ func init() {
 func printAnyIfSet(args []string) {
 	// Age A.K.A. the duration
 	if gAge {
-		fmt.Println(blueB("::")+whiteB("Age:"), "\t", getAge())
+		fmt.Println(blueB("::"), whiteB("Age:"), "\t", getAge())
 	}
 	// help ?
 	if len(args) == 1 && args[0] == "help" {

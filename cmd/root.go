@@ -75,6 +75,9 @@ var redB func(...interface{}) string
 // greenB is a func used to print in bold red
 var greenB func(...interface{}) string
 
+// magB is a func used to print in bold magenta
+var magB func(...interface{}) string
+
 // RootCmd represents the base command when called without any subcommands
 //TODO Make full description with full help on how to use the CLI
 var RootCmd = &cobra.Command{
@@ -147,6 +150,7 @@ func init() {
 	whiteB = color.New(color.FgHiWhite, color.Bold).SprintFunc()
 	redB = color.New(color.FgHiRed, color.Bold).SprintFunc()
 	greenB = color.New(color.FgHiGreen, color.Bold).SprintFunc()
+	magB = color.New(color.FgHiMagenta, color.Bold).SprintFunc()
 
 	// //* Man ?
 	// header := &doc.GenManHeader{

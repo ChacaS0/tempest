@@ -86,12 +86,12 @@ func initializeTP() error {
 	if err != nil {
 		errDel := os.Remove(conf.Home + "/.tempestcf")
 		if errDel != nil {
-			fmt.Println(color.RedString("::Error while replacing existing file (.tempestcf)"))
+			fmt.Println(redB("::"), color.RedString("Error while replacing existing file (.tempestcf)"))
 			return errDel
 		}
 		f2, err2 := os.OpenFile(conf.Home+"/.tempestcf", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 		if err2 != nil {
-			fmt.Println(color.HiRedString("::Huge error! All data lost, could not recreate file! Your life officially sucks!"))
+			fmt.Println(redB("::"), color.HiRedString("Huge error! All data lost, could not recreate file! Your life officially sucks!"))
 			return err2
 		}
 		defer f2.Close()
@@ -118,14 +118,14 @@ auto-mode: false
 
 		errDel := os.Remove(conf.Home + "/.tempest.yaml")
 		if errDel != nil {
-			fmt.Println(color.RedString("::Error while replacing existing file (.tempest.yaml)"))
+			fmt.Println(redB("::"), color.RedString("Error while replacing existing file (.tempest.yaml)"))
 			return errDel
 		}
 	}
 	// Doesn't exist so create it!
 	f, err := os.OpenFile(conf.Home+"/.tempest.yaml", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println(color.HiRedString("::Huge error! Could not recreate file! God lost faith in you!"))
+		fmt.Println(redB("::"), color.HiRedString("Huge error! Could not recreate file! God lost faith in you!"))
 		return err
 	}
 	defer f.Close()

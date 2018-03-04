@@ -136,8 +136,10 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 	days := viper.GetInt("duration")
 	smthToDel := false
 	if days > 1 {
-		color.HiMagenta("List of item to be removed:\n\n")
-		color.HiMagenta("Size\tUnit\t\t Item")
+		// color.HiMagenta("List of item to be removed:\n\n")
+		fmt.Println(magB("\n:: List of item to be removed:\n"))
+		// color.HiMagenta("Size\tUnit\t\t Item")
+		fmt.Println(magB("Size\tUnit\t\t Item"))
 		if len(targets) == 0 {
 			smthToDel = true
 		}
@@ -148,7 +150,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 				var size = float64(target.Size())
 
 				size = Round(size, .5, 2)
-				// TODO: Here set the actual size and unit
+				// TEST: Needs testing
 				var unit string
 				switch {
 				case size < 1000:
@@ -189,8 +191,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 			fmt.Println(greenB("::"), color.HiGreenString("CHAMPAGNE !"))
 		} else {
 			fmt.Println(greenB("\n::"), color.HiGreenString("All done for"), path)
-			fmt.Println(greenB("::"), color.HiGreenString("CHAMPAGNE !"))
-			fmt.Println("")
+			fmt.Println(greenB("::"), color.HiGreenString("CHAMPAGNE !\n"))
 		}
 	} else {
 		fmt.Println(redB("::"), color.HiRedString("Cannot delete files younger than 1 day!"))
