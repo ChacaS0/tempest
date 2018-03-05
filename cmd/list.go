@@ -106,7 +106,7 @@ func printList() error {
 // getPaths returns a slice of string being all the paths for TEMPest to purge
 // and an error if something goes wrong
 func getPaths() (returnSlice []string, pathsError error) {
-	ctnt, pathsError := ioutil.ReadFile(conf.Home + "/.tempestcf")
+	ctnt, pathsError := ioutil.ReadFile(Tempestcf)
 	if pathsError != nil {
 		fmt.Println(color.RedString("::Could not read the file muthafuckkah!"))
 		return nil, pathsError

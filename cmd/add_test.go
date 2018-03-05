@@ -91,3 +91,73 @@ func TestTreatLastChar(t *testing.T) {
 		}
 	}
 }
+
+// TestAddLine is the test for addLine(args []string) error {}
+// Check if it does add the proper line to a .tempestcf file.
+func TestAddLine(t *testing.T) {
+	// TODO: use a temporary Tempestcf file by changing value of ``Tempestcf``
+	// save old Tempestcf
+	TempestcfOld := Tempestcf
+	// set the new Tempestcf
+	Tempestcf = conf.Gopath + string(os.PathSeparator) + ".tempestcf.temp"
+
+	// Create first the temporary new .tempestcf as $GOPATH/.tempestcf.temp
+	f, err := os.OpenFile(Tempestcf, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		t.Error(err)
+	}
+	defer f.Close()
+
+	// args to add
+	args := []string{
+		conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator) + "tempest" + string(os.PathSeparator) + "vendor",
+		conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator) + "tempest" + string(os.PathSeparator) + "cmd",
+		conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator) + "tempest",
+	}
+
+	// Add the test lines (args)
+	errAddLn := addLine(args)
+	if errAddLn != nil {
+		errDel := os.Remove(Tempestcf)
+		if errDel != nil {
+			t.Log(errDel)
+		}
+		t.Error(errAddLn)
+	}
+
+	// Get all paths added in Tempestcf
+	allPaths, errAllP := getPaths()
+	if errAllP != nil {
+		errDel := os.Remove(Tempestcf)
+		if errDel != nil {
+			t.Log(errDel)
+		}
+		t.Error(errAllP)
+	}
+
+	var cpt int
+	for _, onePath := range allPaths {
+		for _, oneArg := range args {
+			if onePath == oneArg {
+				cpt++
+			}
+		}
+	}
+	if cpt != len(args) {
+		errDel := os.Remove(Tempestcf)
+		if errDel != nil {
+			t.Log(errDel)
+		}
+		t.Log("[FAIL]:: Did not add all paths to ", Tempestcf)
+		t.Fail()
+	}
+
+	// Delete the temporary Tempestcf
+	errDel := os.Remove(Tempestcf)
+	if errDel != nil {
+		t.Log(errDel)
+	}
+	// Set back the old Tempestcf
+	Tempestcf = TempestcfOld
+
+}

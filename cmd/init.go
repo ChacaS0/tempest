@@ -82,14 +82,14 @@ func init() {
 // initializeTP creates the ~/.tempestcf file or
 // empty it if already exists
 func initializeTP() error {
-	f, err := os.OpenFile(conf.Home+"/.tempestcf", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(Tempestcf, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		errDel := os.Remove(conf.Home + "/.tempestcf")
+		errDel := os.Remove(Tempestcf)
 		if errDel != nil {
 			fmt.Println(redB("::"), color.RedString("Error while replacing existing file (.tempestcf)"))
 			return errDel
 		}
-		f2, err2 := os.OpenFile(conf.Home+"/.tempestcf", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+		f2, err2 := os.OpenFile(Tempestcf, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 		if err2 != nil {
 			fmt.Println(redB("::"), color.HiRedString("Huge error! All data lost, could not recreate file! Your life officially sucks!"))
 			return err2
