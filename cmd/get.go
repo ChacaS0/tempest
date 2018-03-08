@@ -65,12 +65,12 @@ func init() {
 // printAnyIfSet displays the config set for the ones asked.
 // If none is asked, it shows everything
 func printAnyIfSet(args []string) {
-	// Age A.K.A. the duration
-	if gAge {
-		fmt.Println(blueB("::"), whiteB("Age:"), "\t", getAge())
-	}
-	// help ?
-	if len(args) == 1 && args[0] == "help" {
+	switch {
+	case gAge:
+		// Age A.K.A. the duration
+		fmt.Println(blueB("::"), whiteB("Age:"), getAge())
+	default:
+		// help ?
 		getHelp()
 	}
 }

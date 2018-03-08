@@ -60,6 +60,14 @@ var pathTempest string
 // this file holds all the paths (targets) of TEMPest
 var Tempestcf string
 
+// Tempestyml is the path to the .tempest.yaml file
+// which olds all the the config for the TEMPest tool
+var Tempestyml string
+
+// TempestymlDef is the default path to the .tempest.yaml file
+// use it wisely.
+var TempestymlDef string
+
 // isVersion is the flag variable that indicates whether we want to see the version
 var isVersion bool
 
@@ -149,6 +157,8 @@ func init() {
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
 
 	Tempestcf = conf.Home + string(os.PathSeparator) + ".tempestcf"
+	Tempestyml = viper.ConfigFileUsed()
+	TempestymlDef = conf.Home + string(os.PathSeparator) + ".tempest.yaml"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
@@ -206,11 +216,13 @@ func initConfig() {
 		fmt.Println(blueB(":: Using config file:"), viper.ConfigFileUsed())
 	}
 
+	Tempestyml = viper.ConfigFileUsed()
 	viper.SetDefault("duration", 5)
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("Config file changed:", e.Name)
+		Tempestyml = viper.ConfigFileUsed()
 	})
 }
 

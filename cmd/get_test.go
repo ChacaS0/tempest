@@ -28,5 +28,3 @@ func TestGetAge(t *testing.T) {
 	}
 
 }
-
-// Shouldn't need to test printAnyIfSet() nor getHelp()

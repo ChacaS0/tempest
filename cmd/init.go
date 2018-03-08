@@ -44,6 +44,8 @@ This file will contain the list of all the directories you wish tempest to handl
 		if err := initializeCfFile(); err != nil {
 			fmt.Println(redB("::"), color.HiRedString("Could not initialize .tempest.yaml"))
 			fmt.Println(redB("::"), color.HiRedString("If the error persists, try to create the file manually : touch $HOME/.tempest.yaml"))
+			// fmt.Println(err) //DEBUG
+			return
 		}
 
 		// .tempestcf
@@ -51,6 +53,7 @@ This file will contain the list of all the directories you wish tempest to handl
 			// log.Fatalln(err)
 			fmt.Println(redB("::"), color.HiRedString("Could not initialize .tempestcf"))
 			fmt.Println(redB(err.Error()))
+			return
 		}
 
 		// SUCCESS:
@@ -106,33 +109,34 @@ func initializeTP() error {
 	return nil
 }
 
-// initializeCfFile creates the file ``$HOME/.tempest.yaml``
+// initializeCfFile creates the file ``$HOME/.tempest.yaml``(Tempestyml)
 // if it doesn't already exist with ``duration: 5``
 func initializeCfFile() error {
 	defConf := `duration: 5
 auto-mode: false
 `
-	_, errDir := IsDirectory(conf.Home + "/.tempest.yaml")
+	_, errDir := IsDirectory(Tempestyml)
 	if errDir == nil {
 		// if already exists, we delete
 
-		errDel := os.Remove(conf.Home + "/.tempest.yaml")
+		errDel := os.Remove(Tempestyml)
 		if errDel != nil {
-			fmt.Println(redB("::"), color.RedString("Error while replacing existing file (.tempest.yaml)"))
+			fmt.Println(redB("::"), color.RedString("Error while replacing existing file ("+Tempestyml+")"))
 			return errDel
 		}
 	}
 	// Doesn't exist so create it!
-	f, err := os.OpenFile(conf.Home+"/.tempest.yaml", os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+	Tempestyml = TempestymlDef
+	f, err := os.OpenFile(Tempestyml, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println(redB("::"), color.HiRedString("Huge error! Could not recreate file! God lost faith in you!"))
+		fmt.Println(redB("::"), color.HiRedString("Huge error! Could not recreate file! God lost faith in you!"), Tempestyml)
 		return err
 	}
 	defer f.Close()
 
 	_, errWrite := f.WriteString(defConf)
 	if errWrite != nil {
-		fmt.Println(redB("::"), color.HiRedString("Could not write the default config to $HOME/.tempest.yaml"))
+		fmt.Println(redB("::"), color.HiRedString("Could not write the default config to"), Tempestyml)
 		fmt.Println(redB("::"), color.HiRedString(`If the problem persists, try add this to it:
 	duration: 5
 	auto-mode: false
@@ -140,8 +144,9 @@ auto-mode: false
 		return errWrite
 	}
 	// viper.WriteConfigAs(viper.ConfigFileUsed())
-	cfgFile = conf.Home + "/.tempest.yaml"
-	viper.SetConfigFile(cfgFile)
+	// cfgFile = conf.Home + "/.tempest.yaml"
+	viper.SetConfigFile(Tempestyml)
+	// Tempestyml = TempestymlDef
 	// initConfig()
 
 	return nil
