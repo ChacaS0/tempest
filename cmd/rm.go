@@ -112,9 +112,9 @@ func init() {
 // rmInSlice give it a slice with an index of path to remove.
 // It will return a new slice with the item removed from it!
 func rmInSlice(index int, record string, list []string) []string {
-	// alling this func, check if len(args) == 0, set record at "this"
+	//* NOTE: alling this func, check if len(args) == 0, set record at "this"
 
-	if index == -1 {
+	if index <= -1 {
 		//* we use the the path provided
 		if record == "this" {
 			this, errDir := os.Getwd()
@@ -134,12 +134,17 @@ func rmInSlice(index int, record string, list []string) []string {
 	// Slicing an element out of the slice.
 	// Exmaple to take of the element at position 1:
 	// 	a = a[:1+copy(a[1:], a[2:])]
-	list = list[:index+copy(list[index:], list[index+1:])]
+	// listToRet := list[:index+copy(list[index:], list[index+1:])]
+
+	// I don't find this elegant :(
+	listToRet := make([]string, 0)
+	listToRet = append(listToRet, list[:index]...)
+	listToRet = append(listToRet, list[index+1:]...)
 
 	// DEBUG
 	// color.HiYellow(fmt.Sprintf("%v", list))
 
-	return list
+	return listToRet
 }
 
 // xxx saves the new list of paths meant to be targets for TEMPest

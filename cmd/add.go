@@ -198,7 +198,7 @@ func checkRedondance(slice, sliceArgs []string) (doesit bool) {
 // 	return dir, nil
 // }
 
-// TreatLastChar takes a pointer to a string
+// TreatLastChar takes a string as parameter.
 // It analyzes the last character of this string,
 // if it is a path separator character, it gets removed.
 // Returns the new path, wether there was change or not.

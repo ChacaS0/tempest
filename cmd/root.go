@@ -153,6 +153,13 @@ func init() {
 
 	cobra.OnInitialize(initConfig)
 
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	conf.Home = home
+
 	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
 
@@ -213,7 +220,7 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println(blueB(":: Using config file:"), viper.ConfigFileUsed())
+		// fmt.Println(blueB(":: Using config file:"), Tempestyml)
 	}
 
 	Tempestyml = viper.ConfigFileUsed()
@@ -221,31 +228,11 @@ func initConfig() {
 
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Println("Config file changed:", e.Name)
+		// fmt.Println("Config file changed:", e.Name)
+		fmt.Println(blueB("::"), color.HiBlueString("Config file changed:"), e.Name)
 		Tempestyml = viper.ConfigFileUsed()
 	})
 }
-
-// func saveConfig(cfgpath string) error {
-
-// 	viper.Marshal(&vcf)
-
-// 	b, err := yaml.Marshal(C, "", "    ")
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	f, err := os.Create(cfgpath)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	defer f.Close()
-
-// 	f.WriteString(string(b))
-
-// 	return nil
-// }
 
 // Round just does what it says it does
 func Round(val float64, roundOn float64, places int) (newVal float64) {

@@ -126,7 +126,10 @@ auto-mode: false
 		}
 	}
 	// Doesn't exist so create it!
-	Tempestyml = TempestymlDef
+	testYaml := conf.Gopath + string(os.PathSeparator) + ".tempest.yaml"
+	if Tempestyml != testYaml {
+		Tempestyml = TempestymlDef
+	}
 	f, err := os.OpenFile(Tempestyml, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println(redB("::"), color.HiRedString("Huge error! Could not recreate file! God lost faith in you!"), Tempestyml)
