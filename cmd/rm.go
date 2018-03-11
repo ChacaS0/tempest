@@ -147,7 +147,7 @@ func rmInSlice(index int, record string, list []string) []string {
 	return listToRet
 }
 
-// xxx saves the new list of paths meant to be targets for TEMPest
+// writeTempestcf saves the new list of paths meant to be targets for TEMPest
 func writeTempestcf(targets []string) error {
 	// Backup of the old one
 	if errBp := backupTempestcf(); errBp != nil {
@@ -165,9 +165,9 @@ func writeTempestcf(targets []string) error {
 	} */
 
 	// Open the file to write to
-	tmpcf, err := os.OpenFile(conf.Home+"/.tempestcf", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	tmpcf, err := os.OpenFile(Tempestcf, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
-		fmt.Println(redB("::"), color.RedString("Sorry! Could not find ~/.tempestcf ! :("))
+		fmt.Println(redB("::"), color.RedString("Sorry! Could not find "+Tempestcf+" ! :("))
 		return err
 	}
 	defer tmpcf.Close()
@@ -197,7 +197,7 @@ func writeTempestcf(targets []string) error {
 
 // backupTempestcf save the current .tempestcf as .tempestcf.old
 func backupTempestcf() error {
-	errBup := os.Rename(conf.Home+"/.tempestcf", conf.Home+"/.tempestcf.old")
+	errBup := os.Rename(Tempestcf, Tempestcf+".old")
 	if errBup != nil {
 		return errBup
 	}
@@ -206,7 +206,7 @@ func backupTempestcf() error {
 
 // retoreTempestcf bring back the previous .tempestcf
 func restoreTempestcf() error {
-	errRestore := os.Rename(conf.Home+"/.tempestcf.old", conf.Home+"/.tempestcf")
+	errRestore := os.Rename(Tempestcf+".old", Tempestcf)
 	if errRestore != nil {
 		return errRestore
 	}
