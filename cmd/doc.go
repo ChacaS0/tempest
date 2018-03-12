@@ -107,7 +107,7 @@ func launchDoc() {
 		color.HiMagenta("\nSuck it up, it's not there yet lel\n")
 
 		// // https://gist.github.com/kylelemons/1525278
-		// Collecting the ouput of the commands
+		// Collecting the output of the commands
 		/* var output bytes.Buffer
 		var stderr bytes.Buffer
 

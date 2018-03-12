@@ -31,7 +31,7 @@ func TestRmInSlice(t *testing.T) {
 		{0, "", sl2, sl22, errors.New("[FAIL]:: Can't return the nil slice, sad - int")},
 	}
 
-	// runing tests
+	// running tests
 	for _, tst := range tests {
 		got := rmInSlice(tst.i, tst.str, tst.slstr)
 		if !SameSlices(got, tst.want) {

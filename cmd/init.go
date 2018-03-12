@@ -36,7 +36,7 @@ var initCmd = &cobra.Command{
 	Long: `Call this if it is the first time you use TEMPest or to reset the temps:
 
 It will create a file named .tempestcf in your /home/$USER.
-This file will contain the list of all the directories you wish tempest to handle as temporay directory.
+This file will contain the list of all the directories you wish tempest to handle as temporary directory.
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -59,7 +59,7 @@ This file will contain the list of all the directories you wish tempest to handl
 		// SUCCESS:
 		fmt.Println(greenB("::"), color.HiGreenString("You are now ready to use TEMPest."))
 		fmt.Println(greenB("::"), color.HiGreenString("Suggestions:"))
-		fmt.Println(color.HiGreenString(`	Start using TEMPest right away by adding a temporay file :
+		fmt.Println(color.HiGreenString(`	Start using TEMPest right away by adding a temporary file :
 		tempest add <DIRECTORY_PATH>
 	Or get help to add new paths:
 		tempest help add

@@ -35,7 +35,7 @@ import (
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Updates the TEMPest tool",
-	Long: `Simply update the TEMPest tool. Exmaple:
+	Long: `Simply update the TEMPest tool. Example:
 
 	tempest update
 

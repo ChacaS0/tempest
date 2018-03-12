@@ -34,7 +34,7 @@ func TestInitializeTP(t *testing.T) {
 	verifyTempestcf(t, tempestcfOld)
 
 	if err = cleanTempest(t, &Tempestcf, tempestcfOld); err != nil {
-		t.Log("[ERROR]:: An error occured:", err)
+		t.Log("[ERROR]:: An error occurred:", err)
 	}
 }
 
@@ -69,7 +69,7 @@ func TestInitializeCfFile(t *testing.T) {
 
 	// Set back to default conf and clean temp test files
 	if err = cleanTempest(t, &Tempestyml, tempestymlOld); err != nil {
-		t.Log("[ERROR]:: An error occured:", err)
+		t.Log("[ERROR]:: An error occurred:", err)
 		t.Fail()
 	}
 	viper.SetConfigFile(Tempestyml)

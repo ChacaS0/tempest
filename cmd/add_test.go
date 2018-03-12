@@ -50,7 +50,7 @@ func TestCheckRedondance(t *testing.T) {
 		{s1, s5, false, errors.New("[CONFUSION]:: Thinking there is an error, but the paths name are just looking alike")},
 	}
 
-	// runing tests
+	// running tests
 	for _, tst := range tests {
 		got := checkRedondance(tst.p1, tst.p2)
 		if got != tst.want {
@@ -81,7 +81,7 @@ func TestTreatLastChar(t *testing.T) {
 		{p2, w2, errors.New("[FAIL]:: Did not change when it was supposed to")},
 	}
 
-	// runing tests
+	// running tests
 	for _, tst := range tests {
 		got := TreatLastChar(tst.param)
 		// fmt.Println(got) // DEBUG

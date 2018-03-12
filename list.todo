@@ -7,16 +7,15 @@ General:
 			✔ --> git log HEAD..origin/master --oneline @done (2/5/2018, 4:18:44 AM)
 		☐ [UPDATE] check if can just use ``go get -u`` now instead of pull/fetch @high
 			☐  OR makefile?
-		☐ remove (+same thing as add with ``this``) 
-			--> Maybe based on the yellow number ?
+		✔ remove (+same thing as add with ``this``) @done (3/11/2018, 4:38:55 PM)
 			✔ list all current paths @done (2/3/2018, 6:34:34 PM)
 			✔ --> Bonus: there is a yellow number as the index of the line (line number) @done (2/3/2018, 6:39:28 PM)
 			☐ ``cd`` to a number of path for example: ``tempest cd 0``
 			✔ Start @critical this is the actual stuff : call purge @done (2/4/2018, 4:17:32 PM)
-		☐ When adding a path check if the path exists -_- @high 
-		☐ [ADD] check if it ends with a separator @low
+		✔ When adding a path check if the path exists -_- @high @done (3/11/2018, 4:38:49 PM)
+		✔ [ADD] check if it ends with a separator @low @done (3/11/2018, 4:38:47 PM)
 		✔ Make my own purge @today @done (2/4/2018, 11:04:33 AM)
-		☐ Iniside command ``init`` handle ~/.tempest.yaml @high 
+		✔ Iniside command ``init`` handle ~/.tempest.yaml @high @done (3/11/2018, 4:38:50 PM)
 		✔ DOC command points simply to the markdown README.md @today @done (2/4/2018, 6:48:35 PM)
 			✔ --> hint: use https://github.com/craigbarnes/showdown @done (2/4/2018, 6:48:41 PM)
 			✔ aur/showdown-git @done (2/4/2018, 6:48:34 PM)
@@ -39,9 +38,9 @@ General:
 		✔ use colorized logs (check paper fluo in bag) @done (2/3/2018, 6:34:39 PM)
 		☐ refractor helpers with color package ? @low
 		✔ See the current version @low @done (3/4/2018, 3:37:40 PM)
-			☐ [CURRENT VERSION] [REVISION] Would be the last commit
+			✔ [CURRENT VERSION] [REVISION] Would be the last commit @done (3/11/2018, 4:39:19 PM)
 			☐ [LATEST VERSION]
-		☐ Improve visualisation of output on ``tempest start ``
+		✔ Improve visualisation of output on ``tempest start `` @done (3/11/2018, 4:39:29 PM)
 		✔ More information when doing ``tempest update`` @today @done (2/10/2018, 12:01:48 PM)
 		
 Note:

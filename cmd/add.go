@@ -60,7 +60,7 @@ tempest add /tmp
 	Run: func(cmd *cobra.Command, args []string) {
 		// fmt.Println(color.HiBlueString("lol"))
 		if errAddLine := addLine(args); errAddLine != nil {
-			fmt.Println("::An error occured while adding path(s):\n", errAddLine)
+			fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
 		}
 
 	},

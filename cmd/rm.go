@@ -132,7 +132,7 @@ func rmInSlice(index int, record string, list []string) []string {
 	}
 
 	// Slicing an element out of the slice.
-	// Exmaple to take of the element at position 1:
+	// Example to take of the element at position 1:
 	// 	a = a[:1+copy(a[1:], a[2:])]
 	// listToRet := list[:index+copy(list[index:], list[index+1:])]
 

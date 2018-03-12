@@ -12,7 +12,7 @@ import (
 // func Test(t *testing.T)
 
 // TestSetAge checks if when changing the age,
-// it is stored corretly in viper.Config()
+// it is stored correctly in viper.Config()
 func TestSetAge(t *testing.T) {
 	// Current settings
 	currAge := viper.GetInt("duration")
