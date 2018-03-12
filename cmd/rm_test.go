@@ -142,7 +142,7 @@ func TestRestoreTempestcf(t *testing.T) {
 
 	// Then we restore the previous setup!?
 	if errDel := os.Remove(Tempestcf); errDel != nil {
-		t.Log("[ERROR]:: Could not delete the .tempestcf.temp")
+		t.Log("[ERROR]:: Could not delete the .tempestcf")
 	}
 	Tempestcf = tempestcfBup
 }
@@ -172,7 +172,7 @@ func TestWriteTempestcf(t *testing.T) {
 	if err := addLine(sl1); err != nil {
 		t.Log("[ERROR]:: Failed to add lines to", Tempestcf, "\n\t->", err)
 		if errDel := os.Remove(Tempestcf); errDel != nil {
-			t.Log("[ERROR]:: Could not delete the .tempestcf.temp")
+			t.Log("[ERROR]:: Could not delete the .tempestcf")
 		}
 		Tempestcf = tempestcfBup
 		t.FailNow()
@@ -199,7 +199,11 @@ func TestWriteTempestcf(t *testing.T) {
 
 	// Then we restore the previous setup!?
 	if errDel := os.Remove(Tempestcf); errDel != nil {
-		t.Log("[ERROR]:: Could not delete the .tempestcf.temp")
+		t.Log("[ERROR]:: Did not delete the .tempestcf")
+	}
+	Tempestcf += ".old"
+	if errDel := os.Remove(Tempestcf); errDel != nil {
+		t.Log("[ERROR]:: Did not delete the .tempestcf.old")
 	}
 	Tempestcf = tempestcfBup
 }
