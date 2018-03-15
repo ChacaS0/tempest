@@ -139,3 +139,53 @@ func cleanTempest(t *testing.T, tempest *string, tempestOld string) (errReturn e
 
 	return
 }
+
+// setTestTempestcf set some presets for testing
+func setTestTempestcf(t *testing.T, slTest []string) (tempestcfbup string) {
+	// bup of current Tempestcf
+	tempestcfbup = Tempestcf
+	// new testing Tempestcf
+	Tempestcf = conf.Gopath + string(os.PathSeparator) + ".tempestcf"
+
+	tmpcf, errCreate := os.OpenFile(Tempestcf, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if errCreate != nil {
+		t.Log("[ERROR]:: No file create, but we tried !! #sadface:\n\t->", Tempestcf, "\n\t->", errCreate)
+		Tempestcf = tempestcfbup
+		t.FailNow()
+	}
+	defer tmpcf.Close()
+
+	// Add slTest data to Tempestcf
+	if err := addLine(slTest); err != nil {
+		t.Log("[ERROR]:: Can't add lines to", Tempestcf, ":\n\t->", err)
+		t.Fail()
+	}
+
+	return
+}
+
+// fbTestTempestcf falls back to the previous TEMPestcf config
+func fbTestTempestcf(t *testing.T, tempestcfbup string) {
+	if err := os.Remove(Tempestcf); err != nil {
+		t.Log("[ERROR]:: An error occurred when trying to remove the test tempestcf:", Tempestcf)
+		t.Fail()
+	}
+	Tempestcf = tempestcfbup
+}
+
+// SameSlices checks equality between two slices
+// returns true if they are identiques
+func SameSlices(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	b = b[:len(a)]
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
+}

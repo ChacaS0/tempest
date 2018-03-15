@@ -9,18 +9,7 @@ import (
 
 // TestGetPaths() test function for list/getPaths() (returnSlice []string, pathsError error) {}
 func TestGetPaths(t *testing.T) {
-	// bup of current Tempestcf
-	tempestcfbup := Tempestcf
-	// new testing Tempestcf
-	Tempestcf = conf.Gopath + string(os.PathSeparator) + ".tempestcf"
-
-	tmpcf, errCreate := os.OpenFile(Tempestcf, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if errCreate != nil {
-		t.Log("[ERROR]:: No file create, but we tried !! #sadface:\n\t->", Tempestcf, "\n\t->", errCreate)
-		Tempestcf = tempestcfbup
-		t.FailNow()
-	}
-	defer tmpcf.Close()
+	// presests
 
 	// Slice we will use for tests
 	slTest := []string{
@@ -28,11 +17,7 @@ func TestGetPaths(t *testing.T) {
 		conf.Gopath,
 	}
 
-	// Add slTest data to Tempestcf
-	if err := addLine(slTest); err != nil {
-		t.Log("[ERROR]:: Can't add lines to", Tempestcf, ":\n\t->", err)
-		t.Fail()
-	}
+	tempestcfbup := setTestTempestcf(t, slTest)
 
 	// try to use the func
 	allPaths, err := getPaths()
@@ -52,17 +37,12 @@ func TestGetPaths(t *testing.T) {
 	}
 
 	// Fallback
-	if err := os.Remove(Tempestcf); err != nil {
-		t.Log("[ERROR]:: An error occurred when trying to remove the test tempestcf:", Tempestcf)
-		t.Fail()
-	}
-	Tempestcf = tempestcfbup
+	fbTestTempestcf(t, tempestcfbup)
 }
 
 // TestPrintList checks if printList() error {} prints well the slice
 // given by getPaths() ([]string, error) {}
 func TestPrintList(t *testing.T) {
-	// TODO: complete
 	// // HINT: Change stdout to a variable to check the result?
 	// // 		Will probably be in a []bytes
 
@@ -122,11 +102,7 @@ func TestPrintList(t *testing.T) {
 	}
 
 	// Fallback
-	if errDel := os.Remove(Tempestcf); errDel != nil {
-		t.Log("[ERROR]:: An error occurred when trying to remove the test tempestcf:", Tempestcf)
-		t.Fail()
-	}
-	Tempestcf = tempestcfbup
+	fbTestTempestcf(t, tempestcfbup)
 }
 
 // captureStdout returns the output of a function

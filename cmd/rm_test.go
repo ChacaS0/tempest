@@ -45,32 +45,13 @@ func TestRmInSlice(t *testing.T) {
 // TestBackupTempestcf checks if the backup is really done
 // by backupTempestcf
 func TestBackupTempestcf(t *testing.T) {
-	// Save old Tempestcf
-	tempestcfBup := Tempestcf
-	// Set the new Tempestcf for testing
-	Tempestcf = conf.Gopath + string(os.PathSeparator) + ".tempestcf"
-
-	// Create first the temporary new .tempestcf as $GOPATH/.tempestcf.temp
-	f, err := os.OpenFile(Tempestcf, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		t.Error(err)
-	}
-	defer f.Close()
 
 	sl1 := []string{
 		conf.Gobin,
 		conf.Gopath,
 	}
 
-	// Add a few things to it
-	if err := addLine(sl1); err != nil {
-		t.Log("[ERROR]:: Failed to add lines to", Tempestcf, "\n\t->", err)
-		if errDel := os.Remove(Tempestcf); errDel != nil {
-			t.Log("[ERROR]:: Could not delete the .tempestcf.temp")
-		}
-		Tempestcf = tempestcfBup
-		t.FailNow()
-	}
+	tempestcfbup := setTestTempestcf(t, sl1)
 
 	// Try to make a backup
 	if err := backupTempestcf(); err != nil {
@@ -91,41 +72,20 @@ func TestBackupTempestcf(t *testing.T) {
 	}
 
 	// In the end we restore the previous Tempestcf and delete the .tempestcf.temp just in case
-	if errDel := os.Remove(Tempestcf); errDel != nil {
-		t.Log("[ERROR]:: Could not delete the .tempestcf.temp")
-	}
-	Tempestcf = tempestcfBup
+	fbTestTempestcf(t, tempestcfbup)
 }
 
 // TestRestoreTempestcf check if it restores well a bup of .tempestcf
 // with restoreTempestcf() error {}
 func TestRestoreTempestcf(t *testing.T) {
-	// Save old Tempestcf
-	tempestcfBup := Tempestcf
-	// Set the new Tempestcf for testing
-	Tempestcf = conf.Gopath + string(os.PathSeparator) + ".tempestcf"
-
-	// Create first the temporary new .tempestcf as $GOPATH/.tempestcf.temp
-	f, err := os.OpenFile(Tempestcf, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		t.Error(err)
-	}
-	defer f.Close()
 
 	sl1 := []string{
 		conf.Gobin,
 		conf.Gopath,
 	}
 
-	// Add a few things to it
-	if err := addLine(sl1); err != nil {
-		t.Log("[ERROR]:: Failed to add lines to", Tempestcf, "\n\t->", err)
-		if errDel := os.Remove(Tempestcf); errDel != nil {
-			t.Log("[ERROR]:: Could not delete the .tempestcf.temp")
-		}
-		Tempestcf = tempestcfBup
-		t.FailNow()
-	}
+	// Testing presets
+	tempestcfbup := setTestTempestcf(t, sl1)
 
 	// Try to make a backup
 	if err := backupTempestcf(); err != nil {
@@ -141,42 +101,21 @@ func TestRestoreTempestcf(t *testing.T) {
 	}
 
 	// Then we restore the previous setup!?
-	if errDel := os.Remove(Tempestcf); errDel != nil {
-		t.Log("[ERROR]:: Could not delete the .tempestcf")
-	}
-	Tempestcf = tempestcfBup
+	fbTestTempestcf(t, tempestcfbup)
 }
 
 // TestWriteTempestcf checks if new data is well written to .tempestcf
 // with ``writeTempestcf(targets []string) error {}``.
 // It is supposed to override the .tempestcf targets with a new slice of targets.
 func TestWriteTempestcf(t *testing.T) {
-	// Save old Tempestcf
-	tempestcfBup := Tempestcf
-	// Set the new Tempestcf for testing
-	Tempestcf = conf.Gopath + string(os.PathSeparator) + ".tempestcf"
-
-	// Create first the temporary new .tempestcf as $GOPATH/.tempestcf.temp
-	f, err := os.OpenFile(Tempestcf, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		t.Error(err)
-	}
-	defer f.Close()
 
 	sl1 := []string{
 		conf.Gobin,
 		conf.Gopath,
 	}
 
-	// Add a few things to it
-	if err := addLine(sl1); err != nil {
-		t.Log("[ERROR]:: Failed to add lines to", Tempestcf, "\n\t->", err)
-		if errDel := os.Remove(Tempestcf); errDel != nil {
-			t.Log("[ERROR]:: Could not delete the .tempestcf")
-		}
-		Tempestcf = tempestcfBup
-		t.FailNow()
-	}
+	// Presets for testing
+	tempestcfbup := setTestTempestcf(t, sl1)
 
 	newSl := rmInSlice(0, "", sl1)
 
@@ -205,22 +144,5 @@ func TestWriteTempestcf(t *testing.T) {
 	if errDel := os.Remove(Tempestcf); errDel != nil {
 		t.Log("[ERROR]:: Did not delete the .tempestcf.old")
 	}
-	Tempestcf = tempestcfBup
-}
-
-// SameSlices checks equality between two slices
-// returns true if they are identiques
-func SameSlices(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	b = b[:len(a)]
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
+	Tempestcf = tempestcfbup
 }
