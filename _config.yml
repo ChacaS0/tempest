@@ -1,8 +1,13 @@
+# Site params
 title: TEMPest
-description: TEMPest is a tool (CLI) that helps to handle, manage and act on temporary directories
+description: A simple tool (CLI) that helps to handle, manage and act on temporary directories.
+
+# config
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-cayman
+
+# pages
 site.pages:
   - index
   - usage
