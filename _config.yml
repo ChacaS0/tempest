@@ -3,3 +3,8 @@ description: TEMPest is a tool (CLI) that helps to handle, manage and act on tem
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-cayman
+site.pages:
+  - index
+  - usage
+  - about
+  - install

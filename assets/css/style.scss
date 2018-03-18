@@ -5,3 +5,23 @@
 .page-header {
 	background-image: linear-gradient(120deg, #000000, #1A1803, #206466, #287679);
 }
+.btn-primary{
+	background-color: rgba(15.7%, 46.3%, 47.5%, 0.226)!important;
+	border: none!important;
+}
+.btn-primary:hover{
+	background-color: rgba(15.7%, 46.3%, 47.5%, 0.71)!important;
+	border: none!important;
+
+}
+.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
+	color: #206466;
+}
+.main-title{
+	color: inherit; /* blue colors for links too */
+	text-decoration: inherit; /* no underline */
+}
+.main-title:hover{
+	color: inherit; /* blue colors for links too */
+	text-decoration: inherit; /* no underline */
+}
