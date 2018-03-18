@@ -33,5 +33,5 @@ I haven't done an Issue Template yet, so try to be "clean" about it, with detail
 Also, you can contribute and help me by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA" target="_blank">**donating through Paypal**</a>. Thank you for your support ! :smile_cat:
 
 ## [](#subheader-1-5)How do I get started?
-Please refer to <a href="install">the installation page</a>.
+Please refer to <a href="{{site.url}}/install">the installation page</a>.
 

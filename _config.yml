@@ -17,3 +17,5 @@ site.pages:
 # plugins
 plugins:
   - jemoji
+
+url: https://chacas0.github.io/tempest

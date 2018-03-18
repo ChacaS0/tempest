@@ -74,4 +74,4 @@ auto-mode: false
 ## [](#header-2-4)What's next?
 Once this is done, your **TEMPest** is ready to rock!  
   
-:point_right: You can see basic usage at the <a href="/tempest/usage">Usage section</a>.
+:point_right: You can see basic usage at the <a href="{{site.url}}/usage">Usage section</a>.
