@@ -1,192 +1,109 @@
-# <a href="https://github.com/ChacaS0/tempest" ><img src="https://image.ibb.co/c829L7/logo_v5_small.gif" width="25" height="25" /></a> TEMPest
-*TEMPest is a tool to manage easily temporary folders/files*
+# The Cayman theme
 
-[![Build Status](https://travis-ci.org/ChacaS0/tempest.svg?branch=master)](https://travis-ci.org/ChacaS0/tempest) [![codecov](https://codecov.io/gh/ChacaS0/tempest/branch/master/graph/badge.svg)](https://codecov.io/gh/ChacaS0/tempest) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/25460f686b864a68a44f6871ec3b9ad2)](https://www.codacy.com/app/ChacaS0/tempest?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ChacaS0/tempest&amp;utm_campaign=Badge_Grade) [![Go Report Card](https://goreportcard.com/badge/github.com/ChacaS0/tempest)](https://goreportcard.com/report/github.com/ChacaS0/tempest) [![GoDoc](https://godoc.org/github.com/ChacaS0/tempest?status.svg)](https://godoc.org/github.com/ChacaS0/tempest) 
-[![apm](https://img.shields.io/apm/l/vim-mode.svg)](https://github.com/ChacaS0/tempest/blob/master/LICENSE)
- [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA) [![beta](https://img.shields.io/badge/edition-beta-ff69b4.svg)](https://github.com/ChacaS0/tempest)
+[![Build Status](https://travis-ci.org/pages-themes/cayman.svg?branch=master)](https://travis-ci.org/pages-themes/cayman) [![Gem Version](https://badge.fury.io/rb/jekyll-theme-cayman.svg)](https://badge.fury.io/rb/jekyll-theme-cayman)
 
-## Index
-- [Installation](#installation)
-	- [From source](#from-source-github)
-		- [Requirements](#requirements)
-		- [Command](#command)
-		- [Temporarily ``GOBIN``](#gobin-permanently-in-path)
-- [Initialization](#initialization)
-	- [Command line ``init``](#command-line-init)
-	- [Parameters](#parameters)
-- [Add a new temp folder to the list](#add-a-new-temp-folder-to-the-list)
-	- [To add the current directory](#to-add-the-current-directory)
-		- [Through command-line](#through-command-line)
-		- [Through text editor](#through-text-editor)
-- [List the current directories added to **TEMPest**](#list-the-current-directories-added-to-tempest)
-	- [Using **TEMPest**](#using-tempest)
-	- [Viewing the file ``~/.tempestcf``](#viewing-the-file-tempestcf)
-- [Runing a global purge](#runing-a-global-purge)
-	- [Test mode](#test-mode)
-	- [Real one](#real-one)
-- [Purging one directory](#purging-one-directory)
-	- [Test mode](#test-mode-1)
-	- [Real one](#real-one-1)
-- [Access the documentation](#access-the-documentation-usage)
+*Cayman is a Jekyll theme for GitHub Pages. You can [preview the theme to see what it looks like](http://pages-themes.github.io/cayman), or even [use it today](#usage).*
 
-## Installation
-### From source (Github)
-#### Requirements
-* [git]("https://git-scm.com/downloads")
-* [go (golang)]("https://golang.org/")
-#### Command
-First choose if you want to add permanantly ``GOBIN`` to your ``PATH``
-##### ``GOBIN`` temporarily in ``PATH``
-```bash
-export GOBIN=/bin
-```
-or
-```bash
-export GOBIN=/usr/bin
+![Thumbnail of Cayman](thumbnail.png)
+
+## Usage
+
+To use the Cayman theme:
+
+1. Add the following to your site's `_config.yml`:
+
+    ```yml
+    theme: jekyll-theme-cayman
+    ```
+
+2. Optionally, if you'd like to preview your site on your computer, add the following to your site's `Gemfile`:
+
+    ```ruby
+    gem "github-pages", group: :jekyll_plugins
+    ```
+
+## Customizing
+
+### Configuration variables
+
+Cayman will respect the following variables, if set in your site's `_config.yml`:
+
+```yml
+title: [The title of your site]
+description: [A short description of your site's purpose]
 ```
 
-Then
-```bash
-go get -v -u github.com/ChacaS0/tempest
-```
-##### ``GOBIN`` permanently in ``PATH``
-Add this line to ``/etc/environment``:
-```bash
-GOBIN=<PATH_OF_YOUR_CHOICE>
-PATH=$PATH:$GOBIN
+Additionally, you may choose to set the following optional variables:
+
+```yml
+show_downloads: ["true" or "false" to indicate whether to provide a download URL]
+google_analytics: [Your Google Analytics tracking ID]
 ```
 
-Then
-```bash
-go get -v -u github.com/ChacaS0/tempest
-```
+### Stylesheet
 
-## Initialization
-### Command line ``init``
-It is very easy to use.  
-First, to initialize it the first time, run:
+If you'd like to add your own custom styles:
 
-```bash
-> tempest init
-```
+1. Create a file called `/assets/css/style.scss` in your site
+2. Add the following content to the top of the file, exactly as shown:
+    ```scss
+    ---
+    ---
 
-This will generate a ``~/.tempestcf`` file. 
-It will hold the list of all the temp directories.
+    @import "{{ site.theme }}";
+    ```
+3. Add any custom CSS (or Sass, including imports) you'd like immediately after the `@import` line
 
-> If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempestcf`` and leave it empty for now.
-  
-This will also generate a ``~/.tempest.yaml`` file.
-It will hold the configuration of **TEMPest**.  
+*Note: If you'd like to change the theme's Sass variables, you must set new values before the `@import` line in your stylesheet.*
 
-> If there is an issue and the file can't be created somehow, you can still crate it at its default location: ``$HOME/.tempest.yaml`` with default content:
-```yaml
-duration: 5
-auto-mode: false
-```
-#### Parameters:
+### Layouts
 
-* **duration** : This is the maximum age the content of the temp directories, choose it carefully!
+If you'd like to change the theme's HTML layout:
 
-> *You have to choose a duration greater than 1, it is for your own safety!!*
+1. [Copy the original template](https://github.com/pages-themes/cayman/blob/master/_layouts/default.html) from the theme's repository<br />(*Pro-tip: click "raw" to make copying easier*)
+2. Create a file called `/_layouts/default.html` in your site
+3. Paste the default layout content copied in the first step
+4. Customize the layout as you'd like
 
-## Add a new temp folder to the list
-### To add the current directory
-Positionate yourself to the deried directory. 
-For example, if you want to add /tmp, use this instructions:  
+### Overriding GitHub-generated URLs
 
-```bash
-$ cd /temp
-$ tempest add
-```
+Templates often rely on URLs supplied by GitHub such as links to your repository or links to download your project. If you'd like to override one or more default URLs:
 
-### Through command-line
-Just run:
+1. Look at [the template source](https://github.com/pages-themes/cayman/blob/master/_layouts/default.html) to determine the name of the variable. It will be in the form of `{{ site.github.zip_url }}`.
+2. Specify the URL that you'd like the template to use in your site's `_config.yml`. For example, if the variable was `site.github.url`, you'd add the following:
+    ```yml
+    github:
+      zip_url: http://example.com/download.zip
+      another_url: another value
+    ```
+3. When your site is built, Jekyll will use the URL you specified, rather than the default one provided by GitHub.
 
-```bash
-tempest add ...<PATH>
-```
+*Note: You must remove the `site.` prefix, and each variable name (after the `github.`) should be indent with two space below `github:`.*
 
-* **``<PATH>``** being the path to the directory to be added to the list of temp directories  
-* **``...``** meaning that many arguments can be passed  
+For more information, see [the Jekyll variables documentation](https://jekyllrb.com/docs/variables/).
 
-> **By convention we will give the name ``temp`` to the directories to be added to ``tempest``**
+## Roadmap
 
-### Through text editor
-Just open ``~/.tempestcf`` and add a new line with the <u>absolute path</u> of the temp directory to be added.
+See the [open issues](https://github.com/pages-themes/cayman/issues) for a list of proposed features (and known issues).
 
-## List the current directories added to TEMPest
-### Using TEMPest
+## Project philosophy
 
-```bash
-$ tempest list
-```
+The Cayman theme is intended to make it quick and easy for GitHub Pages users to create their first (or 100th) website. The theme should meet the vast majority of users' needs out of the box, erring on the side of simplicity rather than flexibility, and provide users the opportunity to opt-in to additional complexity if they have specific needs or wish to further customize their experience (such as adding custom CSS or modifying the default layout). It should also look great, but that goes without saying.
 
-### Viewing the file ``~/.tempestcf``
-``$ cat ~/.tempestcf``  
-Or  
-``$ vi ~/.tempestcf``  
+## Contributing
 
-## Updating TEMPest
-```bash
-$ tempest update
-```
+Interested in contributing to Cayman? We'd love your help. Cayman is an open source project, built one contribution at a time by users like you. See [the CONTRIBUTING file](docs/CONTRIBUTING.md) for instructions on how to contribute.
 
-## Runing a global purge
-*The age of the files deleted will be the one older than the number of days set as "duration" in ~/.tempest.yaml*
-### Test mode
-In this mode, it will display the file it <u>would</u> delete plus the size.  
-**Nothing gets deleted**. To do so, try:
+### Previewing the theme locally
 
-```bash
-$ tempest start -t
-```
+If you'd like to preview the theme locally (for example, in the process of proposing a change):
 
-### Real one
-**Runing this will actually delete files/directories, make sure everything inside ``~/.tempestcf`` is meant to be there with ``tempest list`` first.**
+1. Clone down the theme's repository (`git clone https://github.com/pages-themes/cayman`)
+2. `cd` into the theme's directory
+3. Run `script/bootstrap` to install the necessary dependencies
+4. Run `bundle exec jekyll serve` to start the preview server
+5. Visit [`localhost:4000`](http://localhost:4000) in your browser to preview the theme
 
-```bash
-$ tempest start
-```
+### Running tests
 
-## Purging one directory
->*Still based on the config file*  
-
-It is possible to purge a directory even if it is not added to tempest. There is also a test mode for this one.
-### Test mode
-
-```bash
-$ tempest purge -p <PATH> -t
-```
-
-* **``<PATH>``** is the path you want to purge
-* **``-t``** declare the test mode
-
-### Real one
-
-```bash
-$ tempest purge -p <PATH>
-```
-
-* **``<PATH>``** is the path you want to purge
-
-## Access the documentation (usage)
-It is recommanded to have **Showdown** installed. If you don't but are interested, checkout this [link]("https://github.com/craigbarnes/showdown").  
-
-```bash
-$ tempest doc
-```  
-
-There is also a "man like" view of the documentation.  
-
-```bash
-$ tempest doc -m
-```
-
-
--------------------
-*Thanks to*
-> <a href="https://github.com/golang/go" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png" width=33%></a> 
-
-> <a href="https://github.com/spf13/cobra" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886352/ad566232-814f-11e5-9cd0-aa101788c117.png" width=33%></a> 
-
-> <a href="https://github.com/spf13/viper" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886745/998df88a-8151-11e5-9448-4736db51020d.png" width=33%></a> 
+The theme contains a minimal test suite, to ensure a site with the theme would build successfully. To run the tests, simply run `script/cibuild`. You'll need to run `script/bootstrap` one before the test script will work.
