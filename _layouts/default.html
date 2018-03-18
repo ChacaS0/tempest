@@ -18,6 +18,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
     <!-- FAVICO -->
     <link rel="shortcut icon" type="image/x-icon" href="https://image.ibb.co/c829L7/logo_v5_small.gif" >
+    <!-- My JS -->
+    <script src="/assets/js/default.js"></script>
   </head>
   <body>
     <section class="page-header">
@@ -26,7 +28,7 @@
       <!-- <hr> -->
       {% if site.github.is_project_page %}
       <!-- MENU -->
-        <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
+        <a href="{{ site.github.repository_url }}" class="btn" target="_blank">View on GitHub</a>
         <a href="{{site.url}}/install" class="btn">Installation</a>
         <a href="{{site.url}}/usage" class="btn">Usage</a>
         <a href="{{site.url}}/about" class="btn">About</a>

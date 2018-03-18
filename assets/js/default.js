@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
 // ok ?
-console.log("ok"); // not ok >.<
+console.log("TEMPest"); // it is ok ;D
 
 });

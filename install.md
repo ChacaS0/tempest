@@ -7,7 +7,7 @@ title: How to install
 ## [](#header-2-1)Requirements
 - <a href="https://git-scm.com/book/en/v1/Getting-Started-Installing-Git" target="_blank">git</a>
 - <a href="https://golang.org/doc/install" target="_blank">go</a>
-- TEMPest :sweat_smile:
+- **TEMPest** :sweat_smile:
 
 ## [](#header-2-2)Let's begin
 So now you should have golang installed, you have access to ``GOPATH``. If you haven't set up ``GOBIN``, you should, because this is where the **TEMPest** binary will go once installed.  
@@ -32,7 +32,10 @@ Simply run:
 export GOBIN=/usr/bin/
 ```
 
-### [](#header-2-2-2)Install **TEMPest**
+### [](#header-2-2-2)Windows
+> *Coming soon :stuck_out_tongue_winking_eye:*
+
+### [](#header-2-2-3)Install **TEMPest**
 So easy:
 ```bash
 go get -v -u -t github.com/ChacaS0/tempest
