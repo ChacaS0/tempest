@@ -13,3 +13,7 @@ site.pages:
   - usage
   - about
   - install
+
+# plugins
+plugins:
+  - jemoji

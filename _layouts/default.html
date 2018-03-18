@@ -21,7 +21,7 @@
   </head>
   <body>
     <section class="page-header">
-      <a class="main-title" href="{{ site.page.index }}"><h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1></a>
+      <a class="main-title" href="index"><h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1></a>
       <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
       <!-- <hr> -->
       {% if site.github.is_project_page %}
@@ -30,7 +30,7 @@
         <a href="install" class="btn">Installation</a>
         <a href="usage" class="btn">Usage</a>
         <a href="about" class="btn">About</a>
-        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA" target="_blank" class="btn">Donate</a>
+        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA" target="_blank" title="Redirects to Paypal" class="btn">Donate</a>
       {% endif %}
       {% if site.show_downloads %}
         <a href="{{ site.github.zip_url }}" class="btn">Download .zip</a>
@@ -38,7 +38,6 @@
       {% endif %}
       <!-- //MENU -->
     </section>
-    
 
     <section class="main-content">
       {{ content }}
