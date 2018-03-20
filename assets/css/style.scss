@@ -25,6 +25,14 @@
 	color: inherit; /* blue colors for links too */
 	text-decoration: inherit; /* no underline */
 }
-// .working-img{
-// 	margin-left: 15%;
-// }
+.wall-head{
+	border-bottom: solid 1px;
+	// border: solid 1px;
+	border-color: rgba(15.7%, 46.3%, 47.5%, 0.71);
+	padding: 1%;
+	// border-radius: 8px;
+}
+.wall-head:hover{
+	// background-color: rgba(15.7%, 46.3%, 47.5%, 0.214);
+	cursor: pointer;
+}

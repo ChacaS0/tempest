@@ -20,7 +20,7 @@
     <!-- FAVICO -->
     <link rel="shortcut icon" type="image/x-icon" href="https://image.ibb.co/c829L7/logo_v5_small.gif" >
     <!-- My JS -->
-    <script src="/assets/js/default.js"></script>
+    <script src="/assets/js/wallet.js"></script>
   </head>
   <body>
     <section class="page-header">
@@ -35,15 +35,33 @@
         <a href="{{site.url}}/about" class="btn">About</a>
         <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA" target="_blank" title="Redirects to Paypal" class="btn">Donate</a>
       {% endif %}
-      {% if site.show_downloads %}
-        <a href="{{ site.github.zip_url }}" class="btn">Download .zip</a>
-        <a href="{{ site.github.tar_url }}" class="btn">Download .tar.gz</a>
-      {% endif %}
       <!-- //MENU -->
     </section>
 
     <section class="main-content">
-      {{ content }}
+		{{ content }}
+		<div id="wallet1" class="wallet">
+      <!-- WALLET -->
+      <!-- INIT -->
+			<h2 id="wall-init" class="wall-head">Initialization</h2>
+			<div id="wall-ctnt1" class="wall-ctnt">
+				{% capture wallet-init %}{% include wallet/init.md %}{% endcapture %}
+				{{ wallet-init | markdownify }}
+      </div>
+      <!-- ADD -->
+			<h2 id="wall-add" class="wall-head">Add targets </h2>
+			<div id="wall-ctnt2" class="wall-ctnt">
+				{% capture wallet-add %}{% include wallet/add.md %}{% endcapture %}
+				{{ wallet-add | markdownify }}
+      </div>
+      <!-- LIST -->
+			<h2 id="wall-list" class="wall-head">List targets </h2>
+			<div id="wall-ctnt3" class="wall-ctnt">
+				{% capture wallet-list %}{% include wallet/list.md %}{% endcapture %}
+				{{ wallet-list | markdownify }}
+			</div>
+			<!-- //WALLET -->
+		</div>
 
       <footer class="site-footer">
         {% if site.github.is_project_page %}
