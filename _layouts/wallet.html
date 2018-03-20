@@ -52,18 +52,18 @@
 				{% capture wallet-init %}{% include wallet/init.md %}{% endcapture %}
 				{{ wallet-init | markdownify }}
       </div>
+      <!-- LIST -->
+      <h2 id="wall-list" class="wall-head">List targets </h2>
+      <div id="wall-ctnt3" class="wall-ctnt">
+        {% capture wallet-list %}{% include wallet/list.md %}{% endcapture %}
+        {{ wallet-list | markdownify }}
+      </div>
       <!-- ADD -->
 			<h2 id="wall-add" class="wall-head">Add targets </h2>
 			<div id="wall-ctnt2" class="wall-ctnt">
 				{% capture wallet-add %}{% include wallet/add.md %}{% endcapture %}
 				{{ wallet-add | markdownify }}
       </div>
-      <!-- LIST -->
-			<h2 id="wall-list" class="wall-head">List targets </h2>
-			<div id="wall-ctnt3" class="wall-ctnt">
-				{% capture wallet-list %}{% include wallet/list.md %}{% endcapture %}
-				{{ wallet-list | markdownify }}
-			</div>
 			<!-- //WALLET -->
 		</div>
 
