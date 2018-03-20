@@ -1,5 +1,5 @@
 
-<script src="https://asciinema.org/a/170840.js" id="asciicast-170840" async data-size="small"></script>
+<script src="https://asciinema.org/a/170840.js" id="asciicast-170840" async></script>
 
 ### [](#head-init-1)What we do:
 - ``tempest init``: initialize **TEMPest**

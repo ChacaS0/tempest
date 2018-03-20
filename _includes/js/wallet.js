@@ -5,7 +5,7 @@ $(document).ready(function(){
 	// Wallet Title, showing / hiding content
 	$(".wall-head").click(function(event){
 		// hide others
-		$(".wall-ctnt:visible").toggle("slow");
+		$(".wall-ctnt:visible").not($("#"+event.target.id).next()).toggle("slow");
 
 		// show the right one
 		$("#"+event.target.id).next().toggle("slow");
