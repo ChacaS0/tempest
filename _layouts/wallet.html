@@ -20,7 +20,11 @@
     <!-- FAVICO -->
     <link rel="shortcut icon" type="image/x-icon" href="https://image.ibb.co/c829L7/logo_v5_small.gif" >
     <!-- My JS -->
-    <script src="/assets/js/wallet.js"></script>
+    <!-- <script src="/assets/js/wallet.js"></script> -->
+    {% capture scripts %}
+      {% include js/wallet.js %}
+    {% endcapture %}
+    <script>{{ scripts | uglify | strip }}</script>
   </head>
   <body>
     <section class="page-header">
