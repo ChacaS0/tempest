@@ -1,7 +1,8 @@
 
 In this section, we'll see how to add a ``target`` to **TEMPest**, shall we begin? :smile_cat:
 
-<script src="https://asciinema.org/a/171117.js" id="asciicast-171117" async></script>
+<!-- <script src="https://asciinema.org/a/171117.js" id="asciicast-171117" class="asciiframe" async></script> -->
+<a href="https://asciinema.org/a/171117" target="_blank"><img src="https://asciinema.org/a/171117.png" /></a>
 
 ### [](#head-add-1)The \*\*\*\*\* we doing:
 - ``tempest list``: Listing available targets (checking if there are any already set).

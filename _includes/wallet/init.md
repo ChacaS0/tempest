@@ -1,5 +1,6 @@
 
-<script src="https://asciinema.org/a/170840.js" id="asciicast-170840" async></script>
+<!-- <script src="https://asciinema.org/a/170840.js" id="asciicast-170840"></script> -->
+<a href="https://asciinema.org/a/170840" target="_blank"><img src="https://asciinema.org/a/170840.png" /></a>
 
 ### [](#head-init-1)The \*\*\*\*\* we doing:
 - ``tempest init``: initialize **TEMPest**

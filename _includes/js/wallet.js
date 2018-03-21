@@ -4,18 +4,37 @@ $(document).ready(function(){
 	$(".wall-ctnt").hide();
 	// Wallet Title, showing / hiding content
 	$(".wall-head").click(function(event){
+		var idEvt = "#"+event.target.id;
+
 		// hide others
-		$(".wall-ctnt:visible").not($("#"+event.target.id).next()).toggle("slow");
+		$(".wall-ctnt:visible").not($(idEvt).next()).toggle("slow");
 
 		// show the right one
-		$("#"+event.target.id).next().toggle("slow");
+		$(idEvt).next(".wall-ctnt").toggle("slow");
+		
+		// $(getid).load(getsrc);
+		// // get the script URL
+		
+		
+		// var iframe = document.getElementById(getid);
+		// iframe.contentDocument.location=iframe.src;
+		// $('#'+getid).attr('src', $('#'+getid).attr('src'));
+		
+		// $(getid).attr("src", "");
+		// $(getid).attr("src", getsrc);
+		
 		
 		// scroll to it
-		$.wait(1200).then(
-			$('html, body').animate({
-				scrollTop: $("#"+event.target.id).offset().top
-			}, 1000)
-		);
+		$.wait(390).then(function(){
+			$('html').animate({
+				scrollTop: $(idEvt).offset().top
+			}, 450);
+	}
+);
+		
+		// load frame
+		// $(idEvt).next("script").load(this);
+
 	});
 
 });
