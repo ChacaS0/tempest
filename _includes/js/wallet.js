@@ -15,7 +15,6 @@ $(document).ready(function(){
 		// $(getid).load(getsrc);
 		// // get the script URL
 		
-		
 		// var iframe = document.getElementById(getid);
 		// iframe.contentDocument.location=iframe.src;
 		// $('#'+getid).attr('src', $('#'+getid).attr('src'));
@@ -23,12 +22,11 @@ $(document).ready(function(){
 		// $(getid).attr("src", "");
 		// $(getid).attr("src", getsrc);
 		
-		
 		// scroll to it
-		$.wait(390).then(function(){
+		$.wait(410).then(function(){
 			$('html').animate({
 				scrollTop: $(idEvt).offset().top
-			}, 450);
+			}, 500);
 	}
 );
 		
