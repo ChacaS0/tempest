@@ -4,14 +4,14 @@
 ### [](#head-config-1)Set up configuration:
 :wrench: Configuration with **TEMPest** is done with the ``set`` command.  
 ```bash
-tempest set
+tempest set <FLAG> <VALUE>
 ```
   
 
 ### [](#head-config-2)Access configuration:
 :wrench: Access to configuration is done with the ``get`` command.  
 ```bash
-tempest get
+tempest get <FLAG>
 ```
 
   
@@ -19,6 +19,7 @@ tempest get
 
 | Long Flag       | Short Flag  | Description                                                                   |
 |:----------------|:------------|:------------------------------------------------------------------------------|
+| \-\-help        | -h          | [NO_ARGS] See the help section for the command.                               |
 | \-\-age         | -a          | Set the age of the targets. age = 3 means that if a file haven't been modified for 3 days, it will be deleted. |
 | \-\-daemon-mode | -d          | ``true`` if you want it to run as daemon, ``false`` otherwise.                |
   
