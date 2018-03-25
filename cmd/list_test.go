@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"bytes"
-	"io"
 	"os"
 	"testing"
 )
@@ -68,7 +66,7 @@ func TestPrintList(t *testing.T) {
 	})
 
 	// Verify output
-	wantedOutput := ":: No path set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding paths!\n"
+	wantedOutput := ":: No target set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding targets!\n"
 	if wantedOutput != emptyOutput {
 		t.Log("[FAIL]:: printList() failed to process empty .tempestcf\n\t-> Expected:\n\t", wantedOutput, "\n\t-> Got:\n\t", emptyOutput)
 		t.Fail()
@@ -95,7 +93,7 @@ func TestPrintList(t *testing.T) {
 	})
 
 	// Verify output of printList()
-	wantedOutput = "Current paths currently having \"fun\" with TEMPest:\n\nIndex\t| Path\n0\t| " + conf.Gobin + "\n1\t| " + conf.Gopath + "\n"
+	wantedOutput = "Current targets currently having \"fun\" with TEMPest:\n\nIndex\t| Target\n0\t| " + conf.Gobin + "\n1\t| " + conf.Gopath + "\n"
 	if actualOutput != wantedOutput {
 		t.Log("[FAIL]:: The output of printList() was quite unexpected! Wow!\n\t-> ActualOutput:\n\t", actualOutput, "\n\t-> Wanted:\n\t", wantedOutput)
 		t.Fail()
@@ -103,21 +101,4 @@ func TestPrintList(t *testing.T) {
 
 	// Fallback
 	fbTestTempestcf(t, tempestcfbup)
-}
-
-// captureStdout returns the output of a function
-// not thread safe
-func captureStdout(f func()) string {
-	old := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-
-	f()
-
-	w.Close()
-	os.Stdout = old
-
-	var buf bytes.Buffer
-	io.Copy(&buf, r)
-	return buf.String()
 }

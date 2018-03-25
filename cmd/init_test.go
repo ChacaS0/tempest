@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"testing"
 
@@ -188,4 +190,21 @@ func SameSlices(a, b []string) bool {
 	}
 
 	return true
+}
+
+// captureStdout returns the output of a function
+// not thread safe
+func captureStdout(f func()) string {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	f()
+
+	w.Close()
+	os.Stdout = old
+
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+	return buf.String()
 }

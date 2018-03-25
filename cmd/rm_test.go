@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"testing"
 )
@@ -109,15 +110,22 @@ func TestRestoreTempestcf(t *testing.T) {
 // It is supposed to override the .tempestcf targets with a new slice of targets.
 func TestWriteTempestcf(t *testing.T) {
 
+	this, errDir := os.Getwd()
+	if errDir != nil {
+		log.Fatal(errDir)
+	}
+
 	sl1 := []string{
 		conf.Gobin,
 		conf.Gopath,
+		this,
 	}
 
 	// Presets for testing
 	tempestcfbup := setTestTempestcf(t, sl1)
 
 	newSl := rmInSlice(0, "", sl1)
+	newSl = rmInSlice(-1, "this", sl1)
 
 	// Try to use writeTempestcf
 	if err := writeTempestcf(newSl); err != nil {
