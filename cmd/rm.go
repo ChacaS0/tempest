@@ -23,6 +23,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -71,14 +72,18 @@ or
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		// color.Cyan("Sorry, rm is not fully implemented yet... Coming soon don't worry!")
-		if len(args) == 0 && rmInt == -1 && rmStr == "" {
-			rmStr = "this"
-		}
+		// if len(args) == 0 && rmInt == -1 && rmStr == "" {
+		// 	rmStr = "this"
+		// }
+
+		// handles rm's args
+		// slRmInt, slRmStr := processArgsRm(args)
+
 		slicePaths, errAllP := getPaths()
 		if errAllP != nil {
 			color.Red(errAllP.Error())
 		}
-		slicePaths = rmInSlice(rmInt, rmStr, slicePaths)
+		slicePaths = rmInSlice(rmInt, rmStr, slicePaths) // TODO change this to take slices rmInt & Str
 
 		if errWrite := writeTempestcf(slicePaths); errWrite != nil {
 			color.Red(errWrite.Error())
@@ -107,6 +112,40 @@ func init() {
 	rmCmd.Flags().StringVarP(&rmStr, "path", "p", "", "The path of a target for TEMPest")
 
 	rmCmd.Flags().BoolVarP(&rmOrigin, "origin", "o", false, "Removes the target from TEMPest, but also the original directories/files")
+}
+
+// processArgsRm takes the args as parameters and process them
+func processArgsRm(args []string) ([]int, []string) {
+	// TODO process stuff hunh?
+	slRmInt := make([]int, 0)
+	slRmStr := make([]string, 0)
+
+	// Slice into string
+	var strified string
+	for _, valStr := range args {
+		strified += valStr + " "
+	}
+
+	// regexes
+	regexSimpleInt := regexp.MustCompile(`([0-9]+\s|[0-9]+$)`)
+	switch {
+	case regexSimpleInt.FindString(strified) == strified:
+		// then that's it
+	}
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NOTE: WTFFFFFF!!?????
+	// for _, arg := range args {
+	// 	switch {
+	// 	case len(args) == 0 && rmInt[0] == -1 && rmStr[0] == "":
+	// 		slRmStr = append(slRmStr, "this")
+	// 		slRmInt = append(slRmInt, rmInt[0])
+	// 		return slRmInt, slRmStr
+	// 	case len(args) > 0 && rmInt[0] == -1:
+	// 		//todo
+	// 	}
+
+	// }
+
+	return slRmInt, slRmStr
 }
 
 // rmInSlice give it a slice with an index of path to remove.
