@@ -78,7 +78,7 @@ func printList() error {
 	if errSliced != nil {
 		// Just a small enhancement of the "no paths set yet" display
 		if errSliced.Error() == "empty" {
-			fmt.Println(color.HiMagentaString(":: No pattargeth set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding targets!"))
+			fmt.Println(color.HiMagentaString(":: No target set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding targets!"))
 			return nil
 		}
 		return errSliced

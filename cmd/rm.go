@@ -24,6 +24,8 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -127,9 +129,31 @@ func processArgsRm(args []string) ([]int, []string) {
 	}
 
 	// regexes
-	regexSimpleInt := regexp.MustCompile(`([0-9]+\s|[0-9]+$)`)
-	switch {
-	case regexSimpleInt.FindString(strified) == strified:
+	// RegexManyInt is the regex to see if many int were passed
+	// i.e. ``0 1 4`` or ``0``
+	RegexManyInt := regexp.MustCompile(`([0-9]+\s|[0-9]+$|^[0-9]+$)`)
+	// RegexIntToInt is the regex to see if we want a range of int
+	// i.e. ``0-2`` (would be 0 1 2)
+	RegexIntToInt := regexp.MustCompile(`([0-9]+-[0-9]+)`)
+
+	if allItoI := RegexIntToInt.FindAllString(strified, -1); len(allItoI) > 0 {
+		RegexIntToInt.ReplaceAllString(strified, ``)
+		for _, exp := range allItoI {
+			// explode with ``-`` and get the left and right value
+			values := strings.Split(exp, "-")
+			begin, errBegin := strconv.Atoi(values[0])
+			end, errEnd := strconv.Atoi(values[1])
+			if errBegin != nil || errEnd != nil {
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand those arguments", exp), "\n\t[0]:", values[0], "\n\t->", errBegin, "\n\t[1]:", values[1], "\n\t->", errEnd)
+				return nil, nil
+			}
+			for i := begin; i <= end; i++ {
+				slRmInt = append(slRmInt, i)
+			}
+		}
+	}
+
+	if RegexManyInt.FindString(strified) == strified {
 		// then that's it
 	}
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NOTE: WTFFFFFF!!?????

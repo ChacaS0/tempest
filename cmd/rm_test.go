@@ -154,3 +154,36 @@ func TestWriteTempestcf(t *testing.T) {
 	}
 	Tempestcf = tempestcfbup
 }
+
+// TestProcessArgsRm is the test for processArgsRm.
+// It verifies that it returns the right slices
+func TestProcessArgsRm(t *testing.T) {
+	// parameter variables
+	s1 := []string{"0-1"}
+	s2 := []string{"0-2", "5-7"}
+	s3 := []string{""}
+
+	emptySliceStr := make([]string, 0)
+	emptySliceInt := make([]int, 0)
+
+	// tests holds the tests we want to do and the result expected
+	var tests = []struct {
+		param     []string
+		wantSlInt []int
+		wantSlStr []string
+		err       error
+	}{
+		{s1, []int{0, 1}, emptySliceStr, errors.New("[FAIL]:: Failed to return the slice of ints")},
+		{s2, []int{0, 1, 2, 5, 6, 7}, emptySliceStr, errors.New("[FAIL]:: Failed to process 2 ranges of ints")},
+		{s3, emptySliceInt, emptySliceStr, errors.New("[FAIL]:: Failed to prcess empty args")},
+	}
+
+	// running tests
+	for _, tst := range tests {
+		gotSlInt, gotSlStr := processArgsRm(tst.param)
+		if SameSlicesInt(gotSlInt, tst.wantSlInt) || SameSlices(gotSlStr, tst.wantSlStr) {
+			t.Log(tst.err.Error())
+			t.Fail()
+		}
+	}
+}
