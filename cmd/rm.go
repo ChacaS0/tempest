@@ -128,34 +128,61 @@ func processArgsRm(args []string) ([]int, []string) {
 		strified += valStr + " "
 	}
 
-	// regexes
-	// RegexManyInt is the regex to see if many int were passed
-	// i.e. ``0 1 4`` or ``0``
-	RegexManyInt := regexp.MustCompile(`([0-9]+\s|[0-9]+$|^[0-9]+$)`)
+	// // regexes
+	// // RegexManyInt is the regex to see if many int were passed
+	// // i.e. ``0 1 4`` or ``0``
+	// // RegexManyInt := regexp.MustCompile(`([0-9]+\s|[0-9]|^[0-9]+$)`)
 	// RegexIntToInt is the regex to see if we want a range of int
 	// i.e. ``0-2`` (would be 0 1 2)
-	RegexIntToInt := regexp.MustCompile(`([0-9]+-[0-9]+)`)
+	RegexIntToInt := regexp.MustCompile(`(\d+-\d+)`)
+	// RegexManyStr is the regex to see if many strings (targets) were passed
+	// i.e. ``/tmp`` /path1/subpath1``
+	RegexManyStr := regexp.MustCompile(`^(\/|\\)(\d|\D)+`)
+	// RegexJustInt is the regex to see if only an int has been passed as an arg
+	RegexJustInt := regexp.MustCompile(`^(\d+)$`)
 
-	if allItoI := RegexIntToInt.FindAllString(strified, -1); len(allItoI) > 0 {
-		RegexIntToInt.ReplaceAllString(strified, ``)
-		for _, exp := range allItoI {
+	// TODO - Check if the value hasn't been provided twice (specially with range stuffs)
+	for _, arg := range args { // for each arg in args
+		arg = strings.Trim(arg, " ")
+		// IntToInt
+		if allItoI := RegexIntToInt.FindString(arg); len(allItoI) > 0 {
+			// RegexIntToInt.ReplaceAllString(arg, ``)
 			// explode with ``-`` and get the left and right value
-			values := strings.Split(exp, "-")
+			values := strings.Split(arg, "-")
 			begin, errBegin := strconv.Atoi(values[0])
 			end, errEnd := strconv.Atoi(values[1])
 			if errBegin != nil || errEnd != nil {
-				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand those arguments", exp), "\n\t[0]:", values[0], "\n\t->", errBegin, "\n\t[1]:", values[1], "\n\t->", errEnd)
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand those arguments", arg), "\n\t[0]:", values[0], "\n\t->", errBegin, "\n\t[1]:", values[1], "\n\t->", errEnd)
 				return nil, nil
+			}
+			if begin > end {
+				temp := end
+				end = begin
+				begin = temp
 			}
 			for i := begin; i <= end; i++ {
 				slRmInt = append(slRmInt, i)
 			}
 		}
+		// Many Strings
+		if allMStr := RegexManyStr.FindString(arg); len(allMStr) > 0 {
+			slRmStr = append(slRmStr, arg)
+		}
+		// Just an Int
+		if allInt := RegexJustInt.FindString(arg); len(allInt) > 0 {
+			val, errInt := strconv.Atoi(arg)
+			if errInt != nil {
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand thise argument", arg), "\n\t->", errInt)
+				return nil, nil
+			}
+			slRmInt = append(slRmInt, val)
+		}
+
 	}
 
-	if RegexManyInt.FindString(strified) == strified {
-		// then that's it
-	}
+	// // if RegexManyInt.FindString(strified) == strified {
+	// // 	// then that's it
+	// // }
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NOTE: WTFFFFFF!!?????
 	// for _, arg := range args {
 	// 	switch {

@@ -178,6 +178,14 @@ func fbTestTempestcf(t *testing.T, tempestcfbup string) {
 // SameSlices checks equality between two slices of string
 // returns true if they are identiques
 func SameSlices(a, b []string) bool {
+	if a == nil && nil == b {
+		return true
+	}
+
+	if len(a) == 0 && len(b) == 0 {
+		return true
+	}
+
 	if len(a) != len(b) {
 		return false
 	}
@@ -195,6 +203,14 @@ func SameSlices(a, b []string) bool {
 // SameSlicesInt checks equality between two slices of int
 // returns true if they are identiques
 func SameSlicesInt(a, b []int) bool {
+	if a == nil && nil == b {
+		return true
+	}
+
+	if len(a) == 0 && len(b) == 0 {
+		return true
+	}
+
 	if len(a) != len(b) {
 		return false
 	}

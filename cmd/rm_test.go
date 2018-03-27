@@ -159,9 +159,25 @@ func TestWriteTempestcf(t *testing.T) {
 // It verifies that it returns the right slices
 func TestProcessArgsRm(t *testing.T) {
 	// parameter variables
+	//empty
+	s3 := []string{""}
+	// index ranges
 	s1 := []string{"0-1"}
 	s2 := []string{"0-2", "5-7"}
-	s3 := []string{""}
+	s12 := []string{"1-2", "5-3", "7-8"}
+	// Just targets
+	s4 := []string{"/temp", "/tmp/user/aur"}
+	s5 := []string{"/tmp"}
+	// Just Ints
+	s6 := []string{"0", "2", "5"}
+	s7 := []string{"1"}
+	// mixed
+	s8 := []string{"0", "2-5", "7", "/tmp"}
+	s9 := []string{"/tmp", "7", "2-5"}
+	s10 := []string{"2-5", "/tmp", "7"}
+	s11 := []string{"1-2", "3-4", "/temp", "5", "/tmp/user/aur", "6"}
+	// Overlaping arguments
+	// TODO
 
 	emptySliceStr := make([]string, 0)
 	emptySliceInt := make([]int, 0)
@@ -173,15 +189,35 @@ func TestProcessArgsRm(t *testing.T) {
 		wantSlStr []string
 		err       error
 	}{
+		// Empty
+		{s3, emptySliceInt, emptySliceStr, errors.New("[FAIL]:: Failed to prcess empty args")},
+		// IntToInt
 		{s1, []int{0, 1}, emptySliceStr, errors.New("[FAIL]:: Failed to return the slice of ints")},
 		{s2, []int{0, 1, 2, 5, 6, 7}, emptySliceStr, errors.New("[FAIL]:: Failed to process 2 ranges of ints")},
-		{s3, emptySliceInt, emptySliceStr, errors.New("[FAIL]:: Failed to prcess empty args")},
+		{s12, []int{1, 2, 3, 4, 5, 7, 8}, emptySliceStr, errors.New("[FAIL]:: Could not treat some stuff of the for 10-4")},
+		// Many strings
+		{s4, emptySliceInt, s4, errors.New("[FAIL]:: Cannot process many targets")},
+		// One string
+		{s5, emptySliceInt, s5, errors.New("[FAIL]:: Cannot process a single target")},
+		// Many ints
+		{s6, []int{0, 2, 5}, emptySliceStr, errors.New("[FAIL]:: Failed to process a bunch of ints")},
+		{s7, []int{1}, emptySliceStr, errors.New("[FAIL]:: Could not process just one fcking int ffs")},
+		// Mixed
+		{s8, []int{0, 2, 3, 4, 5, 7}, s5, errors.New("[FAIL]:: Failed to process many mixed args (1)")},
+		{s9, []int{7, 2, 3, 4, 5}, s5, errors.New("[FAIL]:: Failed to process many mixed args (2)")},
+		{s10, []int{2, 3, 4, 5, 7}, s5, errors.New("[FAIL]:: Failed to process many mixed args (3)")},
+		{s11, []int{1, 2, 3, 4, 5, 6}, s4, errors.New("[FAIL]:: Failed to process many mixed args (4)")},
 	}
 
 	// running tests
 	for _, tst := range tests {
 		gotSlInt, gotSlStr := processArgsRm(tst.param)
-		if SameSlicesInt(gotSlInt, tst.wantSlInt) || SameSlices(gotSlStr, tst.wantSlStr) {
+		if !SameSlicesInt(gotSlInt, tst.wantSlInt) || !SameSlices(gotSlStr, tst.wantSlStr) {
+			fmt.Println("[GOT] -->\t", gotSlInt, gotSlStr)
+			fmt.Println("[WANT]-->\t", tst.wantSlInt, tst.wantSlStr)
+			fmt.Printf(":GOT:\t\t %T %T\n", gotSlInt, gotSlStr)
+			fmt.Printf(":WANT:\t\t %T %T\n", tst.wantSlInt, tst.wantSlStr)
+			fmt.Println("-------------------------------------------------")
 			t.Log(tst.err.Error())
 			t.Fail()
 		}
