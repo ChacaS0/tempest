@@ -153,11 +153,6 @@ func Execute() {
 
 func init() {
 	// Initialize the environment variables
-	if err := envconfig.Init(&conf); err != nil {
-		log.Fatal(err)
-	}
-
-	cobra.OnInitialize(initConfig)
 
 	home, err := homedir.Dir()
 	if err != nil {
@@ -165,6 +160,12 @@ func init() {
 		os.Exit(1)
 	}
 	conf.Home = home
+
+	cobra.OnInitialize(initConfig)
+
+	if err := envconfig.Init(&conf); err != nil {
+		// log.Println(err)
+	}
 
 	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)

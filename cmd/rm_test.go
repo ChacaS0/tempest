@@ -229,3 +229,46 @@ func TestProcessArgsRm(t *testing.T) {
 		}
 	}
 }
+
+// TestSimpleDelAllString is the test for the func simpleDelAllString which is supposed
+// to delete from the system all paths provided in args
+func TestSimpleDelAllString(t *testing.T) {
+	// create a test directories
+	dir1 := conf.Gopath + string(os.PathSeparator) + "dir1"
+	dir2 := conf.Gopath + string(os.PathSeparator) + "dir2"
+	dir3 := conf.Gopath + string(os.PathSeparator) + "dir3"
+
+	dirs := []string{dir1, dir2, dir3}
+
+	for _, d := range dirs {
+		if err := os.Mkdir(d, 0777); err != nil {
+			t.Log("[ERROR]:: Failed to create test directeory:", d)
+			t.Fail()
+		}
+	}
+
+	// apply func on them in order to delete it
+	if err := simpleDelAllString(dirs...); err != nil {
+		t.Log("[FAIL]:: Failed to remove those directories")
+		t.Fail()
+	}
+
+	stillExisting := make([]string, 0)
+
+	// check if they got deleted for real
+	for _, d := range dirs {
+		if isDir, err := IsDirectory(d); isDir || err == nil {
+			stillExisting = append(stillExisting, d)
+			t.Log("[FAIL]:: Think it deletes but it doesn't, this is so mean, imma cry now. Bye!")
+			t.Fail()
+		}
+	}
+
+	// clean up the mess if one of the test dirs still exist
+	for _, se := range stillExisting {
+		if err := os.RemoveAll(se); err != nil {
+			t.Log("[ERROR]:: F*ck can't do sh*t.")
+			t.Fail()
+		}
+	}
+}

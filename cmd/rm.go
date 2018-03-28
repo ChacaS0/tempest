@@ -21,7 +21,9 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -33,11 +35,11 @@ import (
 
 // @DEPRECATED
 // rmInt is the index to remove from the TEMPest list
-var rmInt int
+// var rmInt int
 
 // @DEPRECATED
 // rmStr is the path to be removed from TEMpest
-var rmStr string
+// var rmStr string
 
 // rmOrigin defines whether the origin directory/file should be deleted too
 var rmOrigin bool
@@ -114,8 +116,8 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// rmCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rmCmd.Flags().IntVarP(&rmInt, "index", "i", -1, "Points to an index provided by TEMPest")
-	rmCmd.Flags().StringVarP(&rmStr, "path", "p", "", "The path of a target for TEMPest")
+	// rmCmd.Flags().IntVarP(&rmInt, "index", "i", -1, "Points to an index provided by TEMPest")
+	// rmCmd.Flags().StringVarP(&rmStr, "path", "p", "", "The path of a target for TEMPest")
 
 	rmCmd.Flags().BoolVarP(&rmOrigin, "origin", "o", false, "Removes the target from TEMPest, but also the original directories/files")
 }
@@ -191,7 +193,7 @@ func processArgsRm(args []string) ([]int, []string) {
 	// // if RegexManyInt.FindString(strified) == strified {
 	// // 	// then that's it
 	// // }
-	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NOTE: WTFFFFFF!!?????
+	// @DEPRECATED
 	// for _, arg := range args {
 	// 	switch {
 	// 	case len(args) == 0 && rmInt[0] == -1 && rmStr[0] == "":
@@ -199,7 +201,6 @@ func processArgsRm(args []string) ([]int, []string) {
 	// 		slRmInt = append(slRmInt, rmInt[0])
 	// 		return slRmInt, slRmStr
 	// 	case len(args) > 0 && rmInt[0] == -1:
-	// 		//todo
 	// 	}
 
 	// }
@@ -236,10 +237,23 @@ func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 	// 	a = a[:1+copy(a[1:], a[2:])]
 	// listToRet := list[:index+copy(list[index:], list[index+1:])]
 
-	listToRet := make([]string, 0)
+	// if we have to, remove the directories/files
+	if rmOrigin {
+		// need to find another way QQ
+		trashSlice := make([]string, 0)
+		for _, index := range indexes {
+			trashSlice = append(trashSlice, list[index])
+		}
 
+		if err := simpleDelAllString(trashSlice...); err != nil {
+			log.Println(redB(":: [ERROR]"), color.HiRedString("There was an error while delete original files:"), "\n\t->", err)
+		}
+	}
+
+	//* Remove from slice
+	listToRet := make([]string, 0)
 	for _, index := range indexes {
-		// I don't find this elegant :(
+		// Is this right? :(
 		listToRet = append(listToRet, list[:index]...)
 		listToRet = append(listToRet, list[index+1:]...)
 	}
@@ -248,6 +262,20 @@ func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 	// color.HiYellow(fmt.Sprintf("%v", list))
 
 	return listToRet
+}
+
+// simpleDelAllString is a simple function to delete files or directories.
+func simpleDelAllString(paths ...string) error {
+	if paths != nil {
+		for _, path := range paths {
+			if err := os.RemoveAll(path); err != nil {
+				return err
+			}
+		}
+	} else {
+		return errors.New("Parameter is nil at rm.go:simpleDelAllString()")
+	}
+	return nil
 }
 
 // writeTempestcf saves the new list of paths meant to be targets for TEMPest
