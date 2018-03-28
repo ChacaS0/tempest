@@ -16,20 +16,22 @@ func TestRmInSlice(t *testing.T) {
 	sl1 := []string{0: "path1/sub1/subsub1", 1: "path2/sub2/subsub2", 2: "path3/sub3/subsub3"}
 	sl2 := []string{0: "path1/sub1"}
 	//---
-	sl22 := []string{}
 	sl11 := []string{0: "path2/sub2/subsub2", 1: "path3/sub3/subsub3"}
+	// empty
+	emptySlInt := make([]int, 0)
+	emptySlStr := make([]string, 0)
 
 	var tests = []struct {
-		i     int
-		str   string
+		i     []int
+		str   []string
 		slstr []string
 		want  []string
 		e     error
 	}{
-		{-1, "path1/sub1/subsub1", sl1, sl11, errors.New("[FAIL]:: Didn't remove shit - str")},
-		{-1, "path1/sub1", sl2, sl22, errors.New("[FAIL]:: Can't return the nil slice, sad - str")},
-		{0, "", sl1, sl11, errors.New("[FAIL]:: Didn't remove shit - int")},
-		{0, "", sl2, sl22, errors.New("[FAIL]:: Can't return the nil slice, sad - int")},
+		{emptySlInt, []string{"path1/sub1/subsub1"}, sl1, sl11, errors.New("[FAIL]:: Didn't remove shit - str")},
+		{emptySlInt, sl2, sl2, emptySlStr, errors.New("[FAIL]:: Can't return the nil slice, sad - str")},
+		{[]int{0}, emptySlStr, sl1, sl11, errors.New("[FAIL]:: Didn't remove shit - int")},
+		{[]int{0}, emptySlStr, sl2, emptySlStr, errors.New("[FAIL]:: Can't return the nil slice, sad - int")},
 	}
 
 	// running tests
@@ -124,8 +126,8 @@ func TestWriteTempestcf(t *testing.T) {
 	// Presets for testing
 	tempestcfbup := setTestTempestcf(t, sl1)
 
-	newSl := rmInSlice(0, "", sl1)
-	newSl = rmInSlice(-1, "this", sl1)
+	newSl := rmInSlice([]int{0}, []string{}, sl1)
+	newSl = rmInSlice([]int{}, []string{"this"}, sl1)
 
 	// Try to use writeTempestcf
 	if err := writeTempestcf(newSl); err != nil {
@@ -159,7 +161,7 @@ func TestWriteTempestcf(t *testing.T) {
 // It verifies that it returns the right slices
 func TestProcessArgsRm(t *testing.T) {
 	// parameter variables
-	//empty
+	// empty arg
 	s3 := []string{""}
 	// index ranges
 	s1 := []string{"0-1"}
@@ -176,8 +178,9 @@ func TestProcessArgsRm(t *testing.T) {
 	s9 := []string{"/tmp", "7", "2-5"}
 	s10 := []string{"2-5", "/tmp", "7"}
 	s11 := []string{"1-2", "3-4", "/temp", "5", "/tmp/user/aur", "6"}
+	s14 := []string{"0", "", "3-3", "/tmp"}
 	// Overlaping arguments
-	// TODO
+	s13 := []string{"0-2", "1-3", "/tmp", "10", "/tmp"}
 
 	emptySliceStr := make([]string, 0)
 	emptySliceInt := make([]int, 0)
@@ -190,7 +193,7 @@ func TestProcessArgsRm(t *testing.T) {
 		err       error
 	}{
 		// Empty
-		{s3, emptySliceInt, emptySliceStr, errors.New("[FAIL]:: Failed to prcess empty args")},
+		{s3, emptySliceInt, []string{"this"}, errors.New("[FAIL]:: Failed to prcess empty args")},
 		// IntToInt
 		{s1, []int{0, 1}, emptySliceStr, errors.New("[FAIL]:: Failed to return the slice of ints")},
 		{s2, []int{0, 1, 2, 5, 6, 7}, emptySliceStr, errors.New("[FAIL]:: Failed to process 2 ranges of ints")},
@@ -202,11 +205,14 @@ func TestProcessArgsRm(t *testing.T) {
 		// Many ints
 		{s6, []int{0, 2, 5}, emptySliceStr, errors.New("[FAIL]:: Failed to process a bunch of ints")},
 		{s7, []int{1}, emptySliceStr, errors.New("[FAIL]:: Could not process just one fcking int ffs")},
+		// Overlaping arguments
+		{s13, []int{0, 1, 2, 3, 10}, s5, errors.New("[FAIL]:: Failed to handle redundant information")},
 		// Mixed
 		{s8, []int{0, 2, 3, 4, 5, 7}, s5, errors.New("[FAIL]:: Failed to process many mixed args (1)")},
 		{s9, []int{7, 2, 3, 4, 5}, s5, errors.New("[FAIL]:: Failed to process many mixed args (2)")},
 		{s10, []int{2, 3, 4, 5, 7}, s5, errors.New("[FAIL]:: Failed to process many mixed args (3)")},
 		{s11, []int{1, 2, 3, 4, 5, 6}, s4, errors.New("[FAIL]:: Failed to process many mixed args (4)")},
+		{s14, []int{0, 3}, []string{"this", "/tmp"}, errors.New("[FAIL]:: Failed to process many mixed args (5)")},
 	}
 
 	// running tests

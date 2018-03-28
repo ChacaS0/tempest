@@ -31,9 +31,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// @DEPRECATED
 // rmInt is the index to remove from the TEMPest list
 var rmInt int
 
+// @DEPRECATED
 // rmStr is the path to be removed from TEMpest
 var rmStr string
 
@@ -85,7 +87,9 @@ or
 		if errAllP != nil {
 			color.Red(errAllP.Error())
 		}
-		slicePaths = rmInSlice(rmInt, rmStr, slicePaths) // TODO change this to take slices rmInt & Str
+		// slicePaths = rmInSlice(rmInt, rmStr, slicePaths) // @DEPRECATED
+		slRmInt, slRmStr := processArgsRm(args)
+		slicePaths = rmInSlice(slRmInt, slRmStr, slicePaths)
 
 		if errWrite := writeTempestcf(slicePaths); errWrite != nil {
 			color.Red(errWrite.Error())
@@ -118,15 +122,8 @@ func init() {
 
 // processArgsRm takes the args as parameters and process them
 func processArgsRm(args []string) ([]int, []string) {
-	// TODO process stuff hunh?
 	slRmInt := make([]int, 0)
 	slRmStr := make([]string, 0)
-
-	// Slice into string
-	var strified string
-	for _, valStr := range args {
-		strified += valStr + " "
-	}
 
 	// // regexes
 	// // RegexManyInt is the regex to see if many int were passed
@@ -141,9 +138,14 @@ func processArgsRm(args []string) ([]int, []string) {
 	// RegexJustInt is the regex to see if only an int has been passed as an arg
 	RegexJustInt := regexp.MustCompile(`^(\d+)$`)
 
-	// TODO - Check if the value hasn't been provided twice (specially with range stuffs)
 	for _, arg := range args { // for each arg in args
 		arg = strings.Trim(arg, " ")
+		// Empty arg
+		if arg == "" {
+			if !IsStringInSlice("this", slRmStr) {
+				slRmStr = append(slRmStr, "this")
+			}
+		}
 		// IntToInt
 		if allItoI := RegexIntToInt.FindString(arg); len(allItoI) > 0 {
 			// RegexIntToInt.ReplaceAllString(arg, ``)
@@ -161,12 +163,16 @@ func processArgsRm(args []string) ([]int, []string) {
 				begin = temp
 			}
 			for i := begin; i <= end; i++ {
-				slRmInt = append(slRmInt, i)
+				if !IsIntInSlice(i, slRmInt) {
+					slRmInt = append(slRmInt, i)
+				}
 			}
 		}
 		// Many Strings
 		if allMStr := RegexManyStr.FindString(arg); len(allMStr) > 0 {
-			slRmStr = append(slRmStr, arg)
+			if !IsStringInSlice(arg, slRmStr) {
+				slRmStr = append(slRmStr, arg)
+			}
 		}
 		// Just an Int
 		if allInt := RegexJustInt.FindString(arg); len(allInt) > 0 {
@@ -175,7 +181,9 @@ func processArgsRm(args []string) ([]int, []string) {
 				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand thise argument", arg), "\n\t->", errInt)
 				return nil, nil
 			}
-			slRmInt = append(slRmInt, val)
+			if !IsIntInSlice(val, slRmInt) {
+				slRmInt = append(slRmInt, val)
+			}
 		}
 
 	}
@@ -201,10 +209,12 @@ func processArgsRm(args []string) ([]int, []string) {
 
 // rmInSlice give it a slice with an index of path to remove.
 // It will return a new slice with the item removed from it!
-func rmInSlice(index int, record string, list []string) []string {
-	//* NOTE: alling this func, check if len(args) == 0, set record at "this"
+func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 
-	if index <= -1 {
+	// NOTE: alling this func, check if len(args) == 0, set record at "this"
+
+	// for strings
+	for _, record := range slRmStr {
 		//* we use the the path provided
 		if record == "this" {
 			this, errDir := os.Getwd()
@@ -216,7 +226,7 @@ func rmInSlice(index int, record string, list []string) []string {
 
 		for i, v := range list {
 			if v == record {
-				index = i
+				indexes = append(indexes, i)
 			}
 		}
 	}
@@ -226,10 +236,13 @@ func rmInSlice(index int, record string, list []string) []string {
 	// 	a = a[:1+copy(a[1:], a[2:])]
 	// listToRet := list[:index+copy(list[index:], list[index+1:])]
 
-	// I don't find this elegant :(
 	listToRet := make([]string, 0)
-	listToRet = append(listToRet, list[:index]...)
-	listToRet = append(listToRet, list[index+1:]...)
+
+	for _, index := range indexes {
+		// I don't find this elegant :(
+		listToRet = append(listToRet, list[:index]...)
+		listToRet = append(listToRet, list[index+1:]...)
+	}
 
 	// DEBUG
 	// color.HiYellow(fmt.Sprintf("%v", list))
