@@ -18,5 +18,5 @@
 | **``tempest rm 1-3``**               | remove the targets with the index 1, 2 and 3                                                      |
 | **``tempest rm *``**                 | remove all the targets                                                                            |
 | **``tempest rm /tmp``**              | remove the target for the path: ``/tmp``                                                          |
-| **``tempest rm 1-3 -o``**            | remove the target for the path: ``/tmp`` and the directory matching to the the indexes 1, 2 and 3 |
+| **``tempest rm 1-3 -o``**            | remove the targets for the matching directories to the the indexes 1, 2 and 3                     |
 
