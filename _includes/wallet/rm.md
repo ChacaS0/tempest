@@ -1,12 +1,22 @@
 
-<a href="https://asciinema.org/a/yujAEYSQnLZTP9YnugDTHtytS" target="_blank"><img src="https://asciinema.org/a/yujAEYSQnLZTP9YnugDTHtytS.png" /></a>
+<a href="https://asciinema.org/a/173451" target="_blank"><img src="https://asciinema.org/a/173451.png" /></a>
 
 ### [](#head-rm-1)List of flags
 
-| Long Flag       | Short Flag  | Description                                                                                             |
-|:----------------|:------------|:--------------------------------------------------------------------------------------------------------|
-| \-\-help        | -h          | [NO_ARGS] See the help section for the command.                                                         |
-| \-\-index       | -i          | [INT] Use the index number shown by ``tempest list`` to identify which target to delete.                |
-| \-\-path        | -p          | [STRING] Use the path shown by ``tempest list`` to identify which target to delete.                     |
-| \-\-origin      | -o          | [NO_ARGS] To be used with ``-p`` or ``-i``, indicates to **TEMPest** to remove it from your computer.   |
+| Long Flag       | Short Flag  | Description                                                                                              |
+|:----------------|:------------|:---------------------------------------------------------------------------------------------------------|
+| \-\-help        | -h          | [NO_ARGS] See the help section for the command.                                                          |
+| \-\-origin      | -o          | [NO_ARGS] To be used with ``-p`` or ``-i``, indicates to **TEMPest** to remove it from your computer.    |
+
+
+### [](#head-rm-2)Explanations
+
+| Example command                      | Description                                                                                       |
+|:-------------------------------------|:--------------------------------------------------------------------------------------------------|
+| **``tempest rm``**                   | remove the current directory from the target list                                                 |
+| **``tempest rm 0``**                 | remove the target with index 0 from the target list                                               |
+| **``tempest rm 1-3``**               | remove the targets with the index 1, 2 and 3                                                      |
+| **``tempest rm *``**                 | remove all the targets                                                                            |
+| **``tempest rm /tmp``**              | remove the target for the path: ``/tmp``                                                          |
+| **``tempest rm 1-3 -o``**            | remove the target for the path: ``/tmp`` and the directory matching to the the indexes 1, 2 and 3 |
 
