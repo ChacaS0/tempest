@@ -20,6 +20,16 @@ func TestRmInSlice(t *testing.T) {
 	// empty
 	emptySlInt := make([]int, 0)
 	emptySlStr := make([]string, 0)
+	// many ints
+	sl3 := []int{0, 2}
+	// this
+	this, errDir := os.Getwd()
+	if errDir != nil {
+		t.Log(errDir.Error())
+	}
+	slThis := []string{this, "/tmp"}
+	// all (*)
+	slAll := []string{"*"}
 
 	var tests = []struct {
 		i     []int
@@ -32,6 +42,15 @@ func TestRmInSlice(t *testing.T) {
 		{emptySlInt, sl2, sl2, emptySlStr, errors.New("[FAIL]:: Can't return the nil slice, sad - str")},
 		{[]int{0}, emptySlStr, sl1, sl11, errors.New("[FAIL]:: Didn't remove shit - int")},
 		{[]int{0}, emptySlStr, sl2, emptySlStr, errors.New("[FAIL]:: Can't return the nil slice, sad - int")},
+		{[]int{0, 1}, emptySlStr, sl1, []string{"path3/sub3/subsub3"}, errors.New("[FAIL]:: This trash sh*t can't remove with multiple indexes")},
+		// many strings
+		{emptySlInt, sl11, sl1, []string{"path1/sub1/subsub1"}, errors.New("[FAIL]:: Failed to remove two paths at once. Noob")},
+		// many ints
+		{sl3, emptySlStr, sl1, []string{"path2/sub2/subsub2"}, errors.New("[FAIL]:: Failed to remove multiple ints at once")},
+		// this
+		{emptySlInt, []string{"this"}, slThis, []string{"/tmp"}, errors.New("[FAIL]:: Could not remove 'this': " + this)},
+		// all (*)
+		{emptySlInt, slAll, sl1, emptySlStr, errors.New("[FAIL]:: Failed to use the all-wildcard")},
 	}
 
 	// running tests
@@ -161,8 +180,8 @@ func TestWriteTempestcf(t *testing.T) {
 // It verifies that it returns the right slices
 func TestProcessArgsRm(t *testing.T) {
 	// parameter variables
-	// empty arg
-	s3 := []string{""}
+	// this arg
+	s3 := []string{"this"}
 	// index ranges
 	s1 := []string{"0-1"}
 	s2 := []string{"0-2", "5-7"}
@@ -178,7 +197,7 @@ func TestProcessArgsRm(t *testing.T) {
 	s9 := []string{"/tmp", "7", "2-5"}
 	s10 := []string{"2-5", "/tmp", "7"}
 	s11 := []string{"1-2", "3-4", "/temp", "5", "/tmp/user/aur", "6"}
-	s14 := []string{"0", "", "3-3", "/tmp"}
+	s14 := []string{"0", "this", "3-3", "/tmp"}
 	// Overlaping arguments
 	s13 := []string{"0-2", "1-3", "/tmp", "10", "/tmp"}
 

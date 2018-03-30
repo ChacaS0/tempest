@@ -78,9 +78,9 @@ or
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		// color.Cyan("Sorry, rm is not fully implemented yet... Coming soon don't worry!")
-		// if len(args) == 0 && rmInt == -1 && rmStr == "" {
-		// 	rmStr = "this"
-		// }
+		if len(args) == 0 {
+			args = append(args, "this")
+		}
 
 		// handles rm's args
 		// slRmInt, slRmStr := processArgsRm(args)
@@ -142,8 +142,12 @@ func processArgsRm(args []string) ([]int, []string) {
 
 	for _, arg := range args { // for each arg in args
 		arg = strings.Trim(arg, " ")
+		// Wildcard: * (ALL)
+		if arg == "*" && len(args) == 1 {
+			slRmStr = append(slRmStr, arg)
+		}
 		// Empty arg
-		if arg == "" {
+		if arg == "this" {
 			if !IsStringInSlice("this", slRmStr) {
 				slRmStr = append(slRmStr, "this")
 			}
@@ -190,21 +194,6 @@ func processArgsRm(args []string) ([]int, []string) {
 
 	}
 
-	// // if RegexManyInt.FindString(strified) == strified {
-	// // 	// then that's it
-	// // }
-	// @DEPRECATED
-	// for _, arg := range args {
-	// 	switch {
-	// 	case len(args) == 0 && rmInt[0] == -1 && rmStr[0] == "":
-	// 		slRmStr = append(slRmStr, "this")
-	// 		slRmInt = append(slRmInt, rmInt[0])
-	// 		return slRmInt, slRmStr
-	// 	case len(args) > 0 && rmInt[0] == -1:
-	// 	}
-
-	// }
-
 	return slRmInt, slRmStr
 }
 
@@ -230,6 +219,10 @@ func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 				indexes = append(indexes, i)
 			}
 		}
+
+		if record == "*" {
+			return []string{}
+		}
 	}
 
 	// Slicing an element out of the slice.
@@ -237,7 +230,7 @@ func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 	// 	a = a[:1+copy(a[1:], a[2:])]
 	// listToRet := list[:index+copy(list[index:], list[index+1:])]
 
-	// if we have to, remove the directories/files
+	//* if we have to, remove the directories/files
 	if rmOrigin {
 		// need to find another way QQ
 		trashSlice := make([]string, 0)
@@ -250,17 +243,20 @@ func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 		}
 	}
 
-	//* Remove from slice
+	//* Remove from slice if has stuff to remove
 	listToRet := make([]string, 0)
-	for _, index := range indexes {
-		// Is this right? :(
-		listToRet = append(listToRet, list[:index]...)
-		listToRet = append(listToRet, list[index+1:]...)
+	if len(indexes) > 0 {
+		for i, item := range list {
+			if !IsIntInSlice(i, indexes) {
+				listToRet = append(listToRet, item)
+			}
+		}
 	}
 
 	// DEBUG
 	// color.HiYellow(fmt.Sprintf("%v", list))
 
+	// just for linter ...
 	return listToRet
 }
 
