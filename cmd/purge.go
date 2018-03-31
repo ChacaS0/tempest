@@ -211,7 +211,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 func deleteAllInt(index int, testMode bool) error {
 	allPaths, errPaths := getPaths()
 	if errPaths != nil {
-		color.Red("::Error while reading .tempestcf")
+		color.Red(":: Error while reading .tempestcf")
 		return errPaths
 	}
 	if index >= 0 && index < len(allPaths) {

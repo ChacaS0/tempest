@@ -33,8 +33,8 @@ import (
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "Lists all the paths submitted to TEMPest.",
-	Long: `All the paths set for TEMPest.
+	Short: "Lists all the targets submitted to TEMPest.",
+	Long: `All the targets set for TEMPest.
 
 They follow this pattern:
 <IndexPath> <Path>
@@ -48,7 +48,7 @@ The IndexPath can then be used to select the path
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		if errLi := printList(); errLi != nil {
-			fmt.Println(color.HiRedString("Could not list paths, sorry bra!", errLi))
+			fmt.Println(color.HiRedString("Could not list targets, sorry bra!", errLi))
 		}
 	},
 }
@@ -78,7 +78,7 @@ func printList() error {
 	if errSliced != nil {
 		// Just a small enhancement of the "no paths set yet" display
 		if errSliced.Error() == "empty" {
-			fmt.Println(color.HiMagentaString(":: No path set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding paths!"))
+			fmt.Println(color.HiMagentaString(":: No target set yet\n:: Suggestion - Run: \n\ttempest help add\nFor more information about adding targets!"))
 			return nil
 		}
 		return errSliced
@@ -86,8 +86,8 @@ func printList() error {
 
 	// color.Red(fmt.Sprintf("%d", len(ctntSlice)))
 	if len(ctntSlice) >= 1 {
-		fmt.Println(color.HiYellowString("Current paths currently having \"fun\" with TEMPest:\n"))
-		fmt.Println(color.HiYellowString("Index\t| Path"))
+		fmt.Println(color.HiYellowString("Current targets currently having \"fun\" with TEMPest:\n"))
+		fmt.Println(color.HiYellowString("Index\t| Target"))
 		// fmt.Println(color.HiYellowString("--------------------------------------------------"))
 	}
 
@@ -97,7 +97,7 @@ func printList() error {
 		case i < len(aPath):
 			fmt.Println(color.HiYellowString(fmt.Sprintf("%d\t|", i)), aPath)
 		case i == 0:
-			fmt.Println(color.HiMagentaString("No path set yet\nSuggestion - Run: \n\ttempest help add\nFor more information about adding paths!"))
+			fmt.Println(color.HiMagentaString("No target set yet\nSuggestion - Run: \n\ttempest help add\nFor more information about adding targets!"))
 		}
 	}
 	return nil

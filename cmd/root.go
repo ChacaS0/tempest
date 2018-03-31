@@ -90,6 +90,12 @@ var greenB func(...interface{}) string
 // magB is a func used to print in bold magenta
 var magB func(...interface{}) string
 
+// Target is represented by an index and a path
+type Target struct {
+	Index int
+	Path  string
+}
+
 // RootCmd represents the base command when called without any subcommands
 //TODO Make full description with full help on how to use the CLI
 var RootCmd = &cobra.Command{
@@ -147,11 +153,6 @@ func Execute() {
 
 func init() {
 	// Initialize the environment variables
-	if err := envconfig.Init(&conf); err != nil {
-		log.Fatal(err)
-	}
-
-	cobra.OnInitialize(initConfig)
 
 	home, err := homedir.Dir()
 	if err != nil {
@@ -159,6 +160,12 @@ func init() {
 		os.Exit(1)
 	}
 	conf.Home = home
+
+	cobra.OnInitialize(initConfig)
+
+	if err := envconfig.Init(&conf); err != nil {
+		// log.Println(err)
+	}
 
 	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
@@ -277,4 +284,34 @@ func IsDirectory(path string) (bool, error) {
 		return false, err
 	}
 	return fileInfo.IsDir(), nil
+}
+
+// IsIntInSlice returns true if the int is in the slice
+func IsIntInSlice(index int, sl []int) bool {
+	if len(sl) <= 0 || sl == nil {
+		return false
+	}
+
+	for _, val := range sl {
+		if val == index {
+			return true
+		}
+	}
+	return false
+}
+
+// IsStringInSlice returns true if the string is in the slice.
+// This one is more simple and faster than checkRedondance(slice, sliceArgs[]string) bool
+func IsStringInSlice(str string, sl []string) bool {
+	if len(sl) <= 0 || sl == nil {
+		return false
+	}
+
+	for _, val := range sl {
+		if val == str {
+			return true
+		}
+	}
+
+	return false
 }
