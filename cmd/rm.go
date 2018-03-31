@@ -21,18 +21,17 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"os"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
-
-// rmInt is the index to remove from the TEMPest list
-var rmInt int
-
-// rmStr is the path to be removed from TEMpest
-var rmStr string
 
 // rmOrigin defines whether the origin directory/file should be deleted too
 var rmOrigin bool
@@ -45,7 +44,7 @@ var rmCmd = &cobra.Command{
 The basic command does not delete the original directory or file.
 It's just telling to TEMPest to untrack the file/directory. For example:
 
-	tempest rm -p /tmp
+	tempest rm /tmp
 
 or
 Place yourself inside the directory and run:
@@ -56,29 +55,51 @@ If it is a directory tracked by TEMPest, it will be untracked, otherwise you wil
 
 It is also possible to use the index number resulting of the tempest list command:
 
-	tempest rm -i 1
+	tempest rm 1
 
 ` + color.RedString("/!\\ [WARNING] After removing a file, the index number might change!!") + `
 
+It is possible to remove many targets at the same time:
+	tempest rm 1 3 2 7
+or
+	tempest rm /tmp /temp
+
+To remove the current directory, for example, if we want to remove /tmp:
+	cd /tmp
+	tempest rm
+
+Using indexes for rm allows to use ranges which, for now can't be done using targets paths. 
+Examples:
+	tempest rm 1-3
+		-> This removes the targets matching the indexes 1 to 3 (1, 2 and 3)
+
+To remove all your targets from TEMPest:
+	tempest rm *
+
 In order to remove the original file/directory:
 
-	tempest rm -o 1
+	tempest rm 1 -o
 or
-	tempest rm --origin 1
+	tempest rm 1 --origin
 
 => Considering 1 is /tmp, this would remove /tmp from TEMPest AND from your device.
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		// color.Cyan("Sorry, rm is not fully implemented yet... Coming soon don't worry!")
-		if len(args) == 0 && rmInt == -1 && rmStr == "" {
-			rmStr = "this"
+		if len(args) == 0 {
+			args = append(args, "this")
 		}
+
+		// handles rm's args
+		// slRmInt, slRmStr := processArgsRm(args)
+
 		slicePaths, errAllP := getPaths()
 		if errAllP != nil {
 			color.Red(errAllP.Error())
 		}
-		slicePaths = rmInSlice(rmInt, rmStr, slicePaths)
+		slRmInt, slRmStr := processArgsRm(args)
+		slicePaths = rmInSlice(slRmInt, slRmStr, slicePaths)
 
 		if errWrite := writeTempestcf(slicePaths); errWrite != nil {
 			color.Red(errWrite.Error())
@@ -103,18 +124,95 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// rmCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rmCmd.Flags().IntVarP(&rmInt, "index", "i", -1, "Points to an index provided by TEMPest")
-	rmCmd.Flags().StringVarP(&rmStr, "path", "p", "", "The path of a target for TEMPest")
+	// rmCmd.Flags().IntVarP(&rmInt, "index", "i", -1, "Points to an index provided by TEMPest")
+	// rmCmd.Flags().StringVarP(&rmStr, "path", "p", "", "The path of a target for TEMPest")
 
 	rmCmd.Flags().BoolVarP(&rmOrigin, "origin", "o", false, "Removes the target from TEMPest, but also the original directories/files")
 }
 
+// processArgsRm takes the args as parameters and process them
+func processArgsRm(args []string) ([]int, []string) {
+	slRmInt := make([]int, 0)
+	slRmStr := make([]string, 0)
+
+	// // regexes
+	// // RegexManyInt is the regex to see if many int were passed
+	// // i.e. ``0 1 4`` or ``0``
+	// // RegexManyInt := regexp.MustCompile(`([0-9]+\s|[0-9]|^[0-9]+$)`)
+	// RegexIntToInt is the regex to see if we want a range of int
+	// i.e. ``0-2`` (would be 0 1 2)
+	RegexIntToInt := regexp.MustCompile(`(\d+-\d+)`)
+	// RegexManyStr is the regex to see if many strings (targets) were passed
+	// i.e. ``/tmp`` /path1/subpath1``
+	RegexManyStr := regexp.MustCompile(`^(\/|\\)(\d|\D)+`)
+	// RegexJustInt is the regex to see if only an int has been passed as an arg
+	RegexJustInt := regexp.MustCompile(`^(\d+)$`)
+
+	for _, arg := range args { // for each arg in args
+		arg = strings.Trim(arg, " ")
+		// Wildcard: * (ALL)
+		if arg == "*" && len(args) == 1 {
+			slRmStr = append(slRmStr, arg)
+		}
+		// Empty arg
+		if arg == "this" {
+			if !IsStringInSlice("this", slRmStr) {
+				slRmStr = append(slRmStr, "this")
+			}
+		}
+		// IntToInt
+		if allItoI := RegexIntToInt.FindString(arg); len(allItoI) > 0 {
+			// RegexIntToInt.ReplaceAllString(arg, ``)
+			// explode with ``-`` and get the left and right value
+			values := strings.Split(arg, "-")
+			begin, errBegin := strconv.Atoi(values[0])
+			end, errEnd := strconv.Atoi(values[1])
+			if errBegin != nil || errEnd != nil {
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand those arguments", arg), "\n\t[0]:", values[0], "\n\t->", errBegin, "\n\t[1]:", values[1], "\n\t->", errEnd)
+				return nil, nil
+			}
+			if begin > end {
+				temp := end
+				end = begin
+				begin = temp
+			}
+			for i := begin; i <= end; i++ {
+				if !IsIntInSlice(i, slRmInt) {
+					slRmInt = append(slRmInt, i)
+				}
+			}
+		}
+		// Many Strings
+		if allMStr := RegexManyStr.FindString(arg); len(allMStr) > 0 {
+			if !IsStringInSlice(arg, slRmStr) {
+				slRmStr = append(slRmStr, arg)
+			}
+		}
+		// Just an Int
+		if allInt := RegexJustInt.FindString(arg); len(allInt) > 0 {
+			val, errInt := strconv.Atoi(arg)
+			if errInt != nil {
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry, could not understand thise argument", arg), "\n\t->", errInt)
+				return nil, nil
+			}
+			if !IsIntInSlice(val, slRmInt) {
+				slRmInt = append(slRmInt, val)
+			}
+		}
+
+	}
+
+	return slRmInt, slRmStr
+}
+
 // rmInSlice give it a slice with an index of path to remove.
 // It will return a new slice with the item removed from it!
-func rmInSlice(index int, record string, list []string) []string {
-	//* NOTE: alling this func, check if len(args) == 0, set record at "this"
+func rmInSlice(indexes []int, slRmStr []string, list []string) []string {
 
-	if index <= -1 {
+	// NOTE: alling this func, check if len(args) == 0, set record at "this"
+
+	// for strings
+	for _, record := range slRmStr {
 		//* we use the the path provided
 		if record == "this" {
 			this, errDir := os.Getwd()
@@ -126,8 +224,12 @@ func rmInSlice(index int, record string, list []string) []string {
 
 		for i, v := range list {
 			if v == record {
-				index = i
+				indexes = append(indexes, i)
 			}
+		}
+
+		if record == "*" {
+			return []string{}
 		}
 	}
 
@@ -136,15 +238,48 @@ func rmInSlice(index int, record string, list []string) []string {
 	// 	a = a[:1+copy(a[1:], a[2:])]
 	// listToRet := list[:index+copy(list[index:], list[index+1:])]
 
-	// I don't find this elegant :(
+	//* if we have to, remove the directories/files
+	if rmOrigin {
+		// need to find another way QQ
+		trashSlice := make([]string, 0)
+		for _, index := range indexes {
+			trashSlice = append(trashSlice, list[index])
+		}
+
+		if err := simpleDelAllString(trashSlice...); err != nil {
+			log.Println(redB(":: [ERROR]"), color.HiRedString("There was an error while delete original files:"), "\n\t->", err)
+		}
+	}
+
+	//* Remove from slice if has stuff to remove
 	listToRet := make([]string, 0)
-	listToRet = append(listToRet, list[:index]...)
-	listToRet = append(listToRet, list[index+1:]...)
+	if len(indexes) > 0 {
+		for i, item := range list {
+			if !IsIntInSlice(i, indexes) {
+				listToRet = append(listToRet, item)
+			}
+		}
+	}
 
 	// DEBUG
 	// color.HiYellow(fmt.Sprintf("%v", list))
 
+	// just for linter ...
 	return listToRet
+}
+
+// simpleDelAllString is a simple function to delete files or directories.
+func simpleDelAllString(paths ...string) error {
+	if paths != nil {
+		for _, path := range paths {
+			if err := os.RemoveAll(path); err != nil {
+				return err
+			}
+		}
+	} else {
+		return errors.New("Parameter is nil at rm.go:simpleDelAllString()")
+	}
+	return nil
 }
 
 // writeTempestcf saves the new list of paths meant to be targets for TEMPest
