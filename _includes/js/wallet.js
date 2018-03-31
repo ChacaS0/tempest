@@ -23,12 +23,11 @@ $(document).ready(function(){
 		// $(getid).attr("src", getsrc);
 		
 		// scroll to it
-		$.wait(410).then(function(){
-			$('html').animate({
-				scrollTop: $(idEvt).offset().top
-			}, 500);
-	}
-);
+		// $.wait(410).then(function(){
+		// 	$('html').animate({
+		// 		scrollTop: $(idEvt).offset().top
+		// 	}, 500);
+		// });
 		
 		// load frame
 		// $(idEvt).next("script").load(this);

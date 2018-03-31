@@ -18,5 +18,9 @@
 | **``tempest rm 1-3``**               | remove the targets with the index 1, 2 and 3                                                      |
 | **``tempest rm *``**                 | remove all the targets                                                                            |
 | **``tempest rm /tmp``**              | remove the target for the path: ``/tmp``                                                          |
-| **``tempest rm 1-3 -o``**            | remove the targets for the matching directories to the the indexes 1, 2 and 3                     |
+| **``tempest rm 1-3 -o``**            | remove the targets for the matching directories to the indexes 1, 2 and 3                         |
+| **``tempest rm 1-3 --origin``**       | same effect of using ``-o``                                                                       |
 
+
+:warning: When using ``--origin`` or ``-o`` flag, the original files and directories will be removed from your system, so be careful.
+:warning: After the use of ``rm``, Indexes numbers might change. Keep an eye on this. :eyes:
