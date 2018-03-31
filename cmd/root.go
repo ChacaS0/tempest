@@ -1,5 +1,6 @@
-// Copyright © 2018 Sebastien Bastide
+// Package cmd contains all the commands for TEMPest.
 //
+// Copyright © 2018 Sebastien Bastide
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,7 +18,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 package cmd
 
 import (
@@ -91,6 +91,7 @@ var greenB func(...interface{}) string
 var magB func(...interface{}) string
 
 // Target is represented by an index and a path
+// Later this will hold the type(directory or file)
 type Target struct {
 	Index int
 	Path  string
@@ -314,4 +315,15 @@ func IsStringInSlice(str string, sl []string) bool {
 	}
 
 	return false
+}
+
+// PathsToTargets is a converter, takes paths (strings) and convert them into targets (Target)
+func PathsToTargets(paths []string) []Target {
+	sliceTgt := make([]Target, 0)
+
+	for i, p := range paths {
+		sliceTgt = append(sliceTgt, Target{i, p})
+	}
+
+	return sliceTgt
 }

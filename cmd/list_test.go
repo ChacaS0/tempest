@@ -102,3 +102,15 @@ func TestPrintList(t *testing.T) {
 	// Fallback
 	fbTestTempestcf(t, tempestcfbup)
 }
+
+// TestGetState is the func that checks if getState give the right state.
+// Meaning { True : "good", False: "Not good"}
+func TestGetState(t *testing.T) {
+	// TODO: to input non existing paths to TEMPest, we can write directly to the file?
+	//
+}
+
+// TestFixTargets is the func that checks if it deletes all the broken targets
+func TestFixTargets(t *testing.T) {
+	// TODO:
+}

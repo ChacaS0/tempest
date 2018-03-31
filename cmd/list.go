@@ -30,6 +30,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// doFix is the var receiving the value of the --fix flag
+// true if needs to fix the targets
+var doFix bool
+
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
@@ -47,8 +51,16 @@ For example:
 The IndexPath can then be used to select the path 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		if errLi := printList(); errLi != nil {
-			fmt.Println(color.HiRedString("Could not list targets, sorry bra!", errLi))
+		switch {
+		case doFix && len(args) == 0:
+			// TODO: Fix that shit
+			// if errFix := fixTargets(); errFix != nil {
+			// 	fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not fix broken paths, feels bra!"), errFix)
+			// }
+		default:
+			if errLi := printList(); errLi != nil {
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not list targets, sorry bra!", errLi))
+			}
 		}
 	},
 }
@@ -65,6 +77,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	listCmd.Flags().BoolVarP(&doFix, "fix", "f", false, "Check if TEMPest is watching some broken paths and act on them in this case.")
 
 	/* //* TEST
 	out := new(bytes.Buffer)
@@ -120,4 +133,65 @@ func getPaths() (returnSlice []string, pathsError error) {
 	ctntStr := string(ctnt)
 	returnSlice = strings.Split(ctntStr, "\n")
 	return returnSlice[:len(returnSlice)-1], nil
+}
+
+// fixTargets is a func that handle the fix paths process
+func fixTargets() error {
+
+	// first we fetch all current paths
+	allPaths, errGP := getPaths()
+	if errGP != nil {
+		return errGP
+	}
+
+	// Convert those as targets
+	allTargets := PathsToTargets(allPaths)
+
+	// Get the state of each target
+	states := getState(allTargets)
+
+	// slRmInt, slRmStr := processArgsRm(args)
+	// slicePaths = rmInSlice(slRmInt, slRmStr, slicePaths)
+
+	// if errWrite := writeTempestcf(slicePaths); errWrite != nil {
+	// 	color.Red(errWrite.Error())
+	// }
+
+	// slRmInt is the slice that will hold all the targets to remove (subject to changes to use Targets instead)
+	slRmInt := make([]int, 0)
+	for tgt, state := range states {
+		if !state {
+			slRmInt = append(slRmInt, tgt.Index)
+		}
+	}
+
+	// Then just process those trashes
+	// TODO - Later maybe we could ask the user what to do ?
+	slicePaths := rmInSlice(slRmInt, []string{}, allPaths)
+	if err := writeTempestcf(slicePaths); err != nil {
+		fmt.Println(redB(":: [ERROR]"), color.HiRedString("Did not succeed to write the new targets: \n\t", err.Error()))
+	}
+
+	return nil
+}
+
+// getState returns a map[Target]bool named ``states``
+// states relates the state of the target's path.
+// {
+// 	True  : Still fine, path is right,
+// 	False : Nope, broken path or doesn't exists
+// }
+func getState(targets []Target) map[Target]bool {
+
+	states := make(map[Target]bool, 0)
+
+	for _, tgt := range targets {
+		if _, err := IsDirectory(tgt.Path); err == nil {
+			states[tgt] = true
+		} else {
+			states[tgt] = false
+		}
+	}
+
+	return states
 }
