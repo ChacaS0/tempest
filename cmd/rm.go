@@ -33,14 +33,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// @DEPRECATED
-// rmInt is the index to remove from the TEMPest list
-// var rmInt int
-
-// @DEPRECATED
-// rmStr is the path to be removed from TEMpest
-// var rmStr string
-
 // rmOrigin defines whether the origin directory/file should be deleted too
 var rmOrigin bool
 
@@ -52,7 +44,7 @@ var rmCmd = &cobra.Command{
 The basic command does not delete the original directory or file.
 It's just telling to TEMPest to untrack the file/directory. For example:
 
-	tempest rm -p /tmp
+	tempest rm /tmp
 
 or
 Place yourself inside the directory and run:
@@ -63,15 +55,32 @@ If it is a directory tracked by TEMPest, it will be untracked, otherwise you wil
 
 It is also possible to use the index number resulting of the tempest list command:
 
-	tempest rm -i 1
+	tempest rm 1
 
 ` + color.RedString("/!\\ [WARNING] After removing a file, the index number might change!!") + `
 
+It is possible to remove many targets at the same time:
+	tempest rm 1 3 2 7
+or
+	tempest rm /tmp /temp
+
+To remove the current directory, for example, if we want to remove /tmp:
+	cd /tmp
+	tempest rm
+
+Using indexes for rm allows to use ranges which, for now can't be done using targets paths. 
+Examples:
+	tempest rm 1-3
+		-> This removes the targets matching the indexes 1 to 3 (1, 2 and 3)
+
+To remove all your targets from TEMPest:
+	tempest rm *
+
 In order to remove the original file/directory:
 
-	tempest rm -o 1
+	tempest rm 1 -o
 or
-	tempest rm --origin 1
+	tempest rm 1 --origin
 
 => Considering 1 is /tmp, this would remove /tmp from TEMPest AND from your device.
 
@@ -89,7 +98,6 @@ or
 		if errAllP != nil {
 			color.Red(errAllP.Error())
 		}
-		// slicePaths = rmInSlice(rmInt, rmStr, slicePaths) // @DEPRECATED
 		slRmInt, slRmStr := processArgsRm(args)
 		slicePaths = rmInSlice(slRmInt, slRmStr, slicePaths)
 
