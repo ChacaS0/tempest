@@ -49,14 +49,16 @@ For example:
 3 /tempor
 
 The IndexPath can then be used to select the path 
+
+To fix broken targets (for example targets that points to non-existing paths):
+	tempest list --fix
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		switch {
 		case doFix && len(args) == 0:
-			// TODO: Fix that shit
-			// if errFix := fixTargets(); errFix != nil {
-			// 	fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not fix broken paths, feels bra!"), errFix)
-			// }
+			if errFix := fixTargets(); errFix != nil {
+				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not fix broken paths, feels bra!"), errFix)
+			}
 		default:
 			if errLi := printList(); errLi != nil {
 				fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not list targets, sorry bra!", errLi))
@@ -150,13 +152,6 @@ func fixTargets() error {
 	// Get the state of each target
 	states := getState(allTargets)
 
-	// slRmInt, slRmStr := processArgsRm(args)
-	// slicePaths = rmInSlice(slRmInt, slRmStr, slicePaths)
-
-	// if errWrite := writeTempestcf(slicePaths); errWrite != nil {
-	// 	color.Red(errWrite.Error())
-	// }
-
 	// slRmInt is the slice that will hold all the targets to remove (subject to changes to use Targets instead)
 	slRmInt := make([]int, 0)
 	for tgt, state := range states {
@@ -167,9 +162,27 @@ func fixTargets() error {
 
 	// Then just process those trashes
 	// TODO - Later maybe we could ask the user what to do ?
-	slicePaths := rmInSlice(slRmInt, []string{}, allPaths)
-	if err := writeTempestcf(slicePaths); err != nil {
-		fmt.Println(redB(":: [ERROR]"), color.HiRedString("Did not succeed to write the new targets: \n\t", err.Error()))
+	fmt.Println(yellowB("::"), yellowB("Status of targets:"))
+	fmt.Println(yellowB("\nStatus\t| Index\t | Target"))
+	for tgt, ste := range states {
+		if !ste {
+			fmt.Print(color.HiRedString("BROKEN"), yellowB("\t|"))
+		} else {
+			fmt.Print(color.HiGreenString("GOOD"), yellowB("\t|"))
+		}
+		fmt.Println(" ", tgt.Index, "\t", yellowB("|"), tgt.Path)
+	}
+	if len(slRmInt) > 0 {
+		fmt.Println("")
+		slicePaths := rmInSlice(slRmInt, []string{}, allPaths)
+		if err := writeTempestcf(slicePaths); err != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Did not succeed to write the new targets: \n\t", err.Error()))
+		}
+		// INFO
+		fmt.Println(color.CyanString("::"), color.HiCyanString("Broken targets deleted with success ! ;)"))
+	} else {
+		// INFO
+		fmt.Println("\n", color.CyanString("::"), color.HiCyanString("No broken targets ! Much WOW ! !"))
 	}
 
 	return nil

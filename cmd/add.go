@@ -84,7 +84,7 @@ func init() {
 	// addCmd.Flags().StringVarP(&this, "this", "t", "nothing", "Points to current directory")
 }
 
-// func addLine(argFlags []string, args []string) error {
+// addLine add each string as target into TEMPest (~/.tempestcf)
 func addLine(args []string) error {
 	// Check if the path already exists first in tempestcf
 	// ctnt, errRead := ioutil.ReadFile(conf.Home + "/.tempestcf")
