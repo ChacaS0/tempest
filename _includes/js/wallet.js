@@ -22,7 +22,7 @@ $(document).ready(function(){
 		// $(getid).attr("src", "");
 		// $(getid).attr("src", getsrc);
 		
-		// scroll to it
+		//* scroll to it
 		// $.wait(410).then(function(){
 		// 	$('html').animate({
 		// 		scrollTop: $(idEvt).offset().top

@@ -26,6 +26,8 @@ source ~/.bash_profile
 
 Then add ``GOBIN`` to your ``PATH``
 
+> You can also skip this step and then just add a symlink from ``$GOBIN/tempest`` to ``/usr/bin/tempest`` after the installation of **TEMPest** (create a shortcut under Windows to ``System32``)
+
 #### [](#header-2-2-1-2)Temporary configuration of ``GOBIN``
 Simply run:
 ```bash
