@@ -45,6 +45,9 @@ or
 export GOBIN=/usr/bin
 ```
 
+> You can also skip this step and then just add a symlink from ``$GOBIN/tempest`` to ``/usr/bin/tempest`` after the installation of **TEMPest**
+
+
 Then
 ```bash
 go get -v -u github.com/ChacaS0/tempest
@@ -55,6 +58,7 @@ Add this line to ``/etc/environment``:
 GOBIN=<PATH_OF_YOUR_CHOICE>
 PATH=$PATH:$GOBIN
 ```
+
 
 Then
 ```bash
