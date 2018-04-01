@@ -9,36 +9,19 @@ $(document).ready(function(){
 		// hide others
 		$(".wall-ctnt:visible").not($(idEvt).next()).toggle("slow");
 
-		// show the right one
-		$(idEvt).next(".wall-ctnt").toggle("slow");
-		
-		// $(getid).load(getsrc);
-		// // get the script URL
-		
-		// var iframe = document.getElementById(getid);
-		// iframe.contentDocument.location=iframe.src;
-		// $('#'+getid).attr('src', $('#'+getid).attr('src'));
-		
-		// $(getid).attr("src", "");
-		// $(getid).attr("src", getsrc);
-		
-		//* scroll to it
-		// $.wait(410).then(function(){
-		// 	$('html').animate({
-		// 		scrollTop: $(idEvt).offset().top
-		// 	}, 500);
-		// });
-		
-		// load frame
-		// $(idEvt).next("script").load(this);
+		// show the right one & scroll to it when it is fully visible
+		$(idEvt).next(".wall-ctnt").toggle("slow").promise().done(function(){
+			$('html, body').animate({ scrollTop: $(idEvt).offset().top }, 500);
+		});
 
 	});
 
 });
 
-// create the wait function...ish
-$.wait = function(ms) {
-	var defer = $.Deferred();
-	setTimeout(function() { defer.resolve(); }, ms);
-	return defer;
-};
+// @DEPRECATED 
+// // create the wait function...ish
+// $.wait = function(ms) {
+// 	var defer = $.Deferred();
+// 	setTimeout(function() { defer.resolve(); }, ms);
+// 	return defer;
+// };
