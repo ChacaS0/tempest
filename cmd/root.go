@@ -48,13 +48,18 @@ var conf struct {
 // 	duration int `yaml:"duration"`
 // }
 
-// var vcf vConfig
+// TempestConfigDir points to the config directory of TEMPest
+// it holds pretty much all configuration for TEMPest
+var TempestConfigDir string
 
 // pathProg is the path to the git root
 var pathProg string
 
 // pathTempest is the path to the tempest folder
 var pathTempest string
+
+// LogShutup is the path to the log of the 'shutup mode'
+var LogShutup string
 
 // Tempestcf is the path to the .tempestcf file
 // this file holds all the paths (targets) of TEMPest
@@ -168,12 +173,15 @@ func init() {
 		// log.Println(err)
 	}
 
+	TempestConfigDir = conf.Home + string(os.PathSeparator) + ".tempest"
+
 	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
 
-	Tempestcf = conf.Home + string(os.PathSeparator) + ".tempestcf"
+	Tempestcf = TempestConfigDir + string(os.PathSeparator) + ".tempestcf"
 	Tempestyml = viper.ConfigFileUsed()
-	TempestymlDef = conf.Home + string(os.PathSeparator) + ".tempest.yaml"
+	TempestymlDef = TempestConfigDir + string(os.PathSeparator) + ".tempest.yaml"
+	LogShutup = TempestConfigDir + string(os.PathSeparator) + ".log" + "shutup.log"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
@@ -196,7 +204,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest/.tempest.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -209,7 +217,7 @@ func init() {
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		viper.SetConfigFile(TempestymlDef)
 	} else {
 		// Find home directory.
 		home, err := homedir.Dir()
@@ -217,9 +225,10 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		conf.Home = home
 
 		// Search config in home directory with name ".tempest" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(TempestConfigDir)
 		viper.SetConfigName(".tempest")
 		viper.SetConfigType("yaml")
 	}

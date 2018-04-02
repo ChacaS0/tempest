@@ -27,7 +27,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// testAll tells if ``start`` should be run in 'test mode'
 var testAll bool
+
+// shutupMode tells if ``start`` should be run in 'shutup mode'
+var shutupMode bool
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
@@ -71,6 +75,7 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().BoolVarP(&testAll, "test", "t", false, "test mode -- doesn't actually delete and log to stdout")
+	startCmd.Flags().BoolVarP(&shutupMode, "shutup", "s", false, "shupup mode -- doesn't display anything here, only in logs: "+LogShutup) // TODO
 }
 
 // callPurge call the external program named "purge" on each path provided
