@@ -22,7 +22,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -82,7 +81,7 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().BoolVarP(&testAll, "test", "t", false, "test mode -- doesn't actually delete and log to stdout")
-	startCmd.Flags().BoolVarP(&needShutup, "shutup", "s", false, "in 'shutup mode', all messages are redirected to logs ("+LogShutup+")") //TODO: Replace LOGPATH by the right var
+	startCmd.Flags().BoolVarP(&needShutup, "shutup", "s", false, "in 'shutup mode', all messages are redirected to logs ("+LogShutup+")")
 }
 
 // callPurge call the external program named "purge" on each path provided
@@ -121,6 +120,7 @@ func callPurge(targets []string) error {
 	return nil
 }
 
+<<<<<<< Updated upstream
 // handleShutupMode is the handler func for the 'shutup mode'.
 // We assume that ``needShutup`` is already true.
 // TODO - migrate to Target instead of string
@@ -133,7 +133,12 @@ func handleShutupMode(targets []string) {
 	}
 	stdString := captureStdout(callBck)
 	// write stdString to the log file
-	// TODO: replace that by the right path var
-	pathLog := conf.Home + string(os.PathSeparator) + ".tempest" + string(os.PathSeparator) + ".log" + string(os.PathSeparator) + "shutup.log"
-	WriteLog(pathLog, string(stdString))
+	WriteLog(LogShutup, string(stdString))
+=======
+// handleShutupMode run the start command in 'shutup mode'.
+// We assume it is shutup mode (check in before calling this).
+func handleShutupMode() error {
+	// TODO: (to be called by the ``.sh`` so change in it when this flag handler is finished)
+	return nil
+>>>>>>> Stashed changes
 }
