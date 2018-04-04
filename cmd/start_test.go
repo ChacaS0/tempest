@@ -25,3 +25,11 @@ func TestCallPurge(t *testing.T) {
 		t.Fail()
 	}
 }
+
+// TestHandleShutupMode checks if the func handles well the shutup mode.
+// - use a test log file
+// - check the creatation of log file if doesn't already exist, don't replace the existing, just append.
+// - capture some stdout with test mode on and then check that the right values got written
+func TestHandleShutupMode(t *testing.T) {
+	// TODO:
+}

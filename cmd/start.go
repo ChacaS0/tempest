@@ -22,6 +22,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -30,8 +31,8 @@ import (
 // testAll tells if ``start`` should be run in 'test mode'
 var testAll bool
 
-// shutupMode tells if ``start`` should be run in 'shutup mode'
-var shutupMode bool
+// needShutup tells if start should be run in 'shutup mode'
+var needShutup bool
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
@@ -55,6 +56,12 @@ tempest start -t
 		if err != nil {
 			fmt.Println(color.RedString("Could not find da wae !\n"), err)
 		}
+		// run in shutup mode
+		if needShutup {
+			handleShutupMode(allPaths)
+			return
+		}
+		// call purge
 		if errPurge := callPurge(allPaths); errPurge != nil {
 			fmt.Println(color.RedString("Sorry something went terribly wrong... Feels brah!\n"), errPurge)
 		}
@@ -75,7 +82,7 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().BoolVarP(&testAll, "test", "t", false, "test mode -- doesn't actually delete and log to stdout")
-	startCmd.Flags().BoolVarP(&shutupMode, "shutup", "s", false, "shupup mode -- doesn't display anything here, only in logs: "+LogShutup) // TODO
+	startCmd.Flags().BoolVarP(&needShutup, "shutup", "s", false, "in 'shutup mode', all messages are redirected to logs ("+LogShutup+")") //TODO: Replace LOGPATH by the right var
 }
 
 // callPurge call the external program named "purge" on each path provided
@@ -112,4 +119,21 @@ func callPurge(targets []string) error {
 	}
 
 	return nil
+}
+
+// handleShutupMode is the handler func for the 'shutup mode'.
+// We assume that ``needShutup`` is already true.
+// TODO - migrate to Target instead of string
+func handleShutupMode(targets []string) {
+	testAll = true // DEBUG MODE
+	callBck := func() {
+		if err := callPurge(targets); err != nil {
+			fmt.Println(err)
+		}
+	}
+	stdString := captureStdout(callBck)
+	// write stdString to the log file
+	// TODO: replace that by the right path var
+	pathLog := conf.Home + string(os.PathSeparator) + ".tempest" + string(os.PathSeparator) + ".log" + string(os.PathSeparator) + "shutup.log"
+	WriteLog(pathLog, string(stdString))
 }
