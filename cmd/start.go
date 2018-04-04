@@ -62,7 +62,8 @@ tempest start -t
 		}
 		// call purge
 		if errPurge := callPurge(allPaths); errPurge != nil {
-			fmt.Println(color.RedString("Sorry something went terribly wrong... Feels brah!\n"), errPurge)
+			// fmt.Println(color.RedString("Sorry something went terribly wrong... Feels brah!\n"), errPurge)
+			fmt.Println(color.HiYellowString("\n[!] Try to run:\n\t tempest list --fix"))
 		}
 		// fmt.Println("start called")
 	},
