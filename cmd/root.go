@@ -79,6 +79,15 @@ var TempestymlDef string
 // isVersion is the flag variable that indicates whether we want to see the version
 var isVersion bool
 
+// CurrTime is the current time
+var CurrTime = time.Now().String()
+
+// HeaderLog is the header for logs
+var HeaderLog = "=========================  - [" + CurrTime + "] -  ========================="
+
+// FooterLog is the footer for logs
+var FooterLog = "=================================================================================================================="
+
 //* Bold Colors
 // blueB is a func used to print in bold blue
 var blueB func(...interface{}) string
@@ -184,7 +193,7 @@ func init() {
 	Tempestcf = TempestConfigDir + string(os.PathSeparator) + ".tempestcf"
 	Tempestyml = viper.ConfigFileUsed()
 	TempestymlDef = TempestConfigDir + string(os.PathSeparator) + ".tempest.yaml"
-	LogShutup = TempestConfigDir + string(os.PathSeparator) + ".log" + "shutup.log"
+	LogShutup = TempestConfigDir + string(os.PathSeparator) + ".log" + string(os.PathSeparator) + "shutup.log"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
@@ -374,14 +383,12 @@ func WriteLog(pathLog string, strs ...string) {
 	defer f.Close()
 
 	// styling
-	currTime := time.Now().String()
-	header := "=========================  - [" + currTime + "] -  ========================="
-	footer := "=================================================================================================================="
+	// CurrTime = time.Now().String()
 
 	// writing logs
 	for _, str := range strs {
 		// Write it for each str passed in param
-		toWrite := header + "\n" + str + "\n" + footer + "\n"
+		toWrite := HeaderLog + "\n" + str + "\n" + FooterLog + "\n"
 		if _, err := f.WriteString(toWrite); err != nil {
 			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry could not write logs\n\t->"), err)
 		}

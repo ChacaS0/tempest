@@ -164,6 +164,33 @@ func setTestTempestcf(t *testing.T, slTest []string) (tempestcfbup string) {
 	return
 }
 
+// setTestLogShutup set some presets for testing
+func setTestLogShutup(t *testing.T) (logShutupbup string, nbBytesWritten int) {
+	// bup of current Logfile
+	logShutupbup = LogShutup
+	// new testing Tempestcf
+	LogShutup = conf.Gopath + string(os.PathSeparator) + ".shutup.log"
+
+	logSUF, errCreate := os.OpenFile(LogShutup, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if errCreate != nil {
+		t.Log("[ERROR]:: No file create, but we tried !! #sadface:\n\t->", LogShutup, "\n\t->", errCreate)
+		LogShutup = logShutupbup
+		t.FailNow()
+	}
+	defer logSUF.Close()
+
+	return
+}
+
+// fbTestLogShutup falls back to the previous LogShutup config
+func fbTestLogShutup(t *testing.T, logShutupbup string) {
+	if err := os.Remove(LogShutup); err != nil {
+		t.Log("[ERROR]:: An error occurred when trying to remove the test logshutup:", LogShutup)
+		t.Fail()
+	}
+	LogShutup = logShutupbup
+}
+
 // fbTestTempestcf falls back to the previous TEMPestcf config
 func fbTestTempestcf(t *testing.T, tempestcfbup string) {
 	if err := os.Remove(Tempestcf); err != nil {

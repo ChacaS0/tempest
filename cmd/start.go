@@ -120,7 +120,6 @@ func callPurge(targets []string) error {
 	return nil
 }
 
-<<<<<<< Updated upstream
 // handleShutupMode is the handler func for the 'shutup mode'.
 // We assume that ``needShutup`` is already true.
 // TODO - migrate to Target instead of string
@@ -134,11 +133,4 @@ func handleShutupMode(targets []string) {
 	stdString := captureStdout(callBck)
 	// write stdString to the log file
 	WriteLog(LogShutup, string(stdString))
-=======
-// handleShutupMode run the start command in 'shutup mode'.
-// We assume it is shutup mode (check in before calling this).
-func handleShutupMode() error {
-	// TODO: (to be called by the ``.sh`` so change in it when this flag handler is finished)
-	return nil
->>>>>>> Stashed changes
 }
