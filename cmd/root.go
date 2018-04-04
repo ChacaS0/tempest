@@ -21,12 +21,15 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"math"
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
@@ -326,4 +329,52 @@ func PathsToTargets(paths []string) []Target {
 	}
 
 	return sliceTgt
+}
+
+// captureStdout returns the output of a function
+// not thread safe
+func captureStdout(f func()) string {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	f()
+
+	w.Close()
+	os.Stdout = old
+
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+	return buf.String()
+}
+
+// WriteLog write the strings passed in param into the log file pointed
+func WriteLog(pathLog string, strs ...string) {
+	// open file first - if does not exist, create it biatch
+	var f *os.File
+	// TODO replace this path by the var once merged with the non-temp branch
+	f, errF := os.OpenFile(pathLog, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+	if errF != nil {
+		f2, errF2 := os.OpenFile(pathLog, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+		if errF2 != nil {
+			fmt.Println(redB("::"), color.HiRedString("Could not open the file\n\t->"), errF2)
+		}
+		defer f2.Close()
+		f = f2
+	}
+	defer f.Close()
+
+	// styling
+	currTime := time.Now().String()
+	header := "=========================  - [" + currTime + "] -  ========================="
+	footer := "=================================================================================================================="
+
+	// writing logs
+	for _, str := range strs {
+		// Write it for each str passed in param
+		toWrite := header + "\n" + str + "\n" + footer + "\n"
+		if _, err := f.WriteString(toWrite); err != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry could not write logs\n\t->"), err)
+		}
+	}
 }
