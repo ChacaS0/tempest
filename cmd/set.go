@@ -23,6 +23,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
+	"runtime"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -31,6 +33,14 @@ import (
 
 // flags vars
 var age int
+
+// autoStart defines if TEMPest should start automatically or not.
+//    -> Default is nope.
+var autoStart string
+
+// LinuxAutoStartP is the path to $HOME/.config/autostart/tempest.desktop
+// which is setup in init()
+var LinuxAutoStartP string
 
 // setCmd represents the set command
 var setCmd = &cobra.Command{
@@ -44,14 +54,21 @@ var setCmd = &cobra.Command{
 More features might come next. Stay tuned!
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		switch {
-		case age != -1:
+		if age != -1 {
 			if errAge := setAge(); errAge != nil {
 				fmt.Println(errAge)
 			}
 			// color.HiCyan("Sorry! No working at the moment! -\\('o')/-")
-		default:
-			color.HiRed("You must provide some flags or whatever! Just do something!")
+		}
+		if autoStart != "" {
+			if err := setAutoStart(); err != nil {
+				fmt.Println(redB("::"), color.HiRedString(err.Error()))
+			}
+		}
+		if age == -1 && autoStart == "" {
+			if err := cmd.Help(); err != nil {
+				color.HiRed("You must provide some flags or whatever! Just do something!")
+			}
 		}
 		// fmt.Println("set called")
 		/* errWC := viper.MergeInConfig()
@@ -64,6 +81,9 @@ More features might come next. Stay tuned!
 func init() {
 	RootCmd.AddCommand(setCmd)
 
+	// $HOME/.config/autostart/tempest.desktop
+	LinuxAutoStartP = conf.Home + string(os.PathSeparator) + ".config" + string(os.PathSeparator) + "autostart" + string(os.PathSeparator) + "tempest.desktop"
+
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
@@ -74,10 +94,11 @@ func init() {
 	// is called directly, e.g.:
 	// setCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	setCmd.Flags().IntVarP(&age, "age", "a", -1, "Set the maximum age (in days) of the temp directories' content")
+	setCmd.Flags().StringVarP(&autoStart, "auto-start", "s", "", "Set to 'on' to activate or 'off' to deactivate. (not activated by default)")
 }
 
-// setAge sets the "duration" value in the config file (~/.tempest.yaml)
-// duration being the maximum age of the temp's content
+// setAge sets the "duration" value in the config file (~/.tempest/.tempest.yaml)
+// - ``duration`` being the maximum age of the temp's content
 func setAge() error {
 	if age > 0 {
 		// ageStr := fmt.Sprintf("%d", age)
@@ -95,4 +116,97 @@ func setAge() error {
 	}
 	color.Red("::Age must be greater than 0, genius . . .")
 	return errors.New("Error while setting the age")
+}
+
+// setAutoStart sets the "auto-mode" value in the config file (~/.tempest/.tempest.yaml).
+// - ``auto-mode`` being called sometimes in the code "auto-start"
+func setAutoStart() error {
+	if autoStart == "" {
+		return errors.New(fmt.Sprint("Empty autoStart", autoStart, ";"))
+	}
+
+	// set up
+	var boolAutoMode bool
+	switch autoStart {
+	case "on":
+		boolAutoMode = true
+	case "off":
+		boolAutoMode = false
+	default:
+		return errors.New("Wrong parameter, only 'on' or 'off' are accepted for this flag (quote excluded)")
+	}
+
+	// Define config
+	viper.Set("duration", viper.GetInt("duration"))
+	viper.Set("auto-mode", boolAutoMode)
+
+	//* actual shit
+	switch runtime.GOOS {
+	case "linux":
+		if err := autoStartLinux(boolAutoMode); err != nil {
+			return err
+		}
+	case "windows":
+		fmt.Println("not yet bruddah")
+	// case "darwin":
+	// 	err = exec.Command("open", url).Start()
+	default:
+		fmt.Println(redB(":: [ERROR]"), color.HiRedString("Unsupported platform"))
+	}
+
+	// Save config
+	if err := viper.WriteConfigAs(viper.ConfigFileUsed()); err != nil {
+		return err
+	}
+
+	fmt.Println(greenB("::"), color.HiGreenString("Auto start is now"), greenB(autoStart))
+
+	return nil
+}
+
+// autoStartLinux set the auto start for TEMPest.
+// - ``{ should = true }``: activate
+// - ``{ should = false }``: deactivate
+//
+// This func writes in the file ``$HOME/.config/autostart/tempest.desktop``.
+// If the file does not exist, it gets created when autoStart is set to "on".
+func autoStartLinux(should bool) error {
+	var ctntAutoF string
+	if should {
+		ctntAutoF = `[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=TEMPest
+Comment=Autorun of TEMPest
+Exec=` + conf.Gopath + `/src/github.com/ChacaS0/tempest/autostart.sh
+`
+		// if doesn't exist, create
+		// if exist, replace all content
+		autoF, errCreate := os.OpenFile(LinuxAutoStartP, os.O_RDWR|os.O_CREATE, 0644)
+		if errCreate != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("No file create, but we tried !! #sadface:\n\t->", LinuxAutoStartP, "\n\t->"))
+			return errCreate
+		}
+		defer autoF.Close()
+
+		// then write to it the config
+		if _, errW := autoF.WriteString(ctntAutoF); errW != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Can't write to the file, WTF!?\n\t->"))
+			return errW
+		}
+
+	} else {
+		// If exists
+		// Keep the file but set ``Hidden`` to ``true``
+		ctntAutoF = `[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=TEMPest
+Comment=Autorun of TEMPest
+Exec=` + conf.Gopath + `/src/github.com/ChacaS0/tempest/autostart.sh
+Hidden=true
+`
+		// If not just do nothing
+	}
+	return nil
 }
