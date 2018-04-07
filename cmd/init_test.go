@@ -168,7 +168,7 @@ func setTestTempestcf(t *testing.T, slTest []string) (tempestcfbup string) {
 func setTestLogShutup(t *testing.T) (logShutupbup string, nbBytesWritten int) {
 	// bup of current Logfile
 	logShutupbup = LogShutup
-	// new testing Tempestcf
+	// new testing Logfile
 	LogShutup = conf.Gopath + string(os.PathSeparator) + ".shutup.log"
 
 	logSUF, errCreate := os.OpenFile(LogShutup, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
