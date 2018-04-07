@@ -39,8 +39,12 @@ var age int
 var autoStart string
 
 // LinuxAutoStartP is the path to $HOME/.config/autostart/tempest.desktop
-// which is setup in init()
+// which is initiaalized in init()
 var LinuxAutoStartP string
+
+// WindowsAutoStartSL is the path to "%AppData%\Microsoft\Windows\Start Menu\Programs\Startup\tempest".
+// which is a Symlink to the scripts/startup.bat file, initialized in init()
+var WindowsAutoStartSL string
 
 // setCmd represents the set command
 var setCmd = &cobra.Command{
@@ -83,6 +87,8 @@ func init() {
 
 	// $HOME/.config/autostart/tempest.desktop
 	LinuxAutoStartP = conf.Home + string(os.PathSeparator) + ".config" + string(os.PathSeparator) + "autostart" + string(os.PathSeparator) + "tempest.desktop"
+
+	WindowsAutoStartSL = `%AppData%\Microsoft\Windows\"Start Menu"\Programs\Startup\TEMPest-startup`
 
 	// Here you will define your flags and configuration settings.
 
@@ -147,11 +153,11 @@ func setAutoStart() error {
 			return err
 		}
 	case "windows":
-		fmt.Println("not yet bruddah")
+		fmt.Println(cyanB(":: [NOTE]"), color.HiCyanString("This functionality hasn't been fully tested for Windows."))
 	// case "darwin":
 	// 	err = exec.Command("open", url).Start()
 	default:
-		fmt.Println(redB(":: [ERROR]"), color.HiRedString("Unsupported platform"))
+		return errors.New(fmt.Sprint(redB(":: [ERROR]"), color.HiRedString("Unsupported platform")))
 	}
 
 	// Save config
@@ -164,6 +170,28 @@ func setAutoStart() error {
 	return nil
 }
 
+// autoStartWindows set the auto start for TEMPest (for Windows - only tested on W10).
+// - ``{ should = true }``: activate
+// - ``{ should = false }``: deactivate
+//
+// This func creates a link of the bash file ``$HOME/.config/autostart/tempest.desktop``.
+// If the file does not exist, it gets created when autoStart is set to "on".
+func autoStartWindows(should bool) error {
+	// var ctntAutoF string
+
+	// if exists,and should not exist, we delete
+	if is, err := IsDirectory(WindowsAutoStartSL); (!is || err == nil) && !should {
+		if errRm := os.Remove(WindowsAutoStartSL); errRm != nil {
+			return errRm
+		}
+	} else if should {
+		// We create a symlink to the startup folder
+		os.Symlink(conf.Gopath+string(os.PathSeparator)+"scripts"+string(os.PathSeparator)+"startup.bat", WindowsAutoStartSL)
+	}
+
+	return nil
+}
+
 // autoStartLinux set the auto start for TEMPest.
 // - ``{ should = true }``: activate
 // - ``{ should = false }``: deactivate
@@ -172,29 +200,25 @@ func setAutoStart() error {
 // If the file does not exist, it gets created when autoStart is set to "on".
 func autoStartLinux(should bool) error {
 	var ctntAutoF string
+
+	// Remove if already existed so we create a fresh one
+	_ = os.Remove(LinuxAutoStartP)
+	autoF, errCreate := os.OpenFile(LinuxAutoStartP, os.O_RDWR|os.O_CREATE, 0644)
+	if errCreate != nil {
+		fmt.Println(redB(":: [ERROR]"), color.HiRedString("No file create, but we tried !! #sadface:\n\t->", LinuxAutoStartP, "\n\t->"))
+		return errCreate
+	}
+	defer autoF.Close()
+
+	// Adapt the content to be written according to the mode selected
 	if should {
 		ctntAutoF = `[Desktop Entry]
 Encoding=UTF-8
 Type=Application
 Name=TEMPest
 Comment=Autorun of TEMPest
-Exec=` + conf.Gopath + `/src/github.com/ChacaS0/tempest/autostart.sh
+Exec=` + conf.Gopath + `/src/github.com/ChacaS0/tempest/scripts/autostart.sh
 `
-		// if doesn't exist, create
-		// if exist, replace all content
-		autoF, errCreate := os.OpenFile(LinuxAutoStartP, os.O_RDWR|os.O_CREATE, 0644)
-		if errCreate != nil {
-			fmt.Println(redB(":: [ERROR]"), color.HiRedString("No file create, but we tried !! #sadface:\n\t->", LinuxAutoStartP, "\n\t->"))
-			return errCreate
-		}
-		defer autoF.Close()
-
-		// then write to it the config
-		if _, errW := autoF.WriteString(ctntAutoF); errW != nil {
-			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Can't write to the file, WTF!?\n\t->"))
-			return errW
-		}
-
 	} else {
 		// If exists
 		// Keep the file but set ``Hidden`` to ``true``
@@ -203,10 +227,16 @@ Encoding=UTF-8
 Type=Application
 Name=TEMPest
 Comment=Autorun of TEMPest
-Exec=` + conf.Gopath + `/src/github.com/ChacaS0/tempest/autostart.sh
+Exec=` + conf.Gopath + `/src/github.com/ChacaS0/tempest/scripts/autostart.sh
 Hidden=true
 `
-		// If not just do nothing
 	}
+
+	// then write to it the config
+	if _, errW := autoF.WriteString(ctntAutoF); errW != nil {
+		fmt.Println(redB(":: [ERROR]"), color.HiRedString("Can't write to the file, WTF!?\n\t->"))
+		return errW
+	}
+
 	return nil
 }

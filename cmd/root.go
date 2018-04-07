@@ -107,6 +107,9 @@ var greenB func(...interface{}) string
 // magB is a func used to print in bold magenta
 var magB func(...interface{}) string
 
+// cyanB is a func used to print in bold cyan
+var cyanB func(...interface{}) string
+
 // Target is represented by an index and a path
 // Later this will hold the type(directory or file)
 type Target struct {
@@ -202,6 +205,7 @@ func init() {
 	redB = color.New(color.FgHiRed, color.Bold).SprintFunc()
 	greenB = color.New(color.FgHiGreen, color.Bold).SprintFunc()
 	magB = color.New(color.FgHiMagenta, color.Bold).SprintFunc()
+	cyanB = color.New(color.FgHiCyan, color.Bold).SprintFunc()
 
 	// //* Man ?
 	// header := &doc.GenManHeader{

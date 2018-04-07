@@ -35,6 +35,7 @@ func TestGetAge(t *testing.T) {
 // It should display all the logs available
 func TestGetAllLogs(t *testing.T) {
 	//setup
+	testAll = true
 	logshutupbup, _ := setTestLogShutup(t)
 
 	var want string

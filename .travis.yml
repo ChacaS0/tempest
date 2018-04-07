@@ -17,7 +17,7 @@ before_install:
 
 script:
   - chmod +x coverage.sh
-  - go install -v ./... && ./coverage.sh
+  - go install -v ./... && ./scripts/coverage.sh
   - go test -v -race ./... 
 
 after_success:

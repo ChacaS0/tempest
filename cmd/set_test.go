@@ -79,3 +79,8 @@ auto-mode: false
 
 	// All done
 }
+
+// TestSetAutoStart tests if it really activates auto start (depends on the device OS)
+func TestSetAutoStart(t *testing.T) {
+	// TODO: Need windows mode to be done too :/
+}
