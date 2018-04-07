@@ -16,7 +16,7 @@ before_install:
   - go get -u github.com/golang/dep
 
 script:
-  - chmod +x coverage.sh
+  - chmod +x scripts/coverage.sh
   - go install -v ./... && ./scripts/coverage.sh
   - go test -v -race ./... 
 
