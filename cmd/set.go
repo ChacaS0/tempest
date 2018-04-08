@@ -39,7 +39,7 @@ var age int
 var autoStart string
 
 // LinuxAutoStartP is the path to $HOME/.config/autostart/tempest.desktop
-// which is initiaalized in init()
+// which is initialized in init()
 var LinuxAutoStartP string
 
 // WindowsAutoStartSL is the path to "%AppData%\Microsoft\Windows\Start Menu\Programs\Startup\tempest".

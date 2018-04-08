@@ -42,9 +42,9 @@ func TestInitializeTP(t *testing.T) {
 // meaning the reset of it if it already exists
 // and its creation if it doesn't exist yet.
 func TestInitializeCfFile(t *testing.T) {
-	// Save current Tempestcf
+	// Save current Tempestyml
 	tempestymlOld := Tempestyml
-	// Set the temporary .tempestcf used for the test
+	// Set the temporary .tempestyml used for the test
 	Tempestyml = conf.Gopath + string(os.PathSeparator) + ".tempest.yaml"
 	// viper.SetConfigFile(Tempestyml)
 
@@ -134,7 +134,7 @@ func cleanTempest(t *testing.T, tempest *string, tempestOld string) (errReturn e
 		t.Log("[ERROR]:: There was an error when trying to delete the freshly created file")
 	}
 
-	// Restore previous Tempestcf
+	// Restore previous Tempest
 	*tempest = tempestOld
 
 	return
@@ -198,54 +198,4 @@ func fbTestTempestcf(t *testing.T, tempestcfbup string) {
 		t.Fail()
 	}
 	Tempestcf = tempestcfbup
-}
-
-// SameSlices checks equality between two slices of string
-// returns true if they are identiques
-func SameSlices(a, b []string) bool {
-	if a == nil && nil == b {
-		return true
-	}
-
-	if len(a) == 0 && len(b) == 0 {
-		return true
-	}
-
-	if len(a) != len(b) {
-		return false
-	}
-
-	b = b[:len(a)]
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// SameSlicesInt checks equality between two slices of int
-// returns true if they are identiques
-func SameSlicesInt(a, b []int) bool {
-	if a == nil && nil == b {
-		return true
-	}
-
-	if len(a) == 0 && len(b) == 0 {
-		return true
-	}
-
-	if len(a) != len(b) {
-		return false
-	}
-
-	b = b[:len(a)]
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
 }

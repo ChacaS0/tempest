@@ -82,5 +82,46 @@ auto-mode: false
 
 // TestSetAutoStart tests if it really activates auto start (depends on the device OS)
 func TestSetAutoStart(t *testing.T) {
-	// TODO: Need windows mode to be done too :/
+	// Save current Tempestyml
+	tempestymlOld := Tempestyml
+	// Set the temporary .tempestyml used for the test
+	Tempestyml = conf.Gopath + string(os.PathSeparator) + ".tempest.yaml"
+	// viper.SetConfigFile(Tempestyml)
+
+	//* Case doesn't exist yet, should create one
+	err := initializeCfFile()
+	if err != nil {
+		t.Log("[ERROR]:: Error while initializing on non-existing .tempest.yml\n\t", err)
+		t.Fail()
+	}
+
+	//* Linux
+	// For linux it should create the file ~/.config/autostart/tempest.desktop
+	// Should be already "off", meaning ``false``.
+	// Check if no args messes up
+	if err := setAutoStart(); err != nil {
+		t.Log("[ERROR]::  An error was encoutered while using setAutostart:\n\t->", err)
+	}
+
+	// Now set it to off
+	autoStart = "off"
+	if err := setAutoStart(); err != nil {
+		t.Log("[ERROR]::  An error was encoutered while using setAutostart:\n\t->", err)
+	}
+
+	// And then to on
+	autoStart = "on"
+	if err := setAutoStart(); err != nil {
+		t.Log("[ERROR]::  An error was encoutered while using setAutostart:\n\t->", err)
+	}
+
+	// TODO Need windows mode to be done too :/
+	// Maybe try to change the runtime.GOOS ? -- will need to set the env and paths separators for windows !?
+
+	// Set back to default conf and clean temp test files
+	if err = cleanTempest(t, &Tempestyml, tempestymlOld); err != nil {
+		t.Log("[ERROR]:: An error occurred:", err)
+		t.Fail()
+	}
+	viper.SetConfigFile(Tempestyml)
 }
