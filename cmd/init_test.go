@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"bytes"
-	"io"
 	"os"
 	"testing"
 
@@ -44,9 +42,9 @@ func TestInitializeTP(t *testing.T) {
 // meaning the reset of it if it already exists
 // and its creation if it doesn't exist yet.
 func TestInitializeCfFile(t *testing.T) {
-	// Save current Tempestcf
+	// Save current Tempestyml
 	tempestymlOld := Tempestyml
-	// Set the temporary .tempestcf used for the test
+	// Set the temporary .tempestyml used for the test
 	Tempestyml = conf.Gopath + string(os.PathSeparator) + ".tempest.yaml"
 	// viper.SetConfigFile(Tempestyml)
 
@@ -136,7 +134,7 @@ func cleanTempest(t *testing.T, tempest *string, tempestOld string) (errReturn e
 		t.Log("[ERROR]:: There was an error when trying to delete the freshly created file")
 	}
 
-	// Restore previous Tempestcf
+	// Restore previous Tempest
 	*tempest = tempestOld
 
 	return
@@ -166,6 +164,33 @@ func setTestTempestcf(t *testing.T, slTest []string) (tempestcfbup string) {
 	return
 }
 
+// setTestLogShutup set some presets for testing
+func setTestLogShutup(t *testing.T) (logShutupbup string, nbBytesWritten int) {
+	// bup of current Logfile
+	logShutupbup = LogShutup
+	// new testing Logfile
+	LogShutup = conf.Gopath + string(os.PathSeparator) + ".shutup.log"
+
+	logSUF, errCreate := os.OpenFile(LogShutup, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if errCreate != nil {
+		t.Log("[ERROR]:: No file create, but we tried !! #sadface:\n\t->", LogShutup, "\n\t->", errCreate)
+		LogShutup = logShutupbup
+		t.FailNow()
+	}
+	defer logSUF.Close()
+
+	return
+}
+
+// fbTestLogShutup falls back to the previous LogShutup config
+func fbTestLogShutup(t *testing.T, logShutupbup string) {
+	if err := os.Remove(LogShutup); err != nil {
+		t.Log("[ERROR]:: An error occurred when trying to remove the test logshutup:", LogShutup)
+		t.Fail()
+	}
+	LogShutup = logShutupbup
+}
+
 // fbTestTempestcf falls back to the previous TEMPestcf config
 func fbTestTempestcf(t *testing.T, tempestcfbup string) {
 	if err := os.Remove(Tempestcf); err != nil {
@@ -173,71 +198,4 @@ func fbTestTempestcf(t *testing.T, tempestcfbup string) {
 		t.Fail()
 	}
 	Tempestcf = tempestcfbup
-}
-
-// SameSlices checks equality between two slices of string
-// returns true if they are identiques
-func SameSlices(a, b []string) bool {
-	if a == nil && nil == b {
-		return true
-	}
-
-	if len(a) == 0 && len(b) == 0 {
-		return true
-	}
-
-	if len(a) != len(b) {
-		return false
-	}
-
-	b = b[:len(a)]
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// SameSlicesInt checks equality between two slices of int
-// returns true if they are identiques
-func SameSlicesInt(a, b []int) bool {
-	if a == nil && nil == b {
-		return true
-	}
-
-	if len(a) == 0 && len(b) == 0 {
-		return true
-	}
-
-	if len(a) != len(b) {
-		return false
-	}
-
-	b = b[:len(a)]
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// captureStdout returns the output of a function
-// not thread safe
-func captureStdout(f func()) string {
-	old := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-
-	f()
-
-	w.Close()
-	os.Stdout = old
-
-	var buf bytes.Buffer
-	io.Copy(&buf, r)
-	return buf.String()
 }

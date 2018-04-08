@@ -40,10 +40,16 @@ This file will contain the list of all the directories you wish tempest to handl
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		// ~/.tempest DIR
+		if err := initTempestDir(); err != nil {
+			fmt.Println(redB("::"), color.HiRedString("Sorry could not create the .tempest dir in "), conf.Home, "\n\t[ERROR]::", err)
+			return
+		}
+
 		// .tempest.yaml
 		if err := initializeCfFile(); err != nil {
 			fmt.Println(redB("::"), color.HiRedString("Could not initialize .tempest.yaml"))
-			fmt.Println(redB("::"), color.HiRedString("If the error persists, try to create the file manually : touch $HOME/.tempest.yaml"))
+			fmt.Println(redB("::"), color.HiRedString("If the error persists, try to create the file manually : touch $HOME/.tempest/.tempest.yaml"))
 			// fmt.Println(err) //DEBUG
 			return
 		}
@@ -80,6 +86,26 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+// initTempestDir init func for .tempest directory
+func initTempestDir() error {
+	// remove if already exists
+	if is, err := IsDirectory(TempestConfigDir); is && err == nil {
+		if errRm := os.RemoveAll(TempestConfigDir); errRm != nil {
+			return errRm
+		}
+	}
+	// fmt.Println("conf dir deleted")
+	// Create the conf dir
+	if err := os.Mkdir(TempestConfigDir, 0755); err != nil {
+		return err
+	}
+	// fmt.Println("conf dir created")
+	// create the log dir
+	err := os.Mkdir(TempestConfigDir+string(os.PathSeparator)+".log", 0755)
+	// fmt.Println("log dir created if nil =>", err)
+	return err
 }
 
 // initializeTP creates the ~/.tempestcf file or
@@ -119,7 +145,7 @@ auto-mode: false
 	if errDir == nil {
 		// if already exists, we delete
 
-		errDel := os.Remove(Tempestyml)
+		errDel := os.RemoveAll(Tempestyml)
 		if errDel != nil {
 			fmt.Println(redB("::"), color.RedString("Error while replacing existing file ("+Tempestyml+")"))
 			return errDel

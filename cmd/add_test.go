@@ -92,6 +92,44 @@ func TestTreatLastChar(t *testing.T) {
 	}
 }
 
+// TestTreatRelativePath is the test for treatRelativePath(path *string, workDir string) {}.
+// Should check if it uses full path to the working dir when adding relative paths.
+// It should do nothing for full paths.
+func TestTreatRelativePath(t *testing.T) {
+	// working directory
+	workDir, errDir := os.Getwd()
+	if errDir != nil {
+		t.Log("[ERROR]:: Can't retrieve the current directory", errDir)
+		t.FailNow()
+	}
+	// params
+	p1 := "./Downloads/temp"
+	p2 := "Documents/temp"
+	p3 := conf.Gopath
+	// wants
+	w1 := workDir + "/Downloads/temp"
+	w2 := workDir + "/" + p2
+
+	var tests = []struct {
+		path  string
+		wkdir string
+		want  string
+		errT  error
+	}{
+		{p1, workDir, w1, errors.New("[FAIL]:: Can't process './' types")},
+		{p2, workDir, w2, errors.New("[FAIL]:: Can't process 'Doc/temp... types")},
+		{p3, workDir, p3, errors.New("[FAIL]:: Should have done nothing, yet did much")},
+	}
+
+	for _, tst := range tests {
+		treatRelativePath(&tst.path, tst.wkdir)
+		if tst.path != tst.want {
+			t.Log(tst.errT, "\n\t[GOT]-> ", tst.path, "\n\t[WANT]->", tst.want)
+			t.Fail()
+		}
+	}
+}
+
 // TestAddLine is the test for addLine(args []string) error {}
 // Check if it does add the proper line to a .tempestcf file.
 func TestAddLine(t *testing.T) {

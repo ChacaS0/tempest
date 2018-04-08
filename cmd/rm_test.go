@@ -226,6 +226,8 @@ func TestProcessArgsRm(t *testing.T) {
 		{s7, []int{1}, emptySliceStr, errors.New("[FAIL]:: Could not process just one fcking int ffs")},
 		// Overlaping arguments
 		{s13, []int{0, 1, 2, 3, 10}, s5, errors.New("[FAIL]:: Failed to handle redundant information")},
+		// Wildcard * (ALL)
+		{[]string{"*"}, emptySliceInt, []string{"*"}, errors.New("[FAIL]:: Failed to handle wildcard: *")},
 		// Mixed
 		{s8, []int{0, 2, 3, 4, 5, 7}, s5, errors.New("[FAIL]:: Failed to process many mixed args (1)")},
 		{s9, []int{7, 2, 3, 4, 5}, s5, errors.New("[FAIL]:: Failed to process many mixed args (2)")},

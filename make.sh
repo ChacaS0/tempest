@@ -1,4 +1,5 @@
 #!/bin/bash
+# @DEPRECATED
 #===============  - BETA -  ===============#
 # BETA_VERSION=$GOPATH/src/github.com/ChacaS0/tempest
 

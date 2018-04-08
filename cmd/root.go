@@ -21,12 +21,15 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"math"
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
@@ -48,13 +51,18 @@ var conf struct {
 // 	duration int `yaml:"duration"`
 // }
 
-// var vcf vConfig
+// TempestConfigDir points to the config directory of TEMPest
+// it holds pretty much all configuration for TEMPest
+var TempestConfigDir string
 
 // pathProg is the path to the git root
 var pathProg string
 
 // pathTempest is the path to the tempest folder
 var pathTempest string
+
+// LogShutup is the path to the log of the 'shutup mode'
+var LogShutup string
 
 // Tempestcf is the path to the .tempestcf file
 // this file holds all the paths (targets) of TEMPest
@@ -70,6 +78,15 @@ var TempestymlDef string
 
 // isVersion is the flag variable that indicates whether we want to see the version
 var isVersion bool
+
+// CurrTime is the current time
+var CurrTime = time.Now().String()
+
+// HeaderLog is the header for logs
+var HeaderLog = "=========================  - [" + CurrTime + "] -  ========================="
+
+// FooterLog is the footer for logs
+var FooterLog = "=================================================================================================================="
 
 //* Bold Colors
 // blueB is a func used to print in bold blue
@@ -89,6 +106,9 @@ var greenB func(...interface{}) string
 
 // magB is a func used to print in bold magenta
 var magB func(...interface{}) string
+
+// cyanB is a func used to print in bold cyan
+var cyanB func(...interface{}) string
 
 // Target is represented by an index and a path
 // Later this will hold the type(directory or file)
@@ -168,12 +188,15 @@ func init() {
 		// log.Println(err)
 	}
 
+	TempestConfigDir = conf.Home + string(os.PathSeparator) + ".tempest"
+
 	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
 	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
 
-	Tempestcf = conf.Home + string(os.PathSeparator) + ".tempestcf"
+	Tempestcf = TempestConfigDir + string(os.PathSeparator) + ".tempestcf"
 	Tempestyml = viper.ConfigFileUsed()
-	TempestymlDef = conf.Home + string(os.PathSeparator) + ".tempest.yaml"
+	TempestymlDef = TempestConfigDir + string(os.PathSeparator) + ".tempest.yaml"
+	LogShutup = TempestConfigDir + string(os.PathSeparator) + ".log" + string(os.PathSeparator) + "shutup.log"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
@@ -182,6 +205,7 @@ func init() {
 	redB = color.New(color.FgHiRed, color.Bold).SprintFunc()
 	greenB = color.New(color.FgHiGreen, color.Bold).SprintFunc()
 	magB = color.New(color.FgHiMagenta, color.Bold).SprintFunc()
+	cyanB = color.New(color.FgHiCyan, color.Bold).SprintFunc()
 
 	// //* Man ?
 	// header := &doc.GenManHeader{
@@ -196,7 +220,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest/.tempest.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -209,7 +233,7 @@ func init() {
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		viper.SetConfigFile(TempestymlDef)
 	} else {
 		// Find home directory.
 		home, err := homedir.Dir()
@@ -217,9 +241,10 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		conf.Home = home
 
 		// Search config in home directory with name ".tempest" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(TempestConfigDir)
 		viper.SetConfigName(".tempest")
 		viper.SetConfigType("yaml")
 	}
@@ -326,4 +351,100 @@ func PathsToTargets(paths []string) []Target {
 	}
 
 	return sliceTgt
+}
+
+// captureStdout returns the output of a function
+// not thread safe
+func captureStdout(f func()) string {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	f()
+
+	w.Close()
+	os.Stdout = old
+
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+	return buf.String()
+}
+
+// WriteLog write the strings passed in param into the log file pointed
+func WriteLog(pathLog string, strs ...string) {
+	// open file first - if does not exist, create it biatch
+	var f *os.File
+	// TODO replace this path by the var once merged with the non-temp branch
+	f, errF := os.OpenFile(pathLog, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
+	if errF != nil {
+		f2, errF2 := os.OpenFile(pathLog, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+		if errF2 != nil {
+			fmt.Println(redB("::"), color.HiRedString("Could not open the file\n\t->"), errF2)
+		}
+		defer f2.Close()
+		f = f2
+	}
+	defer f.Close()
+
+	// styling
+	// CurrTime = time.Now().String()
+
+	// writing logs
+	for _, str := range strs {
+		// Write it for each str passed in param
+		toWrite := HeaderLog + "\n" + str + "\n" + FooterLog + "\n"
+		if _, err := f.WriteString(toWrite); err != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Sorry could not write logs\n\t->"), err)
+		}
+	}
+}
+
+// SameSlices checks equality between two slices of string
+// returns true if they are identiques
+func SameSlices(a, b []string) bool {
+	if a == nil && nil == b {
+		return true
+	}
+
+	if len(a) == 0 && len(b) == 0 {
+		return true
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	b = b[:len(a)]
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// SameSlicesInt checks equality between two slices of int
+// returns true if they are identiques
+func SameSlicesInt(a, b []int) bool {
+	if a == nil && nil == b {
+		return true
+	}
+
+	if len(a) == 0 && len(b) == 0 {
+		return true
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	b = b[:len(a)]
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
 }
