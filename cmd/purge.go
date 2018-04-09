@@ -32,6 +32,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+// var days int
+
+// pPath is the path to use in purge
+var pPath string
+
+// tTest is defining if it should run test mode or not
+var tTest bool
+
+// pInt default is -1, if not, we use the index number for deletion
+var pInt int
+
 // purgeCmd represents the purge command
 var purgeCmd = &cobra.Command{
 	Use:   "purge",
@@ -63,7 +74,7 @@ to quickly create a Cobra application.`,
 		} */
 		switch {
 		case pPath != "":
-			f, e := fetchAll(pPath)
+			f, _, e := fetchAll(pPath)
 			if e != nil {
 				fmt.Println("-----", e)
 			}
@@ -84,30 +95,13 @@ to quickly create a Cobra application.`,
 	},
 }
 
-// var days int
-
-// pPath is the path to use in purge
-var pPath string
-
-// tTest is defining if it should run test mode or not
-var tTest bool
-
-// pInt default is -1, if not, we use the index number for deletion
-var pInt int
-
 func init() {
 	RootCmd.AddCommand(purgeCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// purgeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// purgeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	// purgeCmd.Flags().IntVarP(&days, "days", "d", -1, "age of the files to be deleted in days")
+
 	purgeCmd.Flags().StringVarP(&pPath, "path", "p", "", "path to purge")
 	purgeCmd.Flags().BoolVarP(&tTest, "test", "t", false, "test mode -- doesn't actually delete and log to stdout")
 	purgeCmd.Flags().IntVarP(&pInt, "index", "i", -1, "use the index number pointed by tempest list for purge.")
@@ -115,20 +109,35 @@ func init() {
 
 }
 
-// fetchAll retrieves all files AND directories from the root path provided
-// returns a slice of os.FileInfo and an error
-func fetchAll(root string) ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir(root)
-	if err != nil {
-		color.HiRed("Not a directory, de yoo no da wae !?")
-		return nil, err
+// fetchAll retrieves all files AND directories from the root path provided if the path points to a directory.
+// If it points to a file, it returns the os.FileInfo of that file.
+// If there is an error, it will be returned
+func fetchAll(root string) (sliceDir []os.FileInfo, targetInfo os.FileInfo, errFunc error) {
+	sliceDir, errFunc = ioutil.ReadDir(root)
+	if errFunc != nil {
+		// Not a directory so probably a file ? Check for it
+		targetInfo, errFunc = os.Stat(root)
+		if errFunc != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not read the file(s), sad story!"))
+			targetInfo = nil
+		}
+		sliceDir = nil
 	}
-
-	return files, err
+	return
 }
 
-// deleteAllStr is the basic deletion func in here. It deletes everything
-// within the directory pointed by the path provided
+// emptyFile is one of the main func in here. It deletes everything within
+// the file pointed by the path provided.
+// Doesn't delete anything if testMode is true.
+// It just displays
+func emptyFile(path string, target os.FileInfo, testMode bool) error {
+	// TODO: Refactor fetchAll()
+	//? Maybe add a new age speciffic to files?
+	return nil
+}
+
+// deleteAllStr is one of the main func in here. It deletes everything
+// within the directory pointed by the path provided.
 // Doesn't delete anything if testMode is true.
 // It just displays what would be deleted
 func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
@@ -218,7 +227,7 @@ func deleteAllInt(index int, testMode bool) error {
 		for indx, indPath := range allPaths {
 			if index == indx {
 				// color.Cyan(indPath)
-				fInt, eInt := fetchAll(indPath)
+				fInt, _, eInt := fetchAll(indPath)
 				if eInt != nil {
 					fmt.Println("-----", eInt)
 				}

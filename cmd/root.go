@@ -217,13 +217,8 @@ func init() {
 	// doc.GenMan(RootCmd, header, out)
 	// fmt.Println(out.String())
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest/.tempest.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	RootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "Display the current version v[VERSION_NUMBER]-X-Y[REVISION_NUMBER]")
 

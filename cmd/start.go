@@ -105,7 +105,7 @@ func callPurge(targets []string) error {
 		} */
 		/* pPath = path
 		purgeCmd.Execute() */
-		fInfo, errFInfo := fetchAll(path)
+		fInfo, _, errFInfo := fetchAll(path)
 		if errFInfo != nil {
 			color.HiRed("Error fetch info for this temp directory")
 			return errFInfo
