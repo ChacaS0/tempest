@@ -29,11 +29,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// gAge is true if the user wants to know the age set in config
-var gAge bool
+// theAge is true if the user wants to know the age set in config
+var theAge bool
 
 // allLogs tells if the user wants to see logs
 var allLogs bool
+
+// theAutomode is true if the user wants to know the auto-mode set in config
+var theAutomode bool
 
 // getCmd represents the get command
 var getCmd = &cobra.Command{
@@ -64,8 +67,9 @@ func init() {
 	// is called directly, e.g.:
 	// getCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	getCmd.Flags().BoolVarP(&gAge, "age", "a", false, "Use this if you want to know the age set in .tempest.yaml")
+	getCmd.Flags().BoolVarP(&theAge, "age", "a", false, "Use this if you want to know the age set in .tempest.yaml")
 	getCmd.Flags().BoolVarP(&allLogs, "logs", "l", false, "Use this flag to view all logs")
+	getCmd.Flags().BoolVarP(&theAutomode, "auto-mode", "s", false, "Use this flag to view the current value of the auto-mode. In auto-mode, TEMPest is started autmatically at startup.")
 }
 
 // getAllLogs handle the use of ``logs`` flag.
@@ -97,14 +101,32 @@ func getAllLogs(args []string) error {
 // If none is asked, it shows everything
 func printAnyIfSet(args []string) {
 	switch {
-	case gAge:
-		// Age A.K.A. the duration
-		fmt.Println(blueB("::"), whiteB("Age:"), getAge())
+	case theAge:
+
 	case allLogs:
-		getAllLogs(args)
+
 	default:
-		// help ?
-		getHelp()
+	}
+	if theAge || theAutomode {
+		// individual handler
+		// theAge
+		if theAge {
+			// Age A.K.A. the duration
+			fmt.Println(blueB("::"), color.HiBlueString("Age:\t\t"), blueB(getAge()))
+		}
+		// theAutomode
+		if theAutomode {
+			fmt.Println(blueB("::"), color.HiBlueString("Auto-mode:\t"), blueB(getAutomode()))
+		}
+	} else {
+		// cannot stack with other gets
+		// allLogs
+		if allLogs {
+			getAllLogs(args)
+		} else {
+			// help - default
+			getHelp()
+		}
 	}
 }
 
@@ -116,4 +138,12 @@ func getAge() string {
 // getHelp() calls the regualr helpCommand
 func getHelp() {
 	fmt.Println(RootCmd.UsageString())
+}
+
+// getAutomode returns "on" if the ``auto-mode`` is set to ``true`` else "off".
+func getAutomode() string {
+	if viper.GetBool("auto-mode") {
+		return fmt.Sprint("on")
+	}
+	return fmt.Sprint("off")
 }

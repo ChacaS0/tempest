@@ -31,6 +31,47 @@ func TestGetAge(t *testing.T) {
 
 }
 
+// TestGetAutomode test getAutmode and checks if the func returns the right value according to the config value
+func TestGetAutomode(t *testing.T) {
+	// set to false first
+	viper.Set("auto-mode", false)
+	// boolMode := viper.GetBool("auto-mode")
+	strMode := "off"
+
+	getMode := getAutomode()
+
+	// Same types?
+	if "string" != fmt.Sprintf("%T", getMode) {
+		t.Log("[FAIL]:: getAutomode() returned the wrong type!")
+		t.FailNow()
+	}
+
+	// Same value ?
+	if strMode != getMode {
+		t.Log("[FAIL]:: Result is different than expected:\n\t[GOT] ", getMode, "\n\t[WANT]", strMode)
+		t.FailNow()
+	}
+
+	// Second check with true
+	viper.Set("auto-mode", true)
+	// boolMode = viper.GetBool("auto-mode")
+	strMode = "on"
+
+	getMode = getAutomode()
+
+	// Same types?
+	if "string" != fmt.Sprintf("%T", getMode) {
+		t.Log("[FAIL]:: getAutomode() returned the wrong type!")
+		t.FailNow()
+	}
+
+	// Same value ?
+	if strMode != getMode {
+		t.Log("[FAIL]:: Result is different than expected:\n\t[GOT] ", getMode, "\n\t[WANT]", strMode)
+		t.FailNow()
+	}
+}
+
 // TestGetAllLogs is the test for getAllLogs(args []string){}.
 // It should display all the logs available
 func TestGetAllLogs(t *testing.T) {

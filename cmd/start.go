@@ -125,7 +125,7 @@ func callPurge(targets []string) error {
 // We assume that ``needShutup`` is already true.
 // TODO - migrate to Target instead of string
 func handleShutupMode(targets []string) {
-	testAll = true // DEBUG MODE
+	// testAll = true // DEBUG MODE
 	callBck := func() {
 		if err := callPurge(targets); err != nil {
 			fmt.Println(err)
