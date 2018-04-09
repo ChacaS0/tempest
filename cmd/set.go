@@ -29,6 +29,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/vrischmann/envconfig"
 )
 
 // flags vars
@@ -88,7 +89,7 @@ func init() {
 	// $HOME/.config/autostart/tempest.desktop
 	LinuxAutoStartP = conf.Home + string(os.PathSeparator) + ".config" + string(os.PathSeparator) + "autostart" + string(os.PathSeparator) + "tempest.desktop"
 
-	WindowsAutoStartSL = `%AppData%\Microsoft\Windows\"Start Menu"\Programs\Startup\TEMPest-startup`
+	WindowsAutoStartSL = `\Microsoft\Windows\Start Menu\Programs\Startup\TEMPest-startup`
 
 	// Here you will define your flags and configuration settings.
 
@@ -178,6 +179,19 @@ func setAutoStart() error {
 // If the file does not exist, it gets created when autoStart is set to "on".
 func autoStartWindows(should bool) error {
 	// var ctntAutoF string
+	type WindowsSpecific struct {
+		// %AppData%
+		AppData string
+	}
+	var tempSpef WindowsSpecific
+
+	// Set env var specific to Windows
+	if err := envconfig.Init(&tempSpef); err != nil {
+		return err
+	}
+
+	// update the path to use
+	WindowsAutoStartSL = tempSpef.AppData + WindowsAutoStartSL
 
 	// if exists,and should not exist, we delete
 	if is, err := IsDirectory(WindowsAutoStartSL); (!is || err == nil) && !should {
