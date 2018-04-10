@@ -20,7 +20,7 @@
 		- [Through text editor](#through-text-editor)
 - [List the current directories added to **TEMPest**](#list-the-current-directories-added-to-tempest)
 	- [Using **TEMPest**](#using-tempest)
-	- [Viewing the file ``~/.tempestcf``](#viewing-the-file-tempestcf)
+	- [Viewing the file ``.tempestcf``](#viewing-the-file-tempestcf)
 - [Runing a global purge](#runing-a-global-purge)
 	- [Test mode](#test-mode)
 	- [Real one](#real-one)
@@ -74,15 +74,15 @@ First, to initialize it the first time, run:
 > tempest init
 ```
 
-This will generate a ``~/.tempestcf`` file. 
+This will generate a ``.tempestcf`` file in ``$HOME/.tempest``. 
 It will hold the list of all the temp directories.
 
-> If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempestcf`` and leave it empty for now.
+> If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempest/.tempestcf`` and leave it empty for now.
   
-This will also generate a ``~/.tempest.yaml`` file.
+This will also generate a ``$HOME/.tempest/.tempest.yaml`` file.
 It will hold the configuration of **TEMPest**.  
 
-> If there is an issue and the file can't be created somehow, you can still crate it at its default location: ``$HOME/.tempest.yaml`` with default content:
+> If there is an issue and the file can't be created somehow, you can still crate it at its default location: ``$HOME/.tempest/.tempest.yaml`` with default content:
 ```yaml
 duration: 5
 auto-mode: false
@@ -91,7 +91,7 @@ auto-mode: false
 
 * **duration** : This is the maximum age the content of the temp directories, choose it carefully!
 
-> *You have to choose a duration greater than 1, it is for your own safety!!*
+> *You have to choose a duration greater than 1 !!*
 
 ## Add a new temp folder to the list
 ### To add the current directory
@@ -113,10 +113,10 @@ tempest add ...<PATH>
 * **``<PATH>``** being the path to the directory to be added to the list of temp directories  
 * **``...``** meaning that many arguments can be passed  
 
-> **By convention we will give the name ``temp`` to the directories to be added to ``tempest``**
+> **By convention we will give the name ``temp`` to the directories to be added to ``TEMPest``**
 
 ### Through text editor
-Just open ``~/.tempestcf`` and add a new line with the <u>absolute path</u> of the temp directory to be added.
+Just open ``$HOME/.tempest/.tempestcf`` and add a new line with the <u>absolute path</u> of the temp directory to be added.
 
 ## List the current directories added to TEMPest
 ### Using TEMPest
@@ -125,10 +125,10 @@ Just open ``~/.tempestcf`` and add a new line with the <u>absolute path</u> of t
 $ tempest list
 ```
 
-### Viewing the file ``~/.tempestcf``
-``$ cat ~/.tempestcf``  
+### Viewing the file ``$HOME/.tempest/.tempestcf``
+``$ cat $HOME/.tempest/.tempestcf``  
 Or  
-``$ vi ~/.tempestcf``  
+``$ vi $HOME/.tempest/.tempestcf``  
 
 ## Updating TEMPest
 ```bash
@@ -136,7 +136,7 @@ $ tempest update
 ```
 
 ## Runing a global purge
-*The age of the files deleted will be the one older than the number of days set as "duration" in ~/.tempest.yaml*
+*The age of the files deleted will be the one older than the number of days set as "duration" in ``$HOME/.tempest/.tempest.yaml``*
 ### Test mode
 In this mode, it will display the file it <u>would</u> delete plus the size.  
 **Nothing gets deleted**. To do so, try:
@@ -146,7 +146,7 @@ $ tempest start -t
 ```
 
 ### Real one
-**Runing this will actually delete files/directories, make sure everything inside ``~/.tempestcf`` is meant to be there with ``tempest list`` first.**
+**Runing this will actually delete files/directories, make sure everything inside ``$HOME/.tempest/.tempestcf`` is meant to be there with ``TEMPest list`` first.**
 
 ```bash
 $ tempest start
@@ -155,7 +155,7 @@ $ tempest start
 ## Purging one directory
 >*Still based on the config file*  
 
-It is possible to purge a directory even if it is not added to tempest. There is also a test mode for this one.
+It is possible to purge a directory even if it is not added to TEMPest. There is also a test mode for this one.
 ### Test mode
 
 ```bash
@@ -185,6 +185,9 @@ There is also a "man like" view of the documentation.
 ```bash
 $ tempest doc -m
 ```
+
+## More
+If you want to know more about **TEMPest**, visit <a href="https://chacas0.github.io/tempest" target="_blank">this page</a>.
 
 
 -------------------
