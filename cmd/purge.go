@@ -156,24 +156,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 			// Check if time is right
 			timeDiff := time.Now().Sub(target.ModTime()).Hours()
 			if timeDiff >= float64(days*24) {
-				var size = float64(target.Size())
-
-				// // Seems to be fine
-				var unit string
-				switch {
-				case size >= 1000000000000:
-					unit = "GBytes"
-					size *= 0.000000001
-				case size >= 1000000:
-					unit = "MBytes"
-					size *= 0.000001
-				case size >= 1000:
-					unit = "KBytes"
-					size *= 0.001
-				default:
-					unit = "Bytes"
-				}
-				size = Round(size, .5, 2)
+				size, unit := FormatSize(float64(target.Size()))
 
 				// if target.ModTime() <
 				switch {
