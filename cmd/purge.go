@@ -133,6 +133,28 @@ func fetchAll(root string) (sliceDir []os.FileInfo, targetInfo os.FileInfo, errF
 func emptyFile(path string, target os.FileInfo, testMode bool) error {
 	// TODO: Refactor fetchAll()
 	//? Maybe add a new age speciffic to files?
+
+	// messages
+	var msg string
+	fmt.Println(magB("\n:: List of items to be removed in:"), path)
+
+	// get size
+	size, unit := FormatSize(float64(target.Size()))
+
+	// check testMode
+	if testMode {
+		// no deletion
+		fmt.Println(magB("Victim\tSize\tUnit\t\t Item"))
+		msg = fmt.Sprint("0\tKB\t\t Forever Alone ? It's already empty !")
+		if size <= 0 {
+			msg = "NOPE\t" + msg
+		}
+	} else {
+		// actual deletion
+		fmt.Println(color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t\t", path+target.Name())
+		fmt.Println(magB("Size\tUnit\t\t Item"))
+	}
+
 	return nil
 }
 
