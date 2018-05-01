@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -72,19 +73,13 @@ func init() {
 	}
 
 	RootCmd.AddCommand(addCmd)
-	// Here you will define your flags and configuration settings.
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	// addCmd.Flags().StringVarP(&this, "this", "t", "nothing", "Points to current directory")
 }
 
-// func addLine(argFlags []string, args []string) error {
+// addLine add each string as target into TEMPest (~/.tempestcf)
 func addLine(args []string) error {
 	// Check if the path already exists first in tempestcf
 	// ctnt, errRead := ioutil.ReadFile(conf.Home + "/.tempestcf")
@@ -107,13 +102,14 @@ func addLine(args []string) error {
 	}
 	defer tmpcf.Close()
 
+	// Fetch current directory
+	this, errDir := os.Getwd()
+	if errDir != nil {
+		log.Fatal(errDir)
+	}
+
 	// if no args
 	if len(args) == 0 {
-		// Fetch current directory
-		this, errDir := os.Getwd()
-		if errDir != nil {
-			log.Fatal(errDir)
-		}
 		// Check if already exists
 		sliceThis := make([]string, 1)
 		sliceThis[0] = this
@@ -143,6 +139,9 @@ func addLine(args []string) error {
 				fmt.Println(redB("::"), color.RedString("Can't add this target, check it does exist >>"), path)
 				return errors.New("")
 			}
+			// In case it is a relative path
+			treatRelativePath(&path, this)
+
 			// Add all the paths passed in the file
 			nbBytes, errWS := tmpcf.WriteString(path + "\n")
 			if errWS != nil {
@@ -154,6 +153,37 @@ func addLine(args []string) error {
 	}
 
 	return nil
+}
+
+// treatRelativePath treats a string in case it is a relative path.
+// The func does check if it should act and does the action.
+// if the first character is not a pathSeparator or the first two chars are ``./``
+// It shall be replaced by the full path of the working directory followed by a path separator.
+func treatRelativePath(path *string, workingDir string) {
+	// setup
+	var matchSimpleRel string
+	var matchDotRel string
+	workingDir += string(os.PathSeparator)
+
+	// regexes
+	// for match
+	regSimpleRel := regexp.MustCompile(`^([[:alpha:]]|[\d])`)
+	regDotRel := regexp.MustCompile(`^(\.(\/|\\))`)
+
+	// Matching
+	// Simple Relative path (with the form ``Documents/temp``)
+	matchSimpleRel = regSimpleRel.FindString(*path)
+	// Dot Relative path (with the form ``./Documents/temp``)
+	matchDotRel = regDotRel.FindString(*path)
+
+	switch {
+	case matchSimpleRel != "":
+		// replace
+		*path = regSimpleRel.ReplaceAllString(*path, workingDir+matchSimpleRel)
+	case matchDotRel != "":
+		// replace
+		*path = regDotRel.ReplaceAllString(*path, workingDir)
+	}
 }
 
 // checkRedondance returns true if a string is contained in both slices

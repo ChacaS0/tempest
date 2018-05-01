@@ -32,6 +32,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+// var days int
+
+// pPath is the path to use in purge
+var pPath string
+
+// tTest is defining if it should run test mode or not
+var tTest bool
+
+// pInt default is -1, if not, we use the index number for deletion
+var pInt int
+
 // purgeCmd represents the purge command
 var purgeCmd = &cobra.Command{
 	Use:   "purge",
@@ -63,14 +74,21 @@ to quickly create a Cobra application.`,
 		} */
 		switch {
 		case pPath != "":
-			f, e := fetchAll(pPath)
+			f, fInfo, e := fetchAll(pPath)
 			if e != nil {
 				fmt.Println("-----", e)
 			}
-			//call str
-			if errDeletion := deleteAllStr(pPath, f, tTest); errDeletion != nil {
-				color.Red("FCK ALL")
-				fmt.Println(errDeletion)
+			if fInfo == nil {
+				//call str
+				if errDeletion := deleteAllStr(pPath, f, tTest); errDeletion != nil {
+					color.Red("FCK ALL")
+					fmt.Println(errDeletion)
+				}
+			} else {
+				if errEmptyF := emptyFile(pPath, fInfo, tTest); errEmptyF != nil {
+					color.Red("FCK ME")
+					fmt.Println(errEmptyF)
+				}
 			}
 		case pInt > -1:
 			//call int
@@ -84,30 +102,13 @@ to quickly create a Cobra application.`,
 	},
 }
 
-// var days int
-
-// pPath is the path to use in purge
-var pPath string
-
-// tTest is defining if it should run test mode or not
-var tTest bool
-
-// pInt default is -1, if not, we use the index number for deletion
-var pInt int
-
 func init() {
 	RootCmd.AddCommand(purgeCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// purgeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// purgeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	// purgeCmd.Flags().IntVarP(&days, "days", "d", -1, "age of the files to be deleted in days")
+
 	purgeCmd.Flags().StringVarP(&pPath, "path", "p", "", "path to purge")
 	purgeCmd.Flags().BoolVarP(&tTest, "test", "t", false, "test mode -- doesn't actually delete and log to stdout")
 	purgeCmd.Flags().IntVarP(&pInt, "index", "i", -1, "use the index number pointed by tempest list for purge.")
@@ -115,20 +116,70 @@ func init() {
 
 }
 
-// fetchAll retrieves all files AND directories from the root path provided
-// returns a slice of os.FileInfo and an error
-func fetchAll(root string) ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir(root)
-	if err != nil {
-		color.HiRed("Not a directory, de yoo no da wae !?")
-		return nil, err
+// fetchAll retrieves all files AND directories from the root path provided if the path points to a directory.
+// If it points to a file, it returns the os.FileInfo of that file.
+// If there is an error, it will be returned
+func fetchAll(root string) (sliceDir []os.FileInfo, targetInfo os.FileInfo, errFunc error) {
+	sliceDir, errFunc = ioutil.ReadDir(root)
+	if errFunc != nil {
+		// Not a directory so probably a file ? Check for it
+		targetInfo, errFunc = os.Stat(root)
+		if errFunc != nil {
+			fmt.Println(redB(":: [ERROR]"), color.HiRedString("Could not read the file(s), sad story!"))
+			targetInfo = nil
+		}
+		sliceDir = nil
 	}
-
-	return files, err
+	return
 }
 
-// deleteAllStr is the basic deletion func in here. It deletes everything
-// within the directory pointed by the path provided
+// emptyFile is one of the main func in here. It deletes everything within
+// the file pointed by the path provided.
+// Doesn't delete anything if testMode is true.
+// It just displays
+func emptyFile(path string, target os.FileInfo, testMode bool) error {
+	// TODO: Refactor fetchAll()
+
+	// header message
+	fmt.Println(magB("\n:: File:"), path)
+	fmt.Println(magB("Targeted   Size\tUnit\t Item"))
+
+	//? Maybe add a new age speciffic to files?
+	// get the age in config
+	days := viper.GetInt("duration")
+
+	// check the age
+	timeDiff := time.Now().Sub(target.ModTime()).Hours()
+
+	// infos
+	size, unit := FormatSize(float64(target.Size()))
+
+	var msg string
+
+	if timeDiff >= float64(days*24) {
+
+		if testMode {
+			// Test mode, don't delete
+			// TODO: Improve
+			msg = fmt.Sprintln(redB("YES\t   "), color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t", path+target.Name())
+		} else {
+			// Actual deletion
+			if err := os.Truncate(path, 0); err != nil {
+				return err
+			}
+			msg = fmt.Sprintln(redB("DONE\t   "), color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t", path+target.Name())
+		}
+	} else {
+		msg = fmt.Sprintln(greenB("NOPE\t   "), color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t", path+target.Name())
+	}
+
+	fmt.Println(msg)
+
+	return nil
+}
+
+// deleteAllStr is one of the main func in here. It deletes everything
+// within the directory pointed by the path provided.
 // Doesn't delete anything if testMode is true.
 // It just displays what would be deleted
 func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
@@ -147,24 +198,7 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 			// Check if time is right
 			timeDiff := time.Now().Sub(target.ModTime()).Hours()
 			if timeDiff >= float64(days*24) {
-				var size = float64(target.Size())
-
-				// // Seems to be fine
-				var unit string
-				switch {
-				case size >= 1000000000000:
-					unit = "GBytes"
-					size *= 0.000000001
-				case size >= 1000000:
-					unit = "MBytes"
-					size *= 0.000001
-				case size >= 1000:
-					unit = "KBytes"
-					size *= 0.001
-				default:
-					unit = "Bytes"
-				}
-				size = Round(size, .5, 2)
+				size, unit := FormatSize(float64(target.Size()))
 
 				// if target.ModTime() <
 				switch {
@@ -211,16 +245,19 @@ func deleteAllStr(path string, targets []os.FileInfo, testMode bool) error {
 func deleteAllInt(index int, testMode bool) error {
 	allPaths, errPaths := getPaths()
 	if errPaths != nil {
-		color.Red("::Error while reading .tempestcf")
+		color.Red(":: Error while reading .tempestcf")
 		return errPaths
 	}
 	if index >= 0 && index < len(allPaths) {
 		for indx, indPath := range allPaths {
 			if index == indx {
 				// color.Cyan(indPath)
-				fInt, eInt := fetchAll(indPath)
+				fInt, fInfo, eInt := fetchAll(indPath)
 				if eInt != nil {
 					fmt.Println("-----", eInt)
+				}
+				if fInfo != nil {
+					return emptyFile(indPath, fInfo, testMode)
 				}
 				return deleteAllStr(indPath, fInt, testMode)
 			}

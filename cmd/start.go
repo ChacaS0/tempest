@@ -27,7 +27,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// testAll tells if ``start`` should be run in 'test mode'
 var testAll bool
+
+// needShutup tells if start should be run in 'shutup mode'
+var needShutup bool
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
@@ -51,8 +55,15 @@ tempest start -t
 		if err != nil {
 			fmt.Println(color.RedString("Could not find da wae !\n"), err)
 		}
+		// run in shutup mode
+		if needShutup {
+			handleShutupMode(allPaths)
+			return
+		}
+		// call purge
 		if errPurge := callPurge(allPaths); errPurge != nil {
-			fmt.Println(color.RedString("Sorry something went terribly wrong... Feels brah!\n"), errPurge)
+			// fmt.Println(color.RedString("Sorry something went terribly wrong... Feels brah!\n"), errPurge)
+			fmt.Println(color.HiYellowString("\n[!] Try to run:\n\t tempest list --fix"))
 		}
 		// fmt.Println("start called")
 	},
@@ -71,6 +82,7 @@ func init() {
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().BoolVarP(&testAll, "test", "t", false, "test mode -- doesn't actually delete and log to stdout")
+	startCmd.Flags().BoolVarP(&needShutup, "shutup", "s", false, "in 'shutup mode', all messages are redirected to logs ("+LogShutup+")")
 }
 
 // callPurge call the external program named "purge" on each path provided
@@ -93,18 +105,41 @@ func callPurge(targets []string) error {
 		} */
 		/* pPath = path
 		purgeCmd.Execute() */
-		fInfo, errFInfo := fetchAll(path)
+		fInfo, single, errFInfo := fetchAll(path)
 		if errFInfo != nil {
 			color.HiRed("Error fetch info for this temp directory")
 			return errFInfo
 		}
-
-		if errPurgeAll := deleteAllStr(path, fInfo, testAll); errPurgeAll != nil {
-			color.HiRed("Error while purging all the file at once!")
-			return errPurgeAll
+		if single == nil {
+			// then it's a directory
+			if errPurgeAll := deleteAllStr(path, fInfo, testAll); errPurgeAll != nil {
+				color.HiRed("Error while purging directory:", path)
+				return errPurgeAll
+			}
+		} else {
+			// then it's a single file
+			if errSingleF := emptyFile(path, single, testAll); errSingleF != nil {
+				color.HiRed("Error while purging the single file:", path)
+				return errSingleF
+			}
 		}
 
 	}
 
 	return nil
+}
+
+// handleShutupMode is the handler func for the 'shutup mode'.
+// We assume that ``needShutup`` is already true.
+// TODO - migrate to Target instead of string
+func handleShutupMode(targets []string) {
+	// testAll = true // DEBUG MODE
+	callBck := func() {
+		if err := callPurge(targets); err != nil {
+			fmt.Println(err)
+		}
+	}
+	stdString := captureStdout(callBck)
+	// write stdString to the log file
+	WriteLog(LogShutup, string(stdString))
 }
