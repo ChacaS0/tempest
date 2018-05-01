@@ -93,7 +93,7 @@ func TestPrintList(t *testing.T) {
 	})
 
 	// Verify output of printList()
-	wantedOutput = "Current targets currently having \"fun\" with TEMPest:\n\nIndex\t| Target\n0\t| " + conf.Gobin + "\n1\t| " + conf.Gopath + "\n"
+	wantedOutput = "Current targets currently having \"fun\" with TEMPest:\n\nIndex\t| Target\n0\t| " + TreatLastChar(conf.Gobin) + "\n1\t| " + TreatLastChar(conf.Gopath) + "\n"
 	if actualOutput != wantedOutput {
 		t.Log("[FAIL]:: The output of printList() was quite unexpected! Wow!\n\t-> ActualOutput:\n\t", actualOutput, "\n\t-> Wanted:\n\t", wantedOutput)
 		t.Fail()
@@ -171,7 +171,7 @@ func TestFixTargets(t *testing.T) {
 	}
 	// Handle results
 	if cpt != 3 {
-		t.Log("[FAIL]:: Damn, something went terribly wrong!!\n\tGOT: ", pathsAfter, "\n\tWANT: ", []string{conf.Gobin, conf.Gopath})
+		t.Log("[FAIL]:: Damn, something went terribly wrong!!\n\tGOT:  ", pathsAfter, "\n\tWANT: ", []string{TreatLastChar(conf.Gobin), TreatLastChar(conf.Gopath)})
 		t.Fail()
 	}
 

@@ -202,6 +202,9 @@ func init() {
 	magB = color.New(color.FgHiMagenta, color.Bold).SprintFunc()
 	cyanB = color.New(color.FgHiCyan, color.Bold).SprintFunc()
 
+	conf.Gobin = TreatLastChar(conf.Gobin)
+	conf.Gopath = TreatLastChar(conf.Gopath)
+
 	// //* Man ?
 	// header := &doc.GenManHeader{
 	// 	Title:   "List",

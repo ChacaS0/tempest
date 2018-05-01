@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -20,12 +21,39 @@ func TestCallPurge(t *testing.T) {
 		t.Fail()
 	}
 
-	// call it without test mode on
+	//! call it without test mode on
 	tTest = false
 	if err := callPurge(slTest); err != nil {
 		t.Log("[FAIL]:REGMODE: An error occurred when trying to use ``callPurge(", slTest, ")\n\t->", err)
 		t.Fail()
 	}
+
+	// =============
+	// Test file to be added to tempestcf for testing purpose
+	f, errCF := os.Create(conf.Gobin + string(os.PathSeparator) + "test_file.temp")
+	if errCF != nil {
+		t.Log("[ERROR]:CREATE_F: Can't create a file for testing")
+		t.Fail()
+	}
+	f.Close()
+
+	// Setup the test .tempestcf
+	tempestcfbup := setTestTempestcf(t, []string{
+		conf.Gobin,
+		conf.Gobin + string(os.PathSeparator) + "test_file.temp",
+	})
+
+	// call it with test mode on
+	tTest = true
+	if err := callPurge(slTest); err != nil {
+		t.Log("[FAIL]:REGMODE: An error occurred when trying to use ``callPurge(", slTest, ")\n\t->", err)
+		t.Fail()
+	}
+
+	//! don't call it without test mode on, it might delete stuff !
+
+	// fallback to the previous tempestcf config
+	fbTestTempestcf(t, tempestcfbup)
 }
 
 // TestHandleShutupMode checks if the func handles well the shutup mode.

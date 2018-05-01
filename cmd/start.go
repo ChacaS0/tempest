@@ -113,13 +113,13 @@ func callPurge(targets []string) error {
 		if single == nil {
 			// then it's a directory
 			if errPurgeAll := deleteAllStr(path, fInfo, testAll); errPurgeAll != nil {
-				color.HiRed("Error while purging all the file at once!")
+				color.HiRed("Error while purging directory:", path)
 				return errPurgeAll
 			}
 		} else {
 			// then it's a single file
 			if errSingleF := emptyFile(path, single, testAll); errSingleF != nil {
-				color.HiRed("Error while purging the single file!")
+				color.HiRed("Error while purging the single file:", path)
 				return errSingleF
 			}
 		}
