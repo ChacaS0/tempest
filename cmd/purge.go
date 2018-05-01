@@ -74,14 +74,21 @@ to quickly create a Cobra application.`,
 		} */
 		switch {
 		case pPath != "":
-			f, _, e := fetchAll(pPath)
+			f, fInfo, e := fetchAll(pPath)
 			if e != nil {
 				fmt.Println("-----", e)
 			}
-			//call str
-			if errDeletion := deleteAllStr(pPath, f, tTest); errDeletion != nil {
-				color.Red("FCK ALL")
-				fmt.Println(errDeletion)
+			if fInfo == nil {
+				//call str
+				if errDeletion := deleteAllStr(pPath, f, tTest); errDeletion != nil {
+					color.Red("FCK ALL")
+					fmt.Println(errDeletion)
+				}
+			} else {
+				if errEmptyF := emptyFile(pPath, fInfo, tTest); errEmptyF != nil {
+					color.Red("FCK ME")
+					fmt.Println(errEmptyF)
+				}
 			}
 		case pInt > -1:
 			//call int
@@ -132,7 +139,42 @@ func fetchAll(root string) (sliceDir []os.FileInfo, targetInfo os.FileInfo, errF
 // It just displays
 func emptyFile(path string, target os.FileInfo, testMode bool) error {
 	// TODO: Refactor fetchAll()
+
+	// header message
+	fmt.Println(magB("\n:: File:"), path)
+	fmt.Println(magB("Targeted   Size\tUnit\t Item"))
+
 	//? Maybe add a new age speciffic to files?
+	// get the age in config
+	days := viper.GetInt("duration")
+
+	// check the age
+	timeDiff := time.Now().Sub(target.ModTime()).Hours()
+
+	// infos
+	size, unit := FormatSize(float64(target.Size()))
+
+	var msg string
+
+	if timeDiff >= float64(days*24) {
+
+		if testMode {
+			// Test mode, don't delete
+			// TODO: Improve
+			msg = fmt.Sprintln(redB("YES\t   "), color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t", path+target.Name())
+		} else {
+			// Actual deletion
+			if err := os.Truncate(path, 0); err != nil {
+				return err
+			}
+			msg = fmt.Sprintln(redB("DONE\t   "), color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t", path+target.Name())
+		}
+	} else {
+		msg = fmt.Sprintln(greenB("NOPE\t   "), color.HiCyanString(fmt.Sprintf("%v\t%s", size, unit)), "\t", path+target.Name())
+	}
+
+	fmt.Println(msg)
+
 	return nil
 }
 
@@ -210,9 +252,12 @@ func deleteAllInt(index int, testMode bool) error {
 		for indx, indPath := range allPaths {
 			if index == indx {
 				// color.Cyan(indPath)
-				fInt, _, eInt := fetchAll(indPath)
+				fInt, fInfo, eInt := fetchAll(indPath)
 				if eInt != nil {
 					fmt.Println("-----", eInt)
+				}
+				if fInfo != nil {
+					return emptyFile(indPath, fInfo, testMode)
 				}
 				return deleteAllStr(indPath, fInt, testMode)
 			}
