@@ -90,14 +90,8 @@ func init() {
 
 	WindowsAutoStartSL = `%AppData%\Microsoft\Windows\"Start Menu"\Programs\Startup\TEMPest-startup`
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// setCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// setCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	setCmd.Flags().IntVarP(&age, "age", "a", -1, "Set the maximum age (in days) of the temp directories' content")
 	setCmd.Flags().StringVarP(&autoStart, "auto-start", "s", "", "Set to 'on' to activate or 'off' to deactivate. (not activated by default)")

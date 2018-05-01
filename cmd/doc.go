@@ -48,15 +48,9 @@ var docCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(docCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// docCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// docCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
 	docCmd.Flags().BoolVarP(&isMan, "man", "m", false, "Add this falg to have a \"man like\" view.")
 }
 

@@ -57,14 +57,7 @@ Get is pretty simple to use. For example:
 func init() {
 	RootCmd.AddCommand(getCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// getCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// getCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	getCmd.Flags().BoolVarP(&theAge, "age", "a", false, "Use this if you want to know the age set in .tempest.yaml")

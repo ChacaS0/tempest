@@ -47,10 +47,6 @@ var conf struct {
 	Gopath string
 }
 
-// type vConfig struct {
-// 	duration int `yaml:"duration"`
-// }
-
 // TempestConfigDir points to the config directory of TEMPest
 // it holds pretty much all configuration for TEMPest
 var TempestConfigDir string
@@ -180,13 +176,12 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	conf.Home = home
-
 	cobra.OnInitialize(initConfig)
 
 	if err := envconfig.Init(&conf); err != nil {
 		// log.Println(err)
 	}
+	conf.Home = home
 
 	TempestConfigDir = conf.Home + string(os.PathSeparator) + ".tempest"
 
@@ -207,6 +202,9 @@ func init() {
 	magB = color.New(color.FgHiMagenta, color.Bold).SprintFunc()
 	cyanB = color.New(color.FgHiCyan, color.Bold).SprintFunc()
 
+	conf.Gobin = TreatLastChar(conf.Gobin)
+	conf.Gopath = TreatLastChar(conf.Gopath)
+
 	// //* Man ?
 	// header := &doc.GenManHeader{
 	// 	Title:   "List",
@@ -217,13 +215,8 @@ func init() {
 	// doc.GenMan(RootCmd, header, out)
 	// fmt.Println(out.String())
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", viper.ConfigFileUsed(), "config file (default is $HOME/.tempest/.tempest.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	RootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "Display the current version v[VERSION_NUMBER]-X-Y[REVISION_NUMBER]")
 
@@ -447,4 +440,30 @@ func SameSlicesInt(a, b []int) bool {
 	}
 
 	return true
+}
+
+// FormatSize takes the size in Bytes and return the new size converted in
+// KByte, MBytes, GBytes when it needs to, plus the unit.
+func FormatSize(incomingSize float64) (size float64, unit string) {
+	//set up vars
+	unit = "Bytes"
+	size = incomingSize
+
+	// conversion
+	switch {
+	case size >= 1000000000000:
+		unit = "GBytes"
+		size *= 0.000000001
+	case size >= 1000000:
+		unit = "MBytes"
+		size *= 0.000001
+	case size >= 1000:
+		unit = "KBytes"
+		size *= 0.001
+	default:
+		unit = "Bytes"
+	}
+	size = Round(size, .5, 2)
+
+	return
 }

@@ -105,15 +105,23 @@ func callPurge(targets []string) error {
 		} */
 		/* pPath = path
 		purgeCmd.Execute() */
-		fInfo, errFInfo := fetchAll(path)
+		fInfo, single, errFInfo := fetchAll(path)
 		if errFInfo != nil {
 			color.HiRed("Error fetch info for this temp directory")
 			return errFInfo
 		}
-
-		if errPurgeAll := deleteAllStr(path, fInfo, testAll); errPurgeAll != nil {
-			color.HiRed("Error while purging all the file at once!")
-			return errPurgeAll
+		if single == nil {
+			// then it's a directory
+			if errPurgeAll := deleteAllStr(path, fInfo, testAll); errPurgeAll != nil {
+				color.HiRed("Error while purging directory:", path)
+				return errPurgeAll
+			}
+		} else {
+			// then it's a single file
+			if errSingleF := emptyFile(path, single, testAll); errSingleF != nil {
+				color.HiRed("Error while purging the single file:", path)
+				return errSingleF
+			}
 		}
 
 	}
