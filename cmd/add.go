@@ -65,18 +65,33 @@ tempest add /tmp
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Auto add flag used
-		if autoAdd {
+		if autoAdd && len(args) == 0 {
 			// TODO
-			tempDirs, errDirs := findDirs("/home/chacanterg/", "temp")
+			toAdd, errDirs := findDirs("/home/chacanterg/", "temp.est")
 			if errDirs != nil {
 				log.Fatal(errDirs)
 			}
-			fmt.Println(tempDirs)
-		} else {
+			toAdd, errStrip := stripExistingTargets(toAdd)
+			lenAdd := len(toAdd)
+			if lenAdd > 0 {
+				if errStrip != nil {
+					fmt.Println(errStrip.Error())
+					return
+				}
+			} else {
+				fmt.Println(cyanB("[INFO]::"), color.HiCyanString("No paths were added"))
+			}
+			// add these lines
+			if errAddLine := addLine(toAdd); errAddLine != nil {
+				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
+			}
+		} else if !autoAdd {
 			// FALLBACK CASE
 			if errAddLine := addLine(args); errAddLine != nil {
 				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
 			}
+		} else {
+			cmd.Help()
 		}
 
 	},
@@ -268,4 +283,30 @@ func findDirs(root, pattern string) ([]string, error) {
 	})
 
 	return dirs, err
+}
+
+// stripExistingTargets takes the slice of targets to add as parameter
+// returns a new slice of targets to register but without the existing ones
+func stripExistingTargets(wantAdd []string) ([]string, error) {
+	strippedList := make([]string, 0)
+	existingTgts, errAllTgt := getPaths()
+
+	if errAllTgt != nil {
+		if errAllTgt.Error() == "empty" {
+			for _, tgt := range wantAdd {
+				strippedList = append(strippedList, tgt)
+			}
+			return strippedList, nil
+		}
+		fmt.Println(redB("[ERROR]::"), color.HiRedString("Failed to fetch existing targets. Check if the config is right\n\t"), errAllTgt)
+		return nil, errAllTgt
+	}
+
+	for _, tgt := range wantAdd {
+		if !IsStringInSlice(tgt, existingTgts) {
+			strippedList = append(strippedList, tgt)
+		}
+	}
+
+	return strippedList, nil
 }
