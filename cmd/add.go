@@ -64,6 +64,7 @@ tempest add /tmp
   This way they will be easy to spot
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		// Auto add flag used
 		if autoAdd {
 			// TODO
 			tempDirs, errDirs := findDirs("/home/chacanterg/", "temp")
@@ -72,6 +73,7 @@ tempest add /tmp
 			}
 			fmt.Println(tempDirs)
 		} else {
+			// FALLBACK CASE
 			if errAddLine := addLine(args); errAddLine != nil {
 				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
 			}

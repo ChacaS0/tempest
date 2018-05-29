@@ -173,3 +173,57 @@ func TestAddLine(t *testing.T) {
 	// Clean up the mess
 	fbTestTempestcf(t, tempestcfbup)
 }
+
+// TestFindDirs
+func TestFindDirs(t *testing.T) {
+	// init vars
+	rootPath := conf.Gopath + Slash + "tests_temp"
+	testDirs := []string{
+		0: conf.Gopath + Slash + "tests_temp" + Slash + "dir1",
+		1: conf.Gopath + Slash + "tests_temp" + Slash + "test",
+		2: conf.Gopath + Slash + "tests_temp" + Slash + "dir3" + Slash + "test",
+		3: conf.Gopath + Slash + "tests_temp" + Slash + "dir4" + Slash + "notTest",
+	}
+	// setup test envi
+	if err := createTestDir(rootPath); err != nil {
+		t.Log("[ERROR]:: Could not create the test dir\n\t->", err)
+		t.FailNow()
+	}
+
+	param2 := [][]string{
+		0: testDirs,
+	}
+
+	if err := addToTestDir(rootPath, param2); err != nil {
+		t.Log("[ERROR]:: Could not create the test content\n\t->", err)
+		rmTestDirs(rootPath)
+		t.FailNow()
+	}
+
+	// mock args
+	args := []struct {
+		root    string
+		pattern string
+		want    []string
+	}{
+		{rootPath, "test", []string{
+			testDirs[1],
+			testDirs[2],
+		}},
+	}
+
+	for _, tst := range args {
+		slFound, errFound := findDirs(tst.root, tst.pattern)
+		if errFound != nil {
+			t.Log("[ERROR]:: Searching for matching directories resulted to an error:\n\t-> ", errFound)
+			t.Fail()
+		}
+		if !SameSliceValuesStr(tst.want, slFound) {
+			t.Log("[FAILED]:: Wanted:\n\t", tst.want, "\nGot:\n\t", slFound)
+			t.Fail()
+		}
+	}
+
+	rmTestDirs(rootPath)
+
+}

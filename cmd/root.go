@@ -47,6 +47,9 @@ var conf struct {
 	Gopath string
 }
 
+// Slash is shorthand for the path separator
+var Slash = string(os.PathSeparator)
+
 // TempestConfigDir points to the config directory of TEMPest
 // it holds pretty much all configuration for TEMPest
 var TempestConfigDir string
@@ -183,15 +186,15 @@ func init() {
 	}
 	conf.Home = home
 
-	TempestConfigDir = conf.Home + string(os.PathSeparator) + ".tempest"
+	TempestConfigDir = conf.Home + Slash + ".tempest"
 
-	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
-	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
+	pathProg = conf.Gopath + Slash + "src" + Slash + "github.com" + Slash + "ChacaS0" + Slash
+	pathTempest = pathProg + "tempest" + Slash
 
-	Tempestcf = TempestConfigDir + string(os.PathSeparator) + ".tempestcf"
+	Tempestcf = TempestConfigDir + Slash + ".tempestcf"
 	Tempestyml = viper.ConfigFileUsed()
-	TempestymlDef = TempestConfigDir + string(os.PathSeparator) + ".tempest.yaml"
-	LogShutup = TempestConfigDir + string(os.PathSeparator) + ".log" + string(os.PathSeparator) + "shutup.log"
+	TempestymlDef = TempestConfigDir + Slash + ".tempest.yaml"
+	LogShutup = TempestConfigDir + Slash + ".log" + Slash + "shutup.log"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
@@ -435,6 +438,35 @@ func SameSlicesInt(a, b []int) bool {
 	b = b[:len(a)]
 	for i, v := range a {
 		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// SameSliceValuesStr returns ``true`` if the two slices fo ``string``
+// have the same values, order doesn't matter
+func SameSliceValuesStr(a, b []string) bool {
+	if a == nil && b == nil {
+		return true
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	if len(a) == 0 && len(b) == 0 {
+		return true
+	}
+
+	// b = b[:len(a)]
+	for _, valA := range a {
+		result := false
+		for _, valB := range b {
+			result = result || (valB == valA)
+		}
+		if !result {
 			return false
 		}
 	}
