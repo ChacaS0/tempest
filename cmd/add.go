@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -37,6 +38,10 @@ import (
 )
 
 var this string
+
+// autoAdd indicates if TEMPest should look for all ``temp.est`` dirs and
+// add them as targets
+var autoAdd bool
 
 // var conf struct {
 // 	Home string
@@ -59,9 +64,34 @@ tempest add /tmp
   This way they will be easy to spot
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		// fmt.Println(color.HiBlueString("lol"))
-		if errAddLine := addLine(args); errAddLine != nil {
-			fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
+		// Auto add flag used
+		if autoAdd && len(args) == 0 {
+			// TODO
+			toAdd, errDirs := findDirs("/home/chacanterg/", "temp.est")
+			if errDirs != nil {
+				log.Fatal(errDirs)
+			}
+			toAdd, errStrip := stripExistingTargets(toAdd)
+			lenAdd := len(toAdd)
+			if lenAdd > 0 {
+				if errStrip != nil {
+					fmt.Println(errStrip.Error())
+					return
+				}
+			} else {
+				fmt.Println(cyanB("[INFO]::"), color.HiCyanString("No paths were added"))
+			}
+			// add these lines
+			if errAddLine := addLine(toAdd); errAddLine != nil {
+				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
+			}
+		} else if !autoAdd {
+			// FALLBACK CASE
+			if errAddLine := addLine(args); errAddLine != nil {
+				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
+			}
+		} else {
+			cmd.Help()
 		}
 
 	},
@@ -77,6 +107,7 @@ func init() {
 	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
 	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	// addCmd.Flags().StringVarP(&this, "this", "t", "nothing", "Points to current directory")
+	addCmd.Flags().BoolVarP(&autoAdd, "auto", "a", false, "Look for all ``temp.est`` directories of the system and add them to the targets list of TEMPest if they are not already there.")
 }
 
 // addLine add each string as target into TEMPest (~/.tempestcf)
@@ -123,7 +154,7 @@ func addLine(args []string) error {
 			fmt.Println(redB("::"), color.RedString("Could not write to the file. Fail bitch!"))
 			return errWrite
 		}
-		fmt.Println(greenB("[NEW TEMP]::")+color.GreenString(fmt.Sprintf("%d", nbBytes)+"::>"), this)
+		fmt.Println(greenB(":: [SUCCESS] ")+color.GreenString(fmt.Sprintf("NEW TARGET::%d", nbBytes)+"::>\t"), this)
 	} else {
 		// Treat the last character
 		for ind, onePath := range args {
@@ -147,7 +178,8 @@ func addLine(args []string) error {
 			if errWS != nil {
 				fmt.Println(color.RedString(":: Are you sure you can handle this much? Without askin your mom first!?"))
 			}
-			fmt.Println(color.GreenString("[NEW TEMP]::"+fmt.Sprintf("%d", nbBytes)+"::>"), path)
+			// fmt.Println(color.GreenString("[NEW TEMP]::"+fmt.Sprintf("%d", nbBytes)+"::>"), path)
+			fmt.Println(greenB(":: [SUCCESS] ")+color.GreenString(fmt.Sprintf("NEW TARGET::%d", nbBytes)+"::>\t"), path)
 		}
 		fmt.Println(color.YellowString("::"), "All paths were added to TEMPest !")
 	}
@@ -237,4 +269,45 @@ func TreatLastChar(str string) string {
 		str = str[:len(str)-1]
 	}
 	return str
+}
+
+// findDirs returns all paths of the directories matching the pattern from
+// the root path provided
+func findDirs(root, pattern string) ([]string, error) {
+	dirs := make([]string, 0)
+
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && info.Name() == pattern {
+			dirs = append(dirs, path)
+		}
+		return nil
+	})
+
+	return dirs, err
+}
+
+// stripExistingTargets takes the slice of targets to add as parameter
+// returns a new slice of targets to register but without the existing ones
+func stripExistingTargets(wantAdd []string) ([]string, error) {
+	strippedList := make([]string, 0)
+	existingTgts, errAllTgt := getPaths()
+
+	if errAllTgt != nil {
+		if errAllTgt.Error() == "empty" {
+			for _, tgt := range wantAdd {
+				strippedList = append(strippedList, tgt)
+			}
+			return strippedList, nil
+		}
+		fmt.Println(redB("[ERROR]::"), color.HiRedString("Failed to fetch existing targets. Check if the config is right\n\t"), errAllTgt)
+		return nil, errAllTgt
+	}
+
+	for _, tgt := range wantAdd {
+		if !IsStringInSlice(tgt, existingTgts) {
+			strippedList = append(strippedList, tgt)
+		}
+	}
+
+	return strippedList, nil
 }

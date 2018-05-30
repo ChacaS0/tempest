@@ -156,9 +156,11 @@ func setTestTempestcf(t *testing.T, slTest []string) (tempestcfbup string) {
 	defer tmpcf.Close()
 
 	// Add slTest data to Tempestcf
-	if err := addLine(slTest); err != nil {
-		t.Log("[ERROR]:: Can't add lines to", Tempestcf, ":\n\t->", err)
-		t.Fail()
+	if len(slTest) > 0 {
+		if err := addLine(slTest); err != nil {
+			t.Log("[ERROR]:: Can't add lines to", Tempestcf, ":\n\t->", err)
+			t.Fail()
+		}
 	}
 
 	return
@@ -198,4 +200,59 @@ func fbTestTempestcf(t *testing.T, tempestcfbup string) {
 		t.Fail()
 	}
 	Tempestcf = tempestcfbup
+}
+
+// createTestDir createa directory meant for testing
+func createTestDir(path string) error {
+	return os.MkdirAll(path, 0777)
+}
+
+// addToTestDir add items to the path (test dir)
+// ex:
+// ```go
+// {
+// 	0: {
+// 		"dir1",
+// 		"dir2",
+// 	},
+// 	1: {
+// 		"file1",
+// 		"file2",
+// 	}
+// }
+// ```
+func addToTestDir(pathTestDir string, toAdd [][]string) error {
+	const DIR = 0
+	const FILE = 1
+
+	// Create dirs
+	if len(toAdd[DIR]) > 0 {
+		for _, path := range toAdd[DIR] {
+			if err := os.MkdirAll(path, 0777); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(toAdd) >= 2 {
+		for _, path := range toAdd[FILE] {
+			f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				return err
+			}
+			f.Close()
+		}
+	}
+
+	return nil
+}
+
+// rmTestDirs removes the test directory(ies) and everything in it
+func rmTestDirs(dirs ...string) error {
+	for _, pathDir := range dirs {
+		if err := os.RemoveAll(pathDir); err != nil {
+			return err
+		}
+	}
+	return nil
 }
