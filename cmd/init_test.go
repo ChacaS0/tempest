@@ -156,9 +156,11 @@ func setTestTempestcf(t *testing.T, slTest []string) (tempestcfbup string) {
 	defer tmpcf.Close()
 
 	// Add slTest data to Tempestcf
-	if err := addLine(slTest); err != nil {
-		t.Log("[ERROR]:: Can't add lines to", Tempestcf, ":\n\t->", err)
-		t.Fail()
+	if len(slTest) > 0 {
+		if err := addLine(slTest); err != nil {
+			t.Log("[ERROR]:: Can't add lines to", Tempestcf, ":\n\t->", err)
+			t.Fail()
+		}
 	}
 
 	return
