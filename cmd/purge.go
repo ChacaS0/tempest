@@ -96,9 +96,9 @@ to quickly create a Cobra application.`,
 				color.Red("FCK ALL")
 				fmt.Println(errInt)
 			}
+		default:
+			cmd.Help()
 		}
-		// DEBUG:
-		// fmt.Println("purge called")
 	},
 }
 

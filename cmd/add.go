@@ -66,7 +66,6 @@ tempest add /tmp
 	Run: func(cmd *cobra.Command, args []string) {
 		// Auto add flag used
 		if autoAdd && len(args) == 0 {
-			// TODO
 			toAdd, errDirs := findDirs("/home/chacanterg/", "temp.est")
 			if errDirs != nil {
 				log.Fatal(errDirs)
