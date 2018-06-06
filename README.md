@@ -75,7 +75,7 @@ First, to initialize it the first time, run:
 ```
 
 This will generate a ``.tempestcf`` file in ``$HOME/.tempest``. 
-It will hold the list of all the temp directories.
+It will hold the list of all the targets.
 
 > If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempest/.tempestcf`` and leave it empty for now.
   
@@ -89,34 +89,34 @@ auto-mode: false
 ```
 #### Parameters:
 
-* **duration** : This is the maximum age the content of the temp directories, choose it carefully!
+* **duration** : This is the maximum age the content of the target's content, choose it carefully!
 
 > *You have to choose a duration greater than 1 !!*
 
-## Add a new temp folder to the list
+## Add a new target to the list
 ### To add the current directory
 Positionate yourself to the deried directory. 
-For example, if you want to add /tmp, use this instructions:  
+For example, if you want to add ``/tmp``, use this instructions:  
 
 ```bash
 $ cd /temp
 $ tempest add
 ```
 
-### Through command-line
+### With command-line
 Just run:
 
 ```bash
 tempest add ...<PATH>
 ```
 
-* **``<PATH>``** being the path to the directory to be added to the list of temp directories  
+* **``<PATH>``** being the path to the directory to be added to the list of targets  
 * **``...``** meaning that many arguments can be passed  
 
-> **By convention we will give the name ``temp`` to the directories to be added to ``TEMPest``**
+> **By convention we will give the name ``temp.est`` to the directories to be added to ``TEMPest``**
 
-### Through text editor
-Just open ``$HOME/.tempest/.tempestcf`` and add a new line with the <u>absolute path</u> of the temp directory to be added.
+### With a text editor
+Just open ``$HOME/.tempest/.tempestcf`` and add a new line with the <u>absolute path</u> of the target to be added.
 
 ## List the current directories added to TEMPest
 ### Using TEMPest
