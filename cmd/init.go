@@ -32,8 +32,8 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Call this if it is the first time you use TEMPest or to reset the temps",
-	Long: `Call this if it is the first time you use TEMPest or to reset the temps:
+	Short: "Call this if it is the first time you use TEMPest or to reset the config",
+	Long: `Call this if it is the first time you use TEMPest or to reset the config:
 
 It will create a file named .tempestcf in your /home/$USER.
 This file will contain the list of all the directories you wish tempest to handle as temporary directory.
@@ -66,7 +66,13 @@ This file will contain the list of all the directories you wish tempest to handl
 		fmt.Println(greenB("::"), color.HiGreenString("Suggestions:"))
 		fmt.Println(color.HiGreenString(`	Start using TEMPest right away by adding a temporary file :
 		tempest add <DIRECTORY_PATH>
-	Or get help to add new paths:
+	Or generate new targets
+		tempest new						# Generate a new target in the current directory.
+											  This new target will be already registered.
+											  The created directory will be called ``temp.est``.
+	Or find existing potential targets and add them (meaning the ones called ``temp.est``)
+		tempest add --auto
+	Or get help to add new targets:
 		tempest help add
 `))
 	},
@@ -95,7 +101,7 @@ func initTempestDir() error {
 	}
 	// fmt.Println("conf dir created")
 	// create the log dir
-	err := os.Mkdir(TempestConfigDir+string(os.PathSeparator)+".log", 0755)
+	err := os.Mkdir(TempestConfigDir+Slash+".log", 0755)
 	// fmt.Println("log dir created if nil =>", err)
 	return err
 }
