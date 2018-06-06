@@ -124,17 +124,19 @@ var RootCmd = &cobra.Command{
 	Long: `TEMPest is a simple CLI to manage temporary directories.
 It is still under development, so it's normal if it's not perfect .. YET!
 You can start by checking if the config file exists at:
-	~/.tempest.yaml
+	~/.tempest/.tempest.yaml
 	It contains the files' contraint of age (duration in days).
+	It also contains the mode (auto or manual) in which TEMPest runs.
+		/!\ note that Windows hasn't been fully tested.
 
 Then you can initialize the list of directories handled by TEMPest. For example:
 	tempest init
 Then change directory (cd) to a directory you desire to add, and run:
 	tempest add
 Or just specify the path to the directory (you can add multiple). For example:
-	tempest add /tmp /temp
+	tempest add /tmp/temp.est /temp/test.est
 
-# Note that, by convention, the tempory directories will be called 'temp'
+# Note that, by convention, the tempory directories will be called 'temp.est'
 
 To start cleaning temp directories just run:
 	tempest start
