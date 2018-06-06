@@ -138,7 +138,7 @@ Or just specify the path to the directory (you can add multiple). For example:
 
 # Note that, by convention, the tempory directories will be called 'temp.est'
 
-To start cleaning temp directories just run:
+To start cleaning targets directories just run:
 	tempest start
 Or if you want to see what files/folders would get deleted:
 	tempest start -t
@@ -372,7 +372,6 @@ func captureStdout(f func()) string {
 func WriteLog(pathLog string, strs ...string) {
 	// open file first - if does not exist, create it biatch
 	var f *os.File
-	// TODO replace this path by the var once merged with the non-temp branch
 	f, errF := os.OpenFile(pathLog, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if errF != nil {
 		f2, errF2 := os.OpenFile(pathLog, os.O_APPEND|os.O_WRONLY, os.ModeAppend)

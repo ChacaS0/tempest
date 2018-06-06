@@ -53,7 +53,7 @@ var setCmd = &cobra.Command{
 	Long: `set is used to set variables, content, config on TEMPest. For example:
 
 	tempest set --age 4
-	# This sets the maximum "age" of the temp directories content
+	# This sets the maximum "age" of the target directories content
 
 More features might come next. Stay tuned!
 `,
@@ -93,12 +93,12 @@ func init() {
 	// setCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// setCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	setCmd.Flags().IntVarP(&age, "age", "a", -1, "Set the maximum age (in days) of the temp directories' content")
+	setCmd.Flags().IntVarP(&age, "age", "a", -1, "Set the maximum age (in days) of the targets' content")
 	setCmd.Flags().StringVarP(&autoStart, "auto-start", "s", "", "Set to 'on' to activate or 'off' to deactivate. (not activated by default)")
 }
 
 // setAge sets the "duration" value in the config file (~/.tempest/.tempest.yaml)
-// - ``duration`` being the maximum age of the temp's content
+// - ``duration`` being the maximum age of the target's content
 func setAge() error {
 	if age > 0 {
 		// ageStr := fmt.Sprintf("%d", age)
