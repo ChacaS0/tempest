@@ -191,7 +191,6 @@ If you want to know more about **TEMPest**, visit <a href="https://chacas0.githu
 
 
 -------------------
-*Thanks to*
 > <a href="https://github.com/golang/go" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png" width=33%></a> 
 
 > <a href="https://github.com/spf13/cobra" target="_blank"><img src="https://cloud.githubusercontent.com/assets/173412/10886352/ad566232-814f-11e5-9cd0-aa101788c117.png" width=33%></a> 
