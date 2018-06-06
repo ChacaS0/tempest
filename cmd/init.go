@@ -67,10 +67,10 @@ This file will contain the list of all the directories you wish tempest to handl
 		fmt.Println(color.HiGreenString(`	Start using TEMPest right away by adding a temporary file :
 		tempest add <DIRECTORY_PATH>
 	Or generate new targets
-		tempest new						# Generate a new target in the current directory.
+		tempest new	-t -a				# Generate a new target in the current directory.
 											  This new target will be already registered.
-											  The created directory will be called ``temp.est``.
-	Or find existing potential targets and add them (meaning the ones called ``temp.est``)
+											  The created directory will be called "temp.est".
+	Or find existing potential targets and add them (meaning the ones called "temp.est")
 		tempest add --auto
 	Or get help to add new targets:
 		tempest help add
