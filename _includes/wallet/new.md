@@ -15,25 +15,4 @@ This section shows of to create easily new ``targets``.
 | \-\-autoGen     | -a          | [To be used with other flags] Combine this flag with ``--target <path>...`` in order to generate a default name for the target   |
 | \-\-target      | -t          | [String]&lt;paths&gt;... Create the directory and registers the fresh created directory as a target in TEMPest your computer.    |
 
-
-<!-- ### [](#head-new-3)Explanations
-
-| Example command                      | Description                                                                                       |
-|:-------------------------------------|:--------------------------------------------------------------------------------------------------|
-| **``tempest rm``**                   | remove the current directory from the target list                                                 |
-| **``tempest rm 0``**                 | remove the target with index 0 from the target list                                               |
-| **``tempest rm 1-3``**               | remove the targets with the index 1, 2 and 3                                                      |
-| **``tempest rm *``**                 | remove all the targets                                                                            |
-| **``tempest rm /tmp``**              | remove the target for the path: ``/tmp``                                                          |
-| **``tempest rm 1-3 -o``**            | remove the targets for the matching directories to the indexes 1, 2 and 3                         |
-| **``tempest rm 1-3 --origin``**      | same effect of using ``-o``                                                                       | -->
-
-
-tempest list
-tempest new --target --autoGen /tmp
-tempest list
-
-tempest new -t /tmp/test-tempest
-tempest list
-
 <!-- https://asciinema.org/a/bSMNAQieFKVbU4xXYARen1zbJ -->
