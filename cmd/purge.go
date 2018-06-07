@@ -59,10 +59,10 @@ We recommand to use the default system, meaning:
 		tempest start
 
 Test mode, very convenient to see what would get deleted. For example:
-	tempest purge -p /tmp -t
+	tempest purge -p /tmp/temp.est -t
 
 For real purge, use the same command but without the '-t' flag:
-	tempest purge -p /tmp
+	tempest purge -p /tmp/temp.est
 
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
@@ -96,9 +96,9 @@ to quickly create a Cobra application.`,
 				color.Red("FCK ALL")
 				fmt.Println(errInt)
 			}
+		default:
+			cmd.Help()
 		}
-		// DEBUG:
-		// fmt.Println("purge called")
 	},
 }
 
@@ -138,7 +138,6 @@ func fetchAll(root string) (sliceDir []os.FileInfo, targetInfo os.FileInfo, errF
 // Doesn't delete anything if testMode is true.
 // It just displays
 func emptyFile(path string, target os.FileInfo, testMode bool) error {
-	// TODO: Refactor fetchAll()
 
 	// header message
 	fmt.Println(magB("\n:: File:"), path)
