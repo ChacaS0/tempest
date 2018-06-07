@@ -73,6 +73,12 @@
 				{% capture wallet-add %}{% include wallet/add.md %}{% endcapture %}
 				{{ wallet-add | markdownify }}
       </div>
+      <!-- ADD -->
+			<h2 id="wall-new" class="wall-head">New targets </h2>
+			<div id="wall-ctnt8" class="wall-ctnt">
+				{% capture wallet-new %}{% include wallet/new.md %}{% endcapture %}
+				{{ wallet-new | markdownify }}
+      </div>
       <!-- RM -->
       <h2 id="wall-rm" class="wall-head">Remove targets </h2>
       <div id="wall-ctnt5" class="wall-ctnt">

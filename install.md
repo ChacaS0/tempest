@@ -43,7 +43,7 @@ So easy:
 go get -v -u -t github.com/ChacaS0/tempest
 ```
   
-Great now we just need to generate the files **TEMPest** needs to work by initialization.
+Great now we just need to generate the files **TEMPest** needs to work. This will be its initialization.
 
 ## [](#header-2-3)Initialization
 ### [](#header-2-3-1)Command line
@@ -55,7 +55,7 @@ tempest init
 ```
 
 This will generate a ``~/.tempestcf`` file. 
-It will hold the list of all the temp directories.
+It will hold the list of all the targets.
 
 > If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempestcf`` and leave it empty for now.
   

@@ -19,18 +19,19 @@ Thumbs up if you like it ! :stuck_out_tongue_winking_eye::+1:
 
 
 ## [](#subheader-1-3)So what does it do?
-With **TEMPest** you can "register" some paths as "<u>targets</u>" and then operate deletion on all of them at once. 
+With **TEMPest** you can "register" some paths as "<u>targets</u>" and then operate deletion on all of them at once.  
+It also offers some overview on current temporary stuff.  
 
 
 
 ## [](#subheader-1-4)Plans
 Yeah I do have plans. Plans for the future!!  
-For now, **TEMPest** does not work on Windows, but I'd like to use it on my Windows machine too, so I'm woriking on that.  
+For now, **TEMPest** is not fully tested on Windows, but I'd like to use it on my Windows machines too, so I'm woriking on that.  
   
-If you have suggestions, you can open an <a href="https://github.com/ChacaS0/tempest/issues/new" target="_blank">Issue</a> with the ``suggestion`` label. 
-I haven't done an Issue Template yet, so try to be "clean" about it, with details.
+If you have suggestions, you can <a href="https://github.com/ChacaS0/tempest/issues/new" target="_blank">open an Issue</a>. 
+I haven't done an Issue Template yet, so try to be "clear" about it, with details.
   
-Also, you can contribute and help me by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA" target="_blank">**donating through Paypal**</a>. Thank you for your support ! :smile_cat:
+Also, you can contribute and help me by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TQYU8BPPV5YWA" target="_blank">donating with Paypal</a>. Thank you for your support ! :smile_cat:
 
 ## [](#subheader-1-5)How do I get started?
 Please refer to <a href="{{site.url}}/install">the installation page</a>.

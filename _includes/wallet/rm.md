@@ -22,5 +22,6 @@
 | **``tempest rm 1-3 --origin``**      | same effect of using ``-o``                                                                       |
 
 
-:warning: When using ``--origin`` or ``-o`` flag, the original files and directories will be removed from your system, so be careful.
+:warning: When using ``--origin`` or ``-o`` flag, the original files and directories will be removed from your system, so be careful.  
 :warning: After the use of ``rm``, Indexes numbers might change. Keep an eye on this. :eyes:
+	

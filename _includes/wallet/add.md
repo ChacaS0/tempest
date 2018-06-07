@@ -10,4 +10,7 @@ In this section, we'll see how to add a ``target`` to **TEMPest**, shall we begi
 - ``tempest add ~/Documents/temp/ ~/Downloads/temp``: Add those two as targets, so we can add as many as we want in one command, ending by a ``/`` or not.
 - ``tempest add``: Add the current directory as a target for **TEMPest**.
 
-> **\#Note:** You cannot add multiple times the same target, or a target that doesnt exist.
+> **\#Note:** You cannot add multiple times the same target, or a target that doesnt exist.  
+  
+> :point_right: Use ``tempest add --auto`` to look for all the ``temp.est`` directories and register them as **targets**.
+
