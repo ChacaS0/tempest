@@ -372,6 +372,7 @@ func captureStdout(f func()) string {
 func WriteLog(pathLog string, strs ...string) {
 	// open file first - if does not exist, create it biatch
 	var f *os.File
+
 	f, errF := os.OpenFile(pathLog, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if errF != nil {
 		f2, errF2 := os.OpenFile(pathLog, os.O_APPEND|os.O_WRONLY, os.ModeAppend)

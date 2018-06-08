@@ -75,6 +75,7 @@ First, to initialize it the first time, run:
 ```
 
 This will generate a ``.tempestcf`` file in ``$HOME/.tempest``. 
+
 It will hold the list of all the targets.
 
 > If there is an issue and the file can't be created somehow, you can still create it at its default location: ``$HOME/.tempest/.tempestcf`` and leave it empty for now.

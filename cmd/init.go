@@ -50,6 +50,7 @@ This file will contain the list of all the directories you wish tempest to handl
 		if err := initializeCfFile(); err != nil {
 			fmt.Println(redB("::"), color.HiRedString("Could not initialize .tempest.yaml"))
 			fmt.Println(redB("::"), color.HiRedString("If the error persists, try to create the file manually : touch $HOME/.tempest/.tempest.yaml"))
+
 			return
 		}
 
