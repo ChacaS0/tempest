@@ -60,7 +60,7 @@ tempest add
 To add another directory:
 tempest add /tmp
 
-> By convention we will name the temporary directories "temp".
+> By convention we will name the temporary directories "temp.est".
   This way they will be easy to spot
 `,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -78,16 +78,16 @@ tempest add /tmp
 					return
 				}
 			} else {
-				fmt.Println(cyanB("[INFO]::"), color.HiCyanString("No paths were added"))
+				fmt.Println(cyanB("[INFO]::"), color.HiCyanString("No targets were added"))
 			}
 			// add these lines
 			if errAddLine := addLine(toAdd); errAddLine != nil {
-				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
+				fmt.Println("::An error occurred while adding target(s):\n", errAddLine)
 			}
 		} else if !autoAdd {
 			// FALLBACK CASE
 			if errAddLine := addLine(args); errAddLine != nil {
-				fmt.Println("::An error occurred while adding path(s):\n", errAddLine)
+				fmt.Println("::An error occurred while adding target(s):\n", errAddLine)
 			}
 		} else {
 			cmd.Help()
