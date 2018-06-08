@@ -44,7 +44,7 @@ var rmCmd = &cobra.Command{
 The basic command does not delete the original directory or file.
 It's just telling to TEMPest to untrack the file/directory. For example:
 
-	tempest rm /tmp
+	tempest rm /tmp/temp.est
 
 or
 Place yourself inside the directory and run:
@@ -62,10 +62,10 @@ It is also possible to use the index number resulting of the tempest list comman
 It is possible to remove many targets at the same time:
 	tempest rm 1 3 2 7
 or
-	tempest rm /tmp /temp
+	tempest rm /tmp/temp.est /temp/temp.est
 
 To remove the current directory, for example, if we want to remove /tmp:
-	cd /tmp
+	cd /tmp/temp.est
 	tempest rm
 
 Using indexes for rm allows to use ranges which, for now can't be done using targets paths. 
@@ -82,7 +82,7 @@ In order to remove the original file/directory:
 or
 	tempest rm 1 --origin
 
-=> Considering 1 is /tmp, this would remove /tmp from TEMPest AND from your device.
+=> Considering 1 is /tmp/temp.est, this would remove /tmp/temp.est from TEMPest AND from your device.
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {

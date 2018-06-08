@@ -47,6 +47,9 @@ var conf struct {
 	Gopath string
 }
 
+// Slash is shorthand for the path separator
+var Slash = string(os.PathSeparator)
+
 // TempestConfigDir points to the config directory of TEMPest
 // it holds pretty much all configuration for TEMPest
 var TempestConfigDir string
@@ -121,19 +124,21 @@ var RootCmd = &cobra.Command{
 	Long: `TEMPest is a simple CLI to manage temporary directories.
 It is still under development, so it's normal if it's not perfect .. YET!
 You can start by checking if the config file exists at:
-	~/.tempest.yaml
+	~/.tempest/.tempest.yaml
 	It contains the files' contraint of age (duration in days).
+	It also contains the mode (auto or manual) in which TEMPest runs.
+		/!\ note that Windows hasn't been fully tested.
 
 Then you can initialize the list of directories handled by TEMPest. For example:
 	tempest init
 Then change directory (cd) to a directory you desire to add, and run:
 	tempest add
 Or just specify the path to the directory (you can add multiple). For example:
-	tempest add /tmp /temp
+	tempest add /tmp/temp.est /temp/test.est
 
-# Note that, by convention, the tempory directories will be called 'temp'
+# Note that, by convention, the tempory directories will be called 'temp.est'
 
-To start cleaning temp directories just run:
+To start cleaning targets directories just run:
 	tempest start
 Or if you want to see what files/folders would get deleted:
 	tempest start -t
@@ -183,15 +188,15 @@ func init() {
 	}
 	conf.Home = home
 
-	TempestConfigDir = conf.Home + string(os.PathSeparator) + ".tempest"
+	TempestConfigDir = conf.Home + Slash + ".tempest"
 
-	pathProg = conf.Gopath + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "github.com" + string(os.PathSeparator) + "ChacaS0" + string(os.PathSeparator)
-	pathTempest = pathProg + "tempest" + string(os.PathSeparator)
+	pathProg = conf.Gopath + Slash + "src" + Slash + "github.com" + Slash + "ChacaS0" + Slash
+	pathTempest = pathProg + "tempest" + Slash
 
-	Tempestcf = TempestConfigDir + string(os.PathSeparator) + ".tempestcf"
+	Tempestcf = TempestConfigDir + Slash + ".tempestcf"
 	Tempestyml = viper.ConfigFileUsed()
-	TempestymlDef = TempestConfigDir + string(os.PathSeparator) + ".tempest.yaml"
-	LogShutup = TempestConfigDir + string(os.PathSeparator) + ".log" + string(os.PathSeparator) + "shutup.log"
+	TempestymlDef = TempestConfigDir + Slash + ".tempest.yaml"
+	LogShutup = TempestConfigDir + Slash + ".log" + Slash + "shutup.log"
 
 	//* Bold Colors
 	yellowB = color.New(color.FgHiYellow, color.Bold).SprintFunc()
@@ -367,7 +372,7 @@ func captureStdout(f func()) string {
 func WriteLog(pathLog string, strs ...string) {
 	// open file first - if does not exist, create it biatch
 	var f *os.File
-	// TODO replace this path by the var once merged with the non-temp branch
+
 	f, errF := os.OpenFile(pathLog, os.O_EXCL|os.O_CREATE|os.O_WRONLY, 0644)
 	if errF != nil {
 		f2, errF2 := os.OpenFile(pathLog, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
@@ -435,6 +440,35 @@ func SameSlicesInt(a, b []int) bool {
 	b = b[:len(a)]
 	for i, v := range a {
 		if v != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// SameSliceValuesStr returns ``true`` if the two slices fo ``string``
+// have the same values, order doesn't matter
+func SameSliceValuesStr(a, b []string) bool {
+	if a == nil && b == nil {
+		return true
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	if len(a) == 0 && len(b) == 0 {
+		return true
+	}
+
+	// b = b[:len(a)]
+	for _, valA := range a {
+		result := false
+		for _, valB := range b {
+			result = result || (valB == valA)
+		}
+		if !result {
 			return false
 		}
 	}
