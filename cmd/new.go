@@ -52,7 +52,7 @@ func init() {
 	RootCmd.AddCommand(newCmd)
 
 	newCmd.Flags().BoolVarP(&slTargets, "target", "t", false, "Create the directory and registers the fresh created directory as a target in TEMPest")
-	newCmd.Flags().BoolVarP(&autoGen, "autoGen", "a", false, "Combine this flag with --target ``<path>...`` in order to generate a default name for the target")
+	newCmd.Flags().BoolVarP(&autoGen, "autoGen", "a", false, "Combine this flag with --target <path>... in order to generate a default name for the target")
 }
 
 // newTargets add a list of targets, create and register
