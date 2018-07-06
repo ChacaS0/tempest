@@ -66,7 +66,7 @@ tempest add /tmp
 	Run: func(cmd *cobra.Command, args []string) {
 		// Auto add flag used
 		if autoAdd && len(args) == 0 {
-			toAdd, errDirs := findDirs("/home/chacanterg/", "temp.est")
+			toAdd, errDirs := findDirs(conf.Home+Slash, "temp.est")
 			if errDirs != nil {
 				log.Fatal(errDirs)
 			}
@@ -77,17 +77,18 @@ tempest add /tmp
 					fmt.Println(errStrip.Error())
 					return
 				}
+				// add these lines
+				if errAddLine := addLine(toAdd); errAddLine != nil {
+					fmt.Println(":: An error occurred while adding target(s):\n", errAddLine)
+				}
 			} else {
-				fmt.Println(cyanB("[INFO]::"), color.HiCyanString("No targets were added"))
-			}
-			// add these lines
-			if errAddLine := addLine(toAdd); errAddLine != nil {
-				fmt.Println("::An error occurred while adding target(s):\n", errAddLine)
+				fmt.Println(cyanB(":: [INFO]"), color.HiCyanString("No targets were added"))
+				return
 			}
 		} else if !autoAdd {
 			// FALLBACK CASE
 			if errAddLine := addLine(args); errAddLine != nil {
-				fmt.Println("::An error occurred while adding target(s):\n", errAddLine)
+				fmt.Println(":: An error occurred while adding target(s):\n", errAddLine)
 			}
 		} else {
 			cmd.Help()
@@ -127,7 +128,7 @@ func addLine(args []string) error {
 	// tmpcf, err := os.Open(conf.Home + "/.tempestcf")
 	tmpcf, err := os.OpenFile(Tempestcf, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
-		fmt.Println(color.RedString("::Sorry! Could not find "), viper.ConfigFileUsed())
+		fmt.Println(color.RedString(":: Sorry! Could not find "), viper.ConfigFileUsed())
 		return err
 	}
 	defer tmpcf.Close()
