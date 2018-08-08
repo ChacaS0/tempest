@@ -17,6 +17,7 @@ site.pages:
 # plugins
 plugins:
   - jemoji
+  - jekyll-seo-tag
 
 url: https://chacas0.github.io/tempest
 
