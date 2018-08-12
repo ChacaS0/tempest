@@ -11,7 +11,7 @@ depends=('git' 'go')
 makedepends=('dep')
 options=('!strip' '!emptydirs')
 source=("https://github.com/ChacaS0/tempest/archive/v$pkgver.tar.gz")
-sha256sums=('bd27d4ac125f6d4fd23061b3e24a15aefaa7538652ca4bc607bf18b374fb336b')
+sha256sums=('b08305a9b82f39e71d5f00884aeb4086ff8c8bf29c085fd320572092e55444f1')
 _gourl=github.com/ChacaS0/tempest
 
 build() {
