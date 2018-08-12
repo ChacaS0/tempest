@@ -1,7 +1,7 @@
 # Maintainer: ChacaS0 <chk-chaca@gmail.com>
 
 pkgname=tempest
-pkgver=0.1
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="TEMPest is CLI tool to help manage temporary content"
 arch=('x86_64' 'i686')
