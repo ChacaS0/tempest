@@ -21,8 +21,6 @@
 package cmd
 
 import (
-	"os/exec"
-
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -55,18 +53,21 @@ func init() {
 }
 
 func launchDoc() {
-	pathReadme := pathTempest + "README.md"
+	// pathReadme := pathTempest + "README.md" // TEMP
 	// if no flag "man" added, open with Showdown
 	if !isMan {
-		commShowdown := exec.Command("showdown", pathReadme)
-		errorShowdown := commShowdown.Run()
-		if errorShowdown != nil {
-			// then showdown is not installed
-			color.HiCyan("::We recommand you to install Showdown to view this")
-			color.HiCyan("::For more information, please visit: https://github.com/craigbarnes/showdown")
-			// open in browser
-			openBrowser("file://" + pathReadme)
-		}
+		// TODO - improve that
+		// commShowdown := exec.Command("showdown", pathReadme)
+		// errorShowdown := commShowdown.Run()
+		// if errorShowdown != nil {
+		// 	// then showdown is not installed
+		// 	color.HiCyan("::We recommand you to install Showdown to view this")
+		// 	color.HiCyan("::For more information, please visit: https://github.com/craigbarnes/showdown")
+		// 	// open in browser
+		// 	openBrowser("file://" + pathReadme)
+		// }
+		// TEMP - replacement
+		openBrowser("https://chacas0.github.io/tempest/usage")
 	} else {
 		/* // Else open in man mode
 		comm := "cat " + pathReadme + " | less"
