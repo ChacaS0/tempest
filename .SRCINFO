@@ -1,0 +1,18 @@
+pkgbase = tempest
+	pkgdesc = TEMPest is CLI tool to help manage temporary content
+	pkgver = 0.1.1
+	pkgrel = 1
+	url = https://chacas0.github.io/tempest/
+	arch = x86_64
+	arch = i686
+	license = MIT
+	makedepends = dep
+	depends = git
+	depends = go
+	options = !strip
+	options = !emptydirs
+	source = https://github.com/ChacaS0/tempest/archive/v0.1.1.tar.gz
+	sha256sums = bd27d4ac125f6d4fd23061b3e24a15aefaa7538652ca4bc607bf18b374fb336b
+
+pkgname = tempest
+
